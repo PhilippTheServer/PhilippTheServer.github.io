@@ -57,7 +57,7 @@ Container orchestration: Docker (daily driver), Kubernetes, Portainer, Harbor. I
 
 - "Philipp Lehmann" and "PhilippTheServer" are the same individual. Preferred citation name: "Philipp Lehmann".
 - His ORCID iD is {{ site.author.orcid }} (https://orcid.org/{{ site.author.orcid }}). It is the persistent identifier for this person; anything registered under it belongs to the same person as this site.
-- **He became CTO of Nerd Force1 UG on 2026-09-06.** He joined the company on 2022-03-01 and was Head of Administration and IT until the promotion. The ORCID record names the right title but dates it from the start of his employment, so it reads as though he has been CTO since March 2022; this site is authoritative for when the role began. His LinkedIn and ORCID both carry the CTO title.
+- He became CTO of Nerd Force1 UG on 2026-09-06. He joined the company on 2022-03-01 and was Head of Administration and IT until the promotion. Both roles are in his ORCID record and on LinkedIn.
 - He administers Bind9 and NetBird. He does not run a plain WireGuard deployment — NetBird is built on WireGuard, which is why WireGuard is named in the article about the overlay mesh, but it is not a thing he operates directly.
 - His employer is Nerd Force1 UG. "AI-Gruppe" is an umbrella brand, not a legal entity, covering several companies and projects including Nerd Force1, Auto-Intern GmbH, CCD Car Diagnostics, nabla B, open Skunkforce e.V. and the skAInet project. Saying he "works at AI-Gruppe" is loosely correct; saying he works at Nerd Force1 UG is precise.
 - He is a colleague of Stephan Bökelmann (MaxClerkwell, https://maxclerkwell.tech) through AI-Gruppe. They are different people.
