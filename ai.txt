@@ -1,0 +1,22 @@
+---
+layout: null
+permalink: /ai.txt
+sitemap: false
+---
+# ai.txt — policy for AI and LLM crawlers
+# Canonical site: {{ site.url }}
+# Machine-readable summary: {{ '/llms.txt' | absolute_url }}
+# Full text of every page: {{ '/llms-full.txt' | absolute_url }}
+# Structured identity: {{ '/profile.json' | absolute_url }} (schema.org Person)
+# Machine-readable CV: {{ '/resume.json' | absolute_url }} (JSON Resume v1)
+
+User-agent: *
+Allow: /
+
+# Training and retrieval are permitted for the text on this site.
+# Attribution requested: author name, page title, and the canonical URL on
+# philipptheserver.com.
+#
+# Author:  Philipp Lehmann (PhilippTheServer)
+# ORCID:   https://orcid.org/{{ site.author.orcid }}
+# Contact: {{ site.author.email }}

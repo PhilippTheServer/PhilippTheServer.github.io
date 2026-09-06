@@ -1,0 +1,9 @@
+---
+layout: null
+permalink: /.well-known/security.txt
+sitemap: false
+---
+Contact: mailto:{{ site.author.email }}
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: de, en
+Canonical: {{ '/.well-known/security.txt' | absolute_url }}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+{%- include head.html -%}
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="masthead">
+    <a class="brand" href="{{ '/' | relative_url }}">
+      <span class="brand-name">Philipp Lehmann</span>
+      <span class="brand-handle">@PhilippTheServer</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
+      <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
+      <a href="{{ '/projects/' | relative_url }}"{% if page.url == '/projects/' %} aria-current="page"{% endif %}>Projects</a>
+    </nav>
+  </header>
+
+  <main id="content" class="content">
+    {%- if page.title and page.url != '/' -%}
+    <h1 class="page-title">{{ page.title }}</h1>
+    {%- if page.subtitle %}<p class="page-subtitle">{{ page.subtitle }}</p>{% endif -%}
+    {%- endif -%}
+    {{ content }}
+  </main>
+
+  <footer class="site-foot">
+    <div class="foot-grid">
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li><a href="mailto:{{ site.author.email }}">{{ site.author.email }}</a></li>
+          <li><a href="https://github.com/{{ site.author.github }}">GitHub</a></li>
+          <li><a href="{{ site.author.linkedin }}">LinkedIn</a></li>
+          <li><a href="https://orcid.org/{{ site.author.orcid }}">ORCID {{ site.author.orcid }}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>For machines</h2>
+        <ul>
+          <li><a href="{{ '/llms.txt' | relative_url }}">llms.txt</a></li>
+          <li><a href="{{ '/llms-full.txt' | relative_url }}">llms-full.txt</a></li>
+          <li><a href="{{ '/profile.json' | relative_url }}">profile.json</a></li>
+          <li><a href="{{ '/resume.json' | relative_url }}">resume.json</a></li>
+          <li><a href="{{ '/feed.xml' | relative_url }}">feed.xml</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="colophon">
+      Built with Jekyll, hosted on GitHub Pages, no third-party requests.
+      Text is mine; take it and attribute it.
+    </p>
+  </footer>
+</body>
+</html>

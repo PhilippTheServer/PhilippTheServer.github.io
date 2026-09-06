@@ -1,0 +1,73 @@
+"@context": "https://schema.org"
+"@type": "Person"
+"@id": "https://philipptheserver.com/#person"
+name: "Philipp Lehmann"
+givenName: "Philipp"
+familyName: "Lehmann"
+alternateName: "PhilippTheServer"
+description: >-
+  Infrastructure engineer in Bochum, Germany. Head of Administration and IT at
+  Nerd Force1 UG, part of the AI-Gruppe umbrella brand, and a B.Sc. student of
+  IT Security / Information Engineering at Ruhr University Bochum. Works on
+  container platforms, distributed storage, infrastructure automation and the
+  internal tooling that runs on top of them.
+url: "https://philipptheserver.com"
+mainEntityOfPage: "https://philipptheserver.com/about/"
+image: "https://avatars.githubusercontent.com/u/111761181?v=4"
+email: "mailto:philipp.lehmann@gruppe.ai"
+jobTitle: "Head of Administration and IT"
+identifier:
+  "@type": "PropertyValue"
+  propertyID: "ORCID"
+  value: "https://orcid.org/0009-0002-3922-2471"
+  url: "https://orcid.org/0009-0002-3922-2471"
+knowsLanguage:
+  - "de"
+  - "en"
+homeLocation:
+  "@type": "Place"
+  address:
+    "@type": "PostalAddress"
+    addressLocality: "Bochum"
+    addressRegion: "North Rhine-Westphalia"
+    addressCountry: "DE"
+worksFor:
+  "@type": "Organization"
+  name: "Nerd Force1 UG"
+  url: "https://nerd-force1.de"
+  parentOrganization:
+    "@type": "Organization"
+    name: "AI-Gruppe"
+    url: "https://gruppe.ai"
+affiliation:
+  "@type": "CollegeOrUniversity"
+  name: "Ruhr University Bochum"
+  url: "https://www.ruhr-uni-bochum.de/"
+memberOf:
+  "@type": "Organization"
+  name: "open Skunkforce e.V."
+  url: "https://github.com/skunkforce"
+knowsAbout:
+  - "Infrastructure engineering"
+  - "Docker"
+  - "Kubernetes"
+  - "Ceph distributed storage"
+  - "Ansible"
+  - "Terraform"
+  - "WireGuard"
+  - "Bind9 DNS"
+  - "Linux systems administration"
+  - "Self-hosted large language model serving"
+  - "Python"
+  - "Go"
+  - "C++"
+  - "FastAPI"
+  - "Angular"
+  - "IT security"
+sameAs:
+  - "https://orcid.org/0009-0002-3922-2471"
+  - "https://github.com/PhilippTheServer"
+  - "https://www.linkedin.com/in/philipp-lehmann-17995521b/"
+  - "https://gruppe.ai"
+  - "https://nerd-force1.de"
+  - "https://vaultops.de"

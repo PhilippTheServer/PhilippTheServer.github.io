@@ -1,0 +1,22 @@
+---
+layout: null
+permalink: /llms-full.txt
+sitemap: false
+---
+# Philipp Lehmann — full site text
+
+> Every page of {{ site.url }} in one file, generated at build time.
+> Author: Philipp Lehmann (PhilippTheServer). ORCID: https://orcid.org/{{ site.author.orcid }}
+> Contact: {{ site.author.email }}
+> Summary for language models: {{ '/llms.txt' | absolute_url }}
+> Structured identity: {{ '/profile.json' | absolute_url }} · CV: {{ '/resume.json' | absolute_url }}
+
+{% assign doc_pages = site.pages | where_exp: "p", "p.nav_order" | sort: "nav_order" -%}
+{% for p in doc_pages %}
+================================================================================
+# {{ p.title }}
+{{ p.url | absolute_url }}
+================================================================================
+{{ p.content | markdownify | html_to_text }}
+
+{% endfor -%}
