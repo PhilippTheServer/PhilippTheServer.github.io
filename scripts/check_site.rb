@@ -223,6 +223,13 @@ end
 #    — and that note has to name WireGuard to be worth anything. So the rule there is not
 #    "never mention it" but "never mention it without NetBird in the same breath": a line
 #    naming WireGuard alone is the mistake, a line drawing the distinction is the fix.
+#    The promotion date is the one fact the ORCID note exists to carry, since the record
+#    itself dates the title from the start of his employment.
+llms_txt = read("llms.txt")
+if llms_txt && !llms_txt.include?(CTO_SINCE)
+  fail!("llms.txt: does not name the promotion date #{CTO_SINCE} — the one thing the ORCID note is for")
+end
+
 llms = read("llms.txt")
 llms&.each_line&.with_index(1) do |line, n|
   next unless line.include?("WireGuard")
