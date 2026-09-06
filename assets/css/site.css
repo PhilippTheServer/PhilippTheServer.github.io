@@ -25,6 +25,19 @@
   }
 }
 
+/* The same tokens under an explicit choice, so a theme that is set rather than inherited
+ * works too. prose.css already honoured [data-theme]; without this the page stayed light
+ * while the code blocks went dark, which is how the inconsistency was found. */
+:root[data-theme="dark"] {
+    --bg: #0e1013;
+    --bg-sunk: #16191d;
+    --fg: #e7e9ea;
+    --fg-muted: #9aa1a9;
+    --rule: #242a30;
+    --accent: #6cb0f5;
+    --accent-soft: #16222f;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -123,7 +136,10 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -0.015em; }
 .content ul, .content ol { margin: 0 0 1.2rem; padding-left: 1.3rem; }
 .content li { margin-bottom: 0.35rem; }
 
-code {
+/* Inline code outside an article. Article prose is styled by prose.css, which scopes
+ * this away from <pre> — an unscoped rule here is what boxed every LINE of every code
+ * block separately, because the <code> inside a <pre> is inline and spans many lines. */
+:not(pre) > code {
   font-family: var(--mono);
   font-size: 0.86em;
   background: var(--bg-sunk);
@@ -249,22 +265,6 @@ code {
   background: var(--bg-sunk);
   border-radius: 100px;
   padding: 0.12rem 0.55rem;
-}
-
-.post-body > p:first-of-type { font-size: 1.08rem; }
-
-.post-body h2 {
-  font-size: 1.15rem;
-  margin: 2.75rem 0 0.9rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-.post-body blockquote {
-  margin: 0 0 1.2rem;
-  padding-left: 1rem;
-  border-left: 3px solid var(--accent);
-  color: var(--fg-muted);
 }
 
 .post-foot {

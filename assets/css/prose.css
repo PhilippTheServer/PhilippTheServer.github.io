@@ -1,0 +1,355 @@
+/* prose.css — the universal appearance of an article's body.
+ *
+ * One rule per Markdown construct, in the order a document tends to use them. An article
+ * should render like a well-set Markdown document: this file is what makes that true, and
+ * it is the only place any of it is decided.
+ *
+ * Colours come from the tokens in site.css, so light and dark both work without a second
+ * copy of anything. Everything here is scoped to .prose so it cannot leak into the
+ * navigation, the article index or the tag pages.
+ */
+
+.prose {
+  --prose-measure: 34em;   /* ~66 characters at this size: the comfortable reading width */
+  --prose-gap: 1.15rem;
+  --code-bg: #f6f7f9;
+  --code-fg: #24292f;
+  --code-rule: #dcdfe4;
+  --code-head: #eceff3;
+
+  /* syntax tokens */
+  --t-comment: #6a737d;
+  --t-keyword: #a626a4;
+  --t-string:  #50a14f;
+  --t-number:  #b76b01;
+  --t-name:    #24292f;
+  --t-func:    #4078f2;
+  --t-type:    #c18401;
+  --t-attr:    #986801;
+  --t-punct:   #6a737d;
+  --t-error:   #d13438;
+  --t-added:   #22863a;
+  --t-removed: #b31d28;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .prose {
+    --code-bg: #14181d;
+    --code-fg: #d5dae1;
+    --code-rule: #262c34;
+    --code-head: #1a1f26;
+
+    --t-comment: #7b8798;
+    --t-keyword: #c678dd;
+    --t-string:  #98c379;
+    --t-number:  #d19a66;
+    --t-name:    #d5dae1;
+    --t-func:    #61afef;
+    --t-type:    #e5c07b;
+    --t-attr:    #e5c07b;
+    --t-punct:   #8b95a3;
+    --t-error:   #e06c75;
+    --t-added:   #98c379;
+    --t-removed: #e06c75;
+  }
+}
+
+:root[data-theme="dark"] .prose {
+  --code-bg: #14181d;
+  --code-fg: #d5dae1;
+  --code-rule: #262c34;
+  --code-head: #1a1f26;
+
+  --t-comment: #7b8798;
+  --t-keyword: #c678dd;
+  --t-string:  #98c379;
+  --t-number:  #d19a66;
+  --t-name:    #d5dae1;
+  --t-func:    #61afef;
+  --t-type:    #e5c07b;
+  --t-attr:    #e5c07b;
+  --t-punct:   #8b95a3;
+  --t-error:   #e06c75;
+  --t-added:   #98c379;
+  --t-removed: #e06c75;
+}
+
+/* ── headings ────────────────────────────────────────────────────────────── */
+
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  scroll-margin-top: 1.5rem;
+}
+
+.prose h2 {
+  font-size: 1.3rem;
+  font-weight: 650;
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prose h3 { font-size: 1.08rem; font-weight: 650; margin: 2.25rem 0 0.7rem; }
+.prose h4 { font-size: 0.98rem; font-weight: 650; margin: 1.9rem 0 0.6rem; }
+.prose h5,
+.prose h6 {
+  font-size: 0.85rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-muted);
+  margin: 1.75rem 0 0.5rem;
+}
+
+.prose > h2:first-child,
+.prose > h3:first-child { margin-top: 0; }
+
+/* ── text ────────────────────────────────────────────────────────────────── */
+
+.prose p { margin: 0 0 var(--prose-gap); }
+.prose > p:first-of-type { font-size: 1.05rem; }
+
+.prose strong { font-weight: 650; }
+.prose em { font-style: italic; }
+.prose del { color: var(--fg-muted); }
+
+.prose mark {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: inherit;
+  padding: 0.05em 0.2em;
+  border-radius: 3px;
+}
+
+.prose abbr[title] { text-decoration: underline dotted; cursor: help; }
+
+.prose kbd {
+  font-family: var(--mono);
+  font-size: 0.8em;
+  background: var(--code-bg);
+  border: 1px solid var(--code-rule);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  white-space: nowrap;
+}
+
+/* ── lists ───────────────────────────────────────────────────────────────── */
+
+.prose ul,
+.prose ol { margin: 0 0 var(--prose-gap); padding-left: 1.4rem; }
+
+.prose li { margin-bottom: 0.4rem; }
+.prose li > ul,
+.prose li > ol { margin: 0.4rem 0 0.2rem; }
+.prose li::marker { color: var(--fg-muted); }
+
+/* A task list is a list without bullets; kramdown leaves the checkbox inline. */
+.prose li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.4rem; }
+.prose li > input[type="checkbox"] { margin-right: 0.45rem; }
+
+.prose dl { margin: 0 0 var(--prose-gap); }
+.prose dt { font-weight: 650; margin-top: 0.8rem; }
+.prose dd { margin: 0.2rem 0 0 1.2rem; color: var(--fg-muted); }
+
+/* ── quotes ──────────────────────────────────────────────────────────────── */
+
+.prose blockquote {
+  margin: 0 0 var(--prose-gap);
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--fg-muted);
+}
+.prose blockquote > :last-child { margin-bottom: 0; }
+
+/* ── inline code ─────────────────────────────────────────────────────────── */
+
+/* :not(pre) is the whole fix for the boxed-per-line bug: the <code> inside a <pre> is an
+ * inline element spanning many lines, so a border and background on it are painted once
+ * per line fragment rather than once around the block. */
+.prose :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--code-bg);
+  border: 1px solid var(--code-rule);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  overflow-wrap: break-word;
+}
+
+.prose a > code { color: inherit; }
+
+/* ── code blocks ─────────────────────────────────────────────────────────── */
+
+.prose .highlighter-rouge,
+.prose pre.highlight,
+.prose > pre {
+  margin: 0 0 1.5rem;
+}
+
+.prose .highlight,
+.prose > pre {
+  background: var(--code-bg);
+  border: 1px solid var(--code-rule);
+  border-radius: 8px;
+  overflow: hidden;   /* keeps the child's scrollbar inside the rounded corner */
+}
+
+.prose .highlight > pre,
+.prose pre.highlight,
+.prose > pre {
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;          /* the block scrolls, the page never does */
+  background: transparent;
+  border: 0;
+  color: var(--code-fg);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.prose pre code {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  white-space: pre;
+}
+
+/* The language, from Rouge's own wrapper class, shown in the corner. */
+.prose .highlighter-rouge { position: relative; }
+.prose .highlighter-rouge::after {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0.45rem;
+  right: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  background: var(--code-head);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+  pointer-events: none;
+}
+.prose .highlighter-rouge:not([data-lang])::after { content: none; }
+
+/* ── syntax highlighting (Rouge token classes) ───────────────────────────── */
+
+.prose .highlight .c,  .prose .highlight .c1, .prose .highlight .cm,
+.prose .highlight .cs, .prose .highlight .cd, .prose .highlight .cp { color: var(--t-comment); font-style: italic; }
+
+.prose .highlight .k,  .prose .highlight .kc, .prose .highlight .kd,
+.prose .highlight .kn, .prose .highlight .kp, .prose .highlight .kr,
+.prose .highlight .ow { color: var(--t-keyword); }
+
+.prose .highlight .kt, .prose .highlight .nc, .prose .highlight .nn,
+.prose .highlight .no { color: var(--t-type); }
+
+.prose .highlight .s,  .prose .highlight .s1, .prose .highlight .s2,
+.prose .highlight .sb, .prose .highlight .sc, .prose .highlight .sd,
+.prose .highlight .se, .prose .highlight .sh, .prose .highlight .si,
+.prose .highlight .sx, .prose .highlight .sr, .prose .highlight .ss { color: var(--t-string); }
+
+.prose .highlight .m,  .prose .highlight .mb, .prose .highlight .mf,
+.prose .highlight .mh, .prose .highlight .mi, .prose .highlight .mo,
+.prose .highlight .il { color: var(--t-number); }
+
+.prose .highlight .nf, .prose .highlight .nd, .prose .highlight .nb,
+.prose .highlight .bp { color: var(--t-func); }
+
+.prose .highlight .na, .prose .highlight .nt, .prose .highlight .nl { color: var(--t-attr); }
+
+.prose .highlight .n,  .prose .highlight .nv, .prose .highlight .vc,
+.prose .highlight .vg, .prose .highlight .vi, .prose .highlight .ni,
+.prose .highlight .py { color: var(--t-name); }
+
+.prose .highlight .o,  .prose .highlight .p,
+.prose .highlight .pi { color: var(--t-punct); }
+
+.prose .highlight .err { color: var(--t-error); }
+.prose .highlight .gd { color: var(--t-removed); }
+.prose .highlight .gi { color: var(--t-added); }
+.prose .highlight .gp { color: var(--t-comment); user-select: none; }
+.prose .highlight .ge { font-style: italic; }
+.prose .highlight .gs { font-weight: 650; }
+.prose .highlight .gh,
+.prose .highlight .gu { color: var(--t-func); font-weight: 650; }
+.prose .highlight .w  { color: transparent; }
+
+/* ── tables ──────────────────────────────────────────────────────────────── */
+
+/* The wrapper is what scrolls; the table itself must never widen the page. */
+.prose .table-scroll { overflow-x: auto; margin: 0 0 1.5rem; }
+
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.prose thead th {
+  text-align: left;
+  font-weight: 650;
+  border-bottom: 2px solid var(--rule);
+  padding: 0.5rem 0.7rem;
+  white-space: nowrap;
+}
+
+.prose tbody td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.5rem 0.7rem;
+  vertical-align: top;
+}
+
+.prose tbody tr:last-child td { border-bottom: 0; }
+
+/* ── figures, images, rules ──────────────────────────────────────────────── */
+
+.prose img { max-width: 100%; height: auto; border-radius: 6px; }
+
+.prose figure { margin: 0 0 1.5rem; }
+.prose figcaption {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  margin-top: 0.5rem;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+
+/* ── footnotes (kramdown) ────────────────────────────────────────────────── */
+
+.prose sup[role="doc-noteref"] a,
+.prose a.footnote { text-decoration: none; font-size: 0.8em; padding: 0 0.1em; }
+
+.prose .footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+.prose .footnotes ol { padding-left: 1.2rem; }
+.prose .footnotes p { margin-bottom: 0.4rem; }
+
+/* ── narrow screens ──────────────────────────────────────────────────────── */
+
+@media (max-width: 34rem) {
+  .prose .highlight > pre,
+  .prose pre.highlight,
+  .prose > pre { font-size: 0.76rem; padding: 0.75rem 0.85rem; }
+  .prose h2 { font-size: 1.18rem; }
+}
