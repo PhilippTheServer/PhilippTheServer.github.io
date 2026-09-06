@@ -175,7 +175,40 @@ RETIRED.each do |name|
   end
 end
 
-# 8. The canonical domain.
+# 8. Two facts I got wrong once, from sources that looked authoritative (issue #7).
+#
+#    The title came from the ORCID employment entry, which still reads "Head of
+#    Administration and IT". It is out of date; he is CTO. A dated, self-asserted record
+#    is good evidence and is not the person.
+if profile
+  fail!("profile.json: jobTitle is #{profile['jobTitle'].inspect}, expected \"CTO\"") unless profile["jobTitle"] == "CTO"
+end
+if resume
+  position = resume.dig("work", 0, "position")
+  fail!("resume.json: work[0].position is #{position.inspect}, expected \"CTO\"") unless position == "CTO"
+end
+
+#    He administers Bind9 and NetBird, not a plain WireGuard deployment. NetBird is built
+#    on WireGuard, so the article about the overlay mesh names it correctly and is
+#    excluded here — but no surface describing what he RUNS may list it.
+#    These describe what he runs. WireGuard has no business on any of them.
+%w[index.html about/index.html profile.json resume.json].each do |f|
+  body = read(f) or next
+  fail!("#{f}: lists WireGuard as something he administers; he runs NetBird") if body.include?("WireGuard")
+end
+
+#    llms.txt is the exception, because it carries the note telling a model the difference
+#    — and that note has to name WireGuard to be worth anything. So the rule there is not
+#    "never mention it" but "never mention it without NetBird in the same breath": a line
+#    naming WireGuard alone is the mistake, a line drawing the distinction is the fix.
+llms = read("llms.txt")
+llms&.each_line&.with_index(1) do |line, n|
+  next unless line.include?("WireGuard")
+  next if line.include?("NetBird")
+  fail!("llms.txt:#{n}: names WireGuard without NetBird beside it")
+end
+
+# 9. The canonical domain.
 cname = read("CNAME")&.strip
 fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == DOMAIN
 
@@ -185,7 +218,7 @@ fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == 
   fail!("#{page}: no canonical link to https://#{DOMAIN}") unless html.include?(%(rel="canonical" href="https://#{DOMAIN}))
 end
 
-# 9. llms-full.txt must actually carry the pages, not just its own header.
+# 10. llms-full.txt must actually carry the pages, not just its own header.
 full = read("llms-full.txt")
 if full
   ["Philipp Lehmann", "About"].each do |title|
@@ -195,7 +228,7 @@ if full
   fail!("llms-full.txt: contains unrendered Liquid") if full.include?("{{") || full.include?("{%")
 end
 
-# 10. No file that gets served should leak an unrendered Liquid tag.
+# 11. No file that gets served should leak an unrendered Liquid tag.
 %w[llms.txt ai.txt humans.txt robots.txt .well-known/security.txt profile.json resume.json].each do |f|
   body = read(f) or next
   fail!("#{f}: contains unrendered Liquid") if body.include?("{{") || body.include?("{%")

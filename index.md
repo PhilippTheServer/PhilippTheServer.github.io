@@ -4,8 +4,8 @@ title: Philipp Lehmann
 permalink: /
 nav_order: 1
 description: >-
-  Philipp Lehmann — infrastructure engineer in Bochum. Head of Administration
-  and IT at Nerd Force1 UG (AI-Gruppe), IT-Security student at Ruhr University
+  Philipp Lehmann — infrastructure engineer in Bochum. CTO at Nerd Force1 UG
+  (AI-Gruppe), IT-Security student at Ruhr University
   Bochum. Writing about Docker, Kubernetes, Ceph, Ansible, monitoring and
   self-hosted AI.
 ---
@@ -15,7 +15,7 @@ description: >-
 
 <p class="pull">I like building infrastructure, mostly so I can break it again.</p>
 
-I am Head of Administration and IT at [Nerd Force1 UG](https://nerd-force1.de), part of
+I am CTO at [Nerd Force1 UG](https://nerd-force1.de), part of
 the [AI-Gruppe](https://gruppe.ai) umbrella brand, and a B.Sc. student of IT Security at
 [Ruhr University Bochum](https://www.ruhr-uni-bochum.de/). I run self-hosted systems,
 container platforms and internal services — usually at the scale where a bad decision
@@ -39,7 +39,7 @@ up to the full-stack internal tooling that sits on top of it.
   <li><b>Docker standalone cluster</b> — carries the bulk of company workloads</li>
   <li><b>Kubernetes cluster</b> — orchestrated workloads, deployed with ArgoCD</li>
   <li><b>Ceph cluster</b> — distributed storage across bare metal</li>
-  <li><b>Internal network</b> — WireGuard VPN and Bind9 DNS, all of it as code</li>
+  <li><b>Internal network</b> — a NetBird overlay mesh and Bind9 DNS, all of it as code</li>
 </ul>
 
 The rule I hold everything to: if a host cannot be rebuilt from the repository, it does

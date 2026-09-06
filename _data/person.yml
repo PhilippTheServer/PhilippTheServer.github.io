@@ -6,8 +6,8 @@ givenName: "Philipp"
 familyName: "Lehmann"
 alternateName: "PhilippTheServer"
 description: >-
-  Infrastructure engineer in Bochum, Germany. Head of Administration and IT at
-  Nerd Force1 UG, part of the AI-Gruppe umbrella brand, and a B.Sc. student of
+  Infrastructure engineer in Bochum, Germany. CTO at Nerd Force1 UG, part of the
+  AI-Gruppe umbrella brand, and a B.Sc. student of
   IT Security / Information Engineering at Ruhr University Bochum. Works on
   container platforms, distributed storage, infrastructure automation and the
   internal tooling that runs on top of them.
@@ -15,7 +15,7 @@ url: "https://philipptheserver.com"
 mainEntityOfPage: "https://philipptheserver.com/about/"
 image: "https://avatars.githubusercontent.com/u/111761181?v=4"
 email: "mailto:philipp.lehmann@gruppe.ai"
-jobTitle: "Head of Administration and IT"
+jobTitle: "CTO"
 identifier:
   "@type": "PropertyValue"
   propertyID: "ORCID"
@@ -54,7 +54,8 @@ knowsAbout:
   - "Ceph distributed storage"
   - "Ansible"
   - "Terraform"
-  - "WireGuard"
+  - "NetBird"
+  - "Overlay mesh networking"
   - "Bind9 DNS"
   - "Linux systems administration"
   - "Self-hosted large language model serving"

@@ -7,10 +7,10 @@ basics:
   url: "https://philipptheserver.com"
   summary: >-
     Infrastructure engineer running container-heavy production systems since 2022.
-    Head of Administration and IT at Nerd Force1 UG (AI-Gruppe), where I designed
-    and operate a Docker cluster, a Kubernetes cluster, a Ceph storage cluster and
-    the internal network behind them, plus the full-stack operations platform that
-    replaced most of the company's external tooling. Studying IT Security /
+    CTO at Nerd Force1 UG (AI-Gruppe), where I designed and operate a Docker cluster,
+    a Kubernetes cluster, a Ceph storage cluster and the internal network behind them,
+    plus the full-stack operations platform that replaced most of the company's
+    external tooling. Studying IT Security /
     Information Engineering at Ruhr University Bochum.
   location:
     city: "Bochum"
@@ -31,7 +31,7 @@ work:
   - name: "Nerd Force1 UG"
     location: "Bochum, Germany"
     url: "https://nerd-force1.de"
-    position: "Head of Administration and IT"
+    position: "CTO"
     startDate: "2022-03-01"
     summary: >-
       Own the company's production infrastructure end to end — architecture,
@@ -41,7 +41,7 @@ work:
       - "Designed and operate a Docker standalone cluster carrying the bulk of company workloads"
       - "Built a Kubernetes cluster for orchestrated workloads, deployed with ArgoCD"
       - "Run a Ceph cluster for distributed storage across bare metal"
-      - "Designed the internal network: WireGuard VPN and Bind9 DNS"
+      - "Designed the internal network: a NetBird overlay mesh and Bind9 DNS"
       - "Wrote the whole server estate as Ansible, so hosts are reproducible rather than hand-tuned"
       - "Designed and maintain the internal operations platform that replaced several external SaaS tools"
   - name: "open Skunkforce e.V."
@@ -77,7 +77,7 @@ skills:
   - name: "CI/CD"
     keywords: ["GitHub Actions", "ArgoCD", "Jenkins"]
   - name: "Storage and networking"
-    keywords: ["Ceph", "WireGuard", "Bind9", "HashiCorp Vault"]
+    keywords: ["Ceph", "NetBird", "Bind9", "HashiCorp Vault"]
   - name: "Programming"
     keywords: ["Python", "Go", "C", "C++", "TypeScript", "Bash"]
   - name: "Application stack"
@@ -96,7 +96,7 @@ projects:
     description: >-
       Full-stack platform that centralised company operations and replaced several
       external tools: internal messenger, time tracking, ticket system, accounting,
-      Docker registry frontend, DNS management, WireGuard management and hosting
+      Docker registry frontend, DNS management, VPN management and hosting
       orchestration. Angular frontend, FastAPI backend, MySQL and InfluxDB, Celery workers.
     keywords: ["Angular", "FastAPI", "Celery", "MySQL", "InfluxDB"]
     roles: ["Architect", "Maintainer"]
