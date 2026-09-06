@@ -6,8 +6,8 @@ basics:
   email: "philipp.lehmann@gruppe.ai"
   url: "https://philipptheserver.com"
   summary: >-
-    Infrastructure engineer running container-heavy production systems since 2022.
-    CTO at Nerd Force1 UG (AI-Gruppe), where I designed and operate a Docker cluster,
+    Infrastructure engineer running container-heavy production systems since 2022,
+    CTO at Nerd Force1 UG (AI-Gruppe) since September 2026. I designed and operate a Docker cluster,
     a Kubernetes cluster, a Ceph storage cluster and the internal network behind them,
     plus the full-stack operations platform that replaced most of the company's
     external tooling. Studying IT Security /
@@ -32,11 +32,20 @@ work:
     location: "Bochum, Germany"
     url: "https://nerd-force1.de"
     position: "CTO"
-    startDate: "2022-03-01"
+    startDate: "2026-09-06"
     summary: >-
-      Own the company's production infrastructure end to end — architecture,
-      deployment and day-2 operations — and lead the internal tooling that runs
-      on it. Part of the AI-Gruppe umbrella brand.
+      Technical leadership for the company's engineering and infrastructure.
+      Part of the AI-Gruppe umbrella brand.
+  - name: "Nerd Force1 UG"
+    location: "Bochum, Germany"
+    url: "https://nerd-force1.de"
+    position: "Head of Administration and IT"
+    startDate: "2022-03-01"
+    endDate: "2026-09-06"
+    summary: >-
+      Owned the company's production infrastructure end to end — architecture,
+      deployment and day-2 operations — and led the internal tooling that runs
+      on it.
     highlights:
       - "Designed and operate a Docker standalone cluster carrying the bulk of company workloads"
       - "Built a Kubernetes cluster for orchestrated workloads, deployed with ArgoCD"

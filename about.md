@@ -14,7 +14,7 @@ description: >-
   <li><span class="k">Name</span> <span>Philipp Lehmann</span></li>
   <li><span class="k">Handle</span> <span>PhilippTheServer</span></li>
   <li><span class="k">Based in</span> <span>Bochum, North Rhine-Westphalia, Germany</span></li>
-  <li><span class="k">Role</span> <span>CTO, Nerd Force1 UG (AI-Gruppe)</span></li>
+  <li><span class="k">Role</span> <span>CTO, Nerd Force1 UG (AI-Gruppe) — at Nerd Force1 since 2022</span></li>
   <li><span class="k">Studying</span> <span>B.Sc. IT Security / Information Engineering, Ruhr University Bochum</span></li>
   <li><span class="k">ORCID</span> <span><a href="https://orcid.org/0009-0002-3922-2471">0009-0002-3922-2471</a></span></li>
   <li><span class="k">Contact</span> <span><a href="mailto:philipp.lehmann@gruppe.ai">philipp.lehmann@gruppe.ai</a></span></li>
@@ -39,9 +39,9 @@ could recover from.
 
 ## Roles
 
-### CTO · Nerd Force1 UG
+### CTO · Nerd Force1 UG · since September 2026
 
-At Nerd Force1 since March 2022. It is part of the [AI-Gruppe](https://gruppe.ai)
+At Nerd Force1 since March 2022, as Head of Administration and IT until the move to CTO. It is part of the [AI-Gruppe](https://gruppe.ai)
 umbrella brand. I am responsible for the company's technology: the servers, the network,
 the platforms, and the internal tooling.
 

@@ -18,6 +18,7 @@ ARTICLES = %w[
   netbird-vpn
   keycloak
   atlas-agentic-ops
+  opentaberna
 ].freeze
 
 @failures = []
@@ -177,15 +178,36 @@ end
 
 # 8. Two facts I got wrong once, from sources that looked authoritative (issue #7).
 #
-#    The title came from the ORCID employment entry, which still reads "Head of
-#    Administration and IT". It is out of date; he is CTO. A dated, self-asserted record
-#    is good evidence and is not the person.
+#    He became CTO on 2026-09-06. Before that he was Head of Administration and IT at the
+#    same employer since 2022-03-01, which is what the ORCID record still lists — his
+#    previous title, not an error. Two work entries, because one entry carrying the new
+#    title and the old start date would claim he has been CTO since 2022.
+CTO_SINCE = "2026-09-06"
+
 if profile
   fail!("profile.json: jobTitle is #{profile['jobTitle'].inspect}, expected \"CTO\"") unless profile["jobTitle"] == "CTO"
 end
+
 if resume
-  position = resume.dig("work", 0, "position")
-  fail!("resume.json: work[0].position is #{position.inspect}, expected \"CTO\"") unless position == "CTO"
+  work = Array(resume["work"])
+  current = work.first
+
+  fail!("resume.json: work[0].position is #{current&.dig('position').inspect}, expected \"CTO\"") unless current&.dig("position") == "CTO"
+  unless current&.dig("startDate") == CTO_SINCE
+    fail!("resume.json: the CTO entry starts #{current&.dig('startDate').inspect}, expected #{CTO_SINCE.inspect} — the promotion date, not the date he joined")
+  end
+  fail!("resume.json: the current role must not carry an endDate") if current&.key?("endDate")
+
+  previous = work[1]
+  unless previous && previous["position"] == "Head of Administration and IT"
+    fail!("resume.json: work[1] must be the previous role at the same employer")
+  end
+  if previous && previous["endDate"] != CTO_SINCE
+    fail!("resume.json: the previous role must end when the CTO role starts (#{CTO_SINCE})")
+  end
+  if previous && previous["startDate"] != "2022-03-01"
+    fail!("resume.json: the previous role must start 2022-03-01, when he joined")
+  end
 end
 
 #    He administers Bind9 and NetBird, not a plain WireGuard deployment. NetBird is built

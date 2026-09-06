@@ -15,8 +15,10 @@ a lot of work that is completely fine. For infrastructure work — where the con
 would naturally paste is config, logs, topology, sometimes credentials — it deserves at
 least a decision rather than a default.
 
-That is the reason atlas exists: a self-hosted inference stack, an OpenAI-compatible API in
-front of it, and benchmarks to tell me whether the models are actually any good.
+That is the reason atlas exists: a self-hosted inference stack on a machine I own, an
+OpenAI-compatible API in front of it, benchmarks to tell me whether the models are actually
+any good, and a daemon that hands them real work. Every agent session I run — editor,
+terminal, CI — goes to that endpoint rather than out of the building.
 
 ## Why own the hardware
 
@@ -111,13 +113,30 @@ I would rather be told "I could not verify this" than be told a plausible falseh
 
 ## What it looks like in practice
 
-The workflow that has actually stuck: an agent gathers context and proposes, a human
-decides, a pipeline applies.
+The workflow that has actually stuck is narrower than "an agent that helps", and the
+narrowness is the point: **work is handed over as a GitHub issue, and comes back as a pull
+request.**
 
-The agent reads the logs, correlates the metrics, finds the relevant config, and produces
-a diff with a dry run attached. I read the dry run. If it is right, it goes through the
-normal review path. The time saved is in the gathering, which is most of the time, and
-none of the judgment has moved.
+A daemon watches for issues carrying a particular label. When one appears it drives a
+locally served model to do the work, and opens a pull request. I review the pull request
+the way I would review anyone's. If the issue was badly written, the result is bad, and
+that is informative rather than dangerous — nothing has been applied to anything.
+
+Two properties make this work, and neither is about the model.
+
+**The daemon is deterministic.** Which issue gets picked up, in what order, and what
+happens to it is ordinary code with ordinary tests. The model is called at one point
+inside a process whose shape does not depend on it. That is what makes the system
+debuggable: when something goes wrong, it is nearly always the issue or the harness, and
+both are things you can read.
+
+**The label is a contract.** Applying it is an explicit act by a person, so nothing is
+ever picked up because an agent decided it was in scope. Removing it takes the work back.
+It is a very small mechanism and it is the whole boundary.
+
+What this buys is not speed of typing. It is that a piece of work can be described once,
+handed over, and collected later as a diff — with the review step exactly where it would
+be for a human contributor, because it *is* the review step for a human contributor.
 
 That is a much less exciting story than autonomous operations, and it is the one that
 survives contact with production. The value is real and it is in the boring half.
