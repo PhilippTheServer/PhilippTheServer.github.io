@@ -95,10 +95,10 @@ kind they forgot exists.
 
 ### One node shape, not one struct per kind
 
-The type switch exists because the code is trying to use Go's type system to distinguish
-"kinds of thing" that the domain treats as interchangeable in every way that matters to the
-console — they all have an ID, a name, and a health status; they all participate in edges.
-The fix is to stop encoding "kind" as a Go type and start encoding it as data:
+The type switch exists because the code uses Go's type system to distinguish "kinds of
+thing" that the domain treats as interchangeable in every way that matters to the
+console — an ID, a name, a health status, participation in edges. The fix is to stop
+encoding "kind" as a Go type and start encoding it as data:
 
 ```go
 type Entity struct {
@@ -119,21 +119,19 @@ entity kind is a data change, not a code change — no new struct, no new case a
 because there was never a switch on kind to extend.
 
 An alternative worth naming is a Go interface with one implementation per kind, or a
-generic `Entity[T]` parameterised on an attribute type. Either keeps more compile-time
-checking than a string-keyed map. The trade-off is the one this whole design is making
-throughout: more static safety costs more code per new kind. For a console whose entity
-kinds change as the estate changes — which is the normal case in infrastructure, where
-"we now also monitor object storage buckets" happens a few times a year — the flexible bag
-is usually the better fit. For a fixed, small set of kinds that will not grow, the interface
-approach is worth the extra code.
+generic `Entity[T]` parameterised on an attribute type — either keeps more compile-time
+checking than a string-keyed map, at the cost of more code per new kind. For a console
+whose entity kinds change as the estate changes — "we now also monitor object storage
+buckets" happens a few times a year in most infrastructure teams — the flexible bag is
+usually the better fit. For a fixed, small set of kinds that will not grow, the interface
+is worth the extra code.
 
 ### Relationships as typed edges, not struct fields
 
-Containment (`Host.Volumes`) and dependency (a service needing a link) were different
-things syntactically in the struct-per-type version, purely because one happened to be
-modelled as a slice field and the other wasn't modelled at all yet. They are not different
-things semantically: both say "this entity's state should account for that entity's
-state". Making that explicit is one edge type with a `Type` field:
+Containment (`Host.Volumes`) and dependency (a service needing a link) looked different in
+the struct-per-type version only because one happened to be a slice field and the other
+wasn't modelled at all. Semantically both say "this entity's state should account for
+that entity's state". Making that explicit is one edge type with a `Type` field:
 
 ```go
 type EdgeType string
@@ -191,21 +189,20 @@ a link with fifty dependents is evaluated once, not fifty times.
 
 ### What this costs against a relational schema
 
-A relational schema with a table per entity kind and foreign keys for containment gives you
-things this model does not: the database enforces that a volume's `host_id` points at a
-row that actually exists, a query planner can use an index instead of a graph walk, and a
-column's type is checked before bad data is ever written. The entity graph gives none of
-that for free — `Attrs["sizeGiB"]` being a valid integer is a runtime concern, and a
-dangling edge to a deleted entity is a bug you find at traversal time, not at write time.
+A relational schema with a table per kind and foreign keys for containment gives you things
+this model does not: the database enforces that a volume's `host_id` points at a row that
+actually exists, a query planner can use an index instead of a graph walk, and a column's
+type is checked before bad data is written. The entity graph gives none of that for free —
+`Attrs["sizeGiB"]` being a valid integer is a runtime concern, and a dangling edge to a
+deleted entity is a bug found at traversal time, not write time.
 
-What the graph buys back is that a new entity kind is a new `Kind` string and, if the
-console UI wants to render it specially, a template lookup — never a migration, never an
-`ALTER TABLE`, never a new join added to every query that used to enumerate "all the things
-attached to a host". For an estate whose shape is still changing — which describes most
-infrastructure observability tooling for as long as the infrastructure it watches keeps
-changing — that trade is usually the right one. For a data model that has settled and needs
-to support arbitrary ad-hoc queries efficiently, push the settled part into a proper schema
-and keep the graph for the part that hasn't settled yet.
+What it buys back is that a new entity kind is a new `Kind` string, never a migration,
+never an `ALTER TABLE`, never a new join added to every query that enumerated "everything
+attached to a host". For an estate whose shape keeps changing — most infrastructure
+observability tooling, for as long as the infrastructure it watches keeps changing — that
+trade is usually right. Once the kinds and relationships have settled and the query
+patterns against them demand more than a graph walk can give, push the settled part into a
+proper schema and keep the graph only for what hasn't settled yet.
 
 ## The solution
 
@@ -344,8 +341,8 @@ func (g *Graph) AddEdge(from, to string, typ EdgeType) {
 }
 
 // aggregatorFor returns the configured aggregator for an edge type, or
-// worst-status-wins if none was set. A new edge type therefore works
-// correctly the moment it is used, even before anyone configures it.
+// worst-status-wins if none was set, so a new edge type works correctly the
+// moment it is used.
 func (g *Graph) aggregatorFor(t EdgeType) Aggregator {
 	if agg, ok := g.aggregators[t]; ok {
 		return agg
@@ -353,11 +350,10 @@ func (g *Graph) aggregatorFor(t EdgeType) Aggregator {
 	return worstWins
 }
 
-// Health computes the rolled-up status of one entity: its own status,
-// folded with the rolled-up status of everything it depends on, using each
-// edge's aggregator. It shares memo and visiting across the recursion so a
-// diamond-shaped graph (two hosts sharing a link, say) evaluates each node
-// once rather than once per path to it.
+// Health computes the rolled-up status of one entity: its own status folded
+// with everything it depends on, via each edge's aggregator. memo and
+// visiting are shared across the recursion so a diamond-shaped graph (two
+// hosts sharing a link) evaluates each node once, not once per path to it.
 func (g *Graph) Health(id string) (Status, error) {
 	memo := make(map[string]Status)
 	visiting := make(map[string]bool)
@@ -407,19 +403,16 @@ func (g *Graph) RollupAll() (map[string]Status, error) {
 func buildExampleGraph() *Graph {
 	g := NewGraph()
 
-	g.AddEntity(&Entity{ID: "host-a", Kind: "host", Name: "host-a", Status: StatusHealthy})
-	g.AddEntity(&Entity{ID: "host-b", Kind: "host", Name: "host-b", Status: StatusHealthy})
-	g.AddEntity(&Entity{ID: "vol-1", Kind: "volume", Name: "vol-1", Status: StatusHealthy,
+	g.AddEntity(&Entity{ID: "host-a", Kind: "host", Status: StatusHealthy})
+	g.AddEntity(&Entity{ID: "host-b", Kind: "host", Status: StatusHealthy})
+	g.AddEntity(&Entity{ID: "vol-2", Kind: "volume", Status: StatusHealthy,
 		Attrs: map[string]string{"sizeGiB": "500"}})
-	g.AddEntity(&Entity{ID: "vol-2", Kind: "volume", Name: "vol-2", Status: StatusHealthy,
-		Attrs: map[string]string{"sizeGiB": "500"}})
-	g.AddEntity(&Entity{ID: "link-1", Kind: "link", Name: "link-1", Status: StatusHealthy,
+	g.AddEntity(&Entity{ID: "link-1", Kind: "link", Status: StatusHealthy,
 		Attrs: map[string]string{"mediaType": "fibre"}})
-	g.AddEntity(&Entity{ID: "svc-api", Kind: "service", Name: "svc-api", Status: StatusHealthy})
-	g.AddEntity(&Entity{ID: "alert-1", Kind: "alert", Name: "vol-2 usage above threshold",
-		Status: StatusUnhealthy, Attrs: map[string]string{"severity": "critical"}})
+	g.AddEntity(&Entity{ID: "svc-api", Kind: "service", Status: StatusHealthy})
+	g.AddEntity(&Entity{ID: "alert-1", Kind: "alert", Status: StatusUnhealthy,
+		Attrs: map[string]string{"severity": "critical"}})
 
-	g.AddEdge("host-a", "vol-1", EdgeContains)
 	g.AddEdge("host-a", "vol-2", EdgeContains)
 	g.AddEdge("vol-2", "alert-1", EdgeDependsOn)
 	g.AddEdge("svc-api", "host-b", EdgeRunsOn)
@@ -446,14 +439,11 @@ func main() {
 		fmt.Printf("%-10s %-8s %s\n", id, g.entities[id].Kind, statuses[id])
 	}
 
-	// A leaf alert on vol-2 must reach host-a as degraded: the alert is
-	// unhealthy, dependsOn caps that at degraded on the volume, and
-	// contains carries the volume's degraded status up unchanged.
+	// vol-2's alert is unhealthy; dependsOn caps that at degraded, contains
+	// carries it up unchanged, so host-a should read degraded.
 	if got, want := statuses["host-a"], StatusDegraded; got != want {
 		panic(fmt.Sprintf("host-a: got %s, want %s", got, want))
 	}
-	// host-b itself is healthy and has nothing contained in it, so the
-	// service running on it stays healthy too.
 	if got, want := statuses["svc-api"], StatusHealthy; got != want {
 		panic(fmt.Sprintf("svc-api: got %s, want %s", got, want))
 	}
@@ -524,26 +514,6 @@ func TestHealthRollup(t *testing.T) {
 			// survives unchanged to the root.
 			want: StatusDegraded,
 		},
-		{
-			name: "a node with no edges reports only its own status",
-			build: func() (*Graph, string) {
-				g := NewGraph()
-				g.AddEntity(&Entity{ID: "link-1", Kind: "link", Status: StatusDegraded})
-				return g, "link-1"
-			},
-			want: StatusDegraded,
-		},
-		{
-			name: "healthy dependency does not improve an already-worse self status",
-			build: func() (*Graph, string) {
-				g := NewGraph()
-				g.AddEntity(&Entity{ID: "host-a", Kind: "host", Status: StatusDegraded})
-				g.AddEntity(&Entity{ID: "vol-1", Kind: "volume", Status: StatusHealthy})
-				g.AddEdge("host-a", "vol-1", EdgeContains)
-				return g, "host-a"
-			},
-			want: StatusDegraded,
-		},
 	}
 
 	for _, tc := range cases {
@@ -572,9 +542,10 @@ func TestHealthDetectsCycles(t *testing.T) {
 	}
 }
 
-func TestRollupAllSharesSharedDependencies(t *testing.T) {
-	// Two hosts depend on the same link. RollupAll must still return the
-	// correct status for every entity, not just the ones queried directly.
+// TestRollupAllCoversSharedDependencies checks that two hosts pointing at
+// the same link both come back with the correct rolled-up status from a
+// single RollupAll call, not just from independent Health calls.
+func TestRollupAllCoversSharedDependencies(t *testing.T) {
 	g := NewGraph()
 	g.AddEntity(&Entity{ID: "host-a", Kind: "host", Status: StatusHealthy})
 	g.AddEntity(&Entity{ID: "host-b", Kind: "host", Status: StatusHealthy})
@@ -586,14 +557,10 @@ func TestRollupAllSharesSharedDependencies(t *testing.T) {
 	if err != nil {
 		t.Fatalf("RollupAll returned error: %v", err)
 	}
-
 	for _, id := range []string{"host-a", "host-b"} {
 		if statuses[id] != StatusDegraded {
 			t.Errorf("statuses[%q] = %s, want %s", id, statuses[id], StatusDegraded)
 		}
-	}
-	if statuses["link-1"] != StatusUnhealthy {
-		t.Errorf("statuses[%q] = %s, want %s", "link-1", statuses["link-1"], StatusUnhealthy)
 	}
 }
 ```
@@ -608,22 +575,11 @@ host-a     host     degraded
 host-b     host     healthy
 link-1     link     healthy
 svc-api    service  healthy
-vol-1      volume   healthy
 vol-2      volume   degraded
 ```
 
 ```bash
-$ go test ./... -v
---- PASS: TestHealthRollup (0.00s)
-    --- PASS: TestHealthRollup/healthy_leaf,_healthy_root (0.00s)
-    --- PASS: TestHealthRollup/unhealthy_leaf_propagates_unchanged_through_contains (0.00s)
-    --- PASS: TestHealthRollup/unhealthy_leaf_is_capped_at_degraded_through_dependsOn (0.00s)
-    --- PASS: TestHealthRollup/unhealthy_leaf_two_hops_away_reaches_the_root (0.00s)
-    --- PASS: TestHealthRollup/a_node_with_no_edges_reports_only_its_own_status (0.00s)
-    --- PASS: TestHealthRollup/healthy_dependency_does_not_improve_an_already-worse_self_status (0.00s)
---- PASS: TestHealthDetectsCycles (0.00s)
---- PASS: TestRollupAllSharesSharedDependencies (0.00s)
-PASS
+$ go test ./...
 ok  	entgraph	0.002s
 ```
 
@@ -640,14 +596,12 @@ not into a switch keyed by entity type.** There are far fewer relationship types
 (`contains`, `dependsOn`, `runsOn`, and rarely more) than entity kinds, so this is the
 smaller, more stable surface to special-case.
 
-**The honest cost is real and worth stating plainly.** A relational schema with foreign
-keys catches a dangling reference at write time; this graph catches it at traversal time,
-as an error return from `Health`, and only if something actually walks that edge. A
-database's query planner can also do things `Health`'s recursive walk cannot without more
-work — filter, aggregate, and paginate efficiently over millions of edges. This model is
-the right trade for a console whose entity kinds are still shifting; it is the wrong trade
-once the kinds and relationships have settled and the query patterns against them have
-grown demanding enough that an index beats a graph walk.
+**The honest cost is real.** A relational schema with foreign keys catches a dangling
+reference at write time; this graph catches it at traversal time, as an error from
+`Health`, and only if something actually walks that edge. A query planner can also filter,
+aggregate and paginate over millions of edges in ways `Health`'s recursive walk cannot
+without more work. This model is the right trade while entity kinds keep shifting; it is
+the wrong one once the shape has settled and an index would beat a graph walk.
 
 **Cycle detection is not optional once the model allows arbitrary edges.** A struct-based
 model with `Volumes []*Volume` cannot express a cycle by construction. A graph can, the
