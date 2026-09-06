@@ -1,0 +1,22 @@
+---
+layout: null
+permalink: /humans.txt
+sitemap: false
+---
+/* TEAM */
+  Infrastructure engineer: Philipp Lehmann (PhilippTheServer)
+  Contact: philipp.lehmann [at] gruppe.ai
+  ORCID: {{ site.author.orcid }}
+  From: Bochum, Germany
+  Site: {{ site.url }}
+
+/* THANKS */
+  Everyone at AI-Gruppe and open Skunkforce e.V. who lets me take things
+  apart, and everyone who noticed before I did.
+
+/* SITE */
+  Standards: HTML5, CSS3, schema.org JSON-LD, JSON Resume
+  Components: Jekyll, jekyll-feed, jekyll-sitemap
+  Hosting: GitHub Pages
+  Fonts: system stack — no webfonts, no third-party requests
+  Software: Neovim, tmux, Docker, Ansible, and a lot of terminals

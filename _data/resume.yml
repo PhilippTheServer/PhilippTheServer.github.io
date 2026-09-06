@@ -1,0 +1,135 @@
+"$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json"
+basics:
+  name: "Philipp Lehmann"
+  label: "Infrastructure Engineer"
+  image: "https://avatars.githubusercontent.com/u/111761181?v=4"
+  email: "philipp.lehmann@gruppe.ai"
+  url: "https://philipptheserver.com"
+  summary: >-
+    Infrastructure engineer running container-heavy production systems since 2022.
+    Head of Administration and IT at Nerd Force1 UG (AI-Gruppe), where I designed
+    and operate a Docker cluster, a Kubernetes cluster, a Ceph storage cluster and
+    the internal network behind them, plus the full-stack operations platform that
+    replaced most of the company's external tooling. Studying IT Security /
+    Information Engineering at Ruhr University Bochum.
+  location:
+    city: "Bochum"
+    region: "North Rhine-Westphalia"
+    countryCode: "DE"
+  profiles:
+    - network: "GitHub"
+      username: "PhilippTheServer"
+      url: "https://github.com/PhilippTheServer"
+    - network: "ORCID"
+      username: "0009-0002-3922-2471"
+      url: "https://orcid.org/0009-0002-3922-2471"
+    - network: "LinkedIn"
+      username: "philipp-lehmann-17995521b"
+      url: "https://www.linkedin.com/in/philipp-lehmann-17995521b/"
+
+work:
+  - name: "Nerd Force1 UG"
+    location: "Bochum, Germany"
+    url: "https://nerd-force1.de"
+    position: "Head of Administration and IT"
+    startDate: "2022-03-01"
+    summary: >-
+      Own the company's production infrastructure end to end — architecture,
+      deployment and day-2 operations — and lead the internal tooling that runs
+      on it. Part of the AI-Gruppe umbrella brand.
+    highlights:
+      - "Designed and operate a Docker standalone cluster carrying the bulk of company workloads"
+      - "Built a Kubernetes cluster for orchestrated workloads, deployed with ArgoCD"
+      - "Run a Ceph cluster for distributed storage across bare metal"
+      - "Designed the internal network: WireGuard VPN and Bind9 DNS"
+      - "Wrote the whole server estate as Ansible, so hosts are reproducible rather than hand-tuned"
+      - "Designed and maintain the internal operations platform that replaced several external SaaS tools"
+  - name: "open Skunkforce e.V."
+    location: "Bochum, Germany"
+    url: "https://github.com/skunkforce"
+    position: "Executive Office"
+    startDate: "2025-01-01"
+    summary: >-
+      Lead a small developer team and coordinate the association's open-source
+      work. Co-organise the emBO++ and KiCon conferences held in Bochum each year.
+
+education:
+  - institution: "Ruhr University Bochum"
+    url: "https://www.ruhr-uni-bochum.de/"
+    area: "IT Security / Information Engineering"
+    studyType: "Bachelor of Science"
+    startDate: "2021-10-01"
+    score: ""
+    courses:
+      - "Implementation of cryptographic schemes"
+      - "Software security"
+      - "Operating systems"
+      - "System theory"
+      - "Electrical engineering"
+
+skills:
+  - name: "Container orchestration"
+    level: "Advanced"
+    keywords: ["Docker", "Kubernetes", "Portainer", "Harbor"]
+  - name: "Infrastructure as code"
+    level: "Advanced"
+    keywords: ["Ansible", "Terraform", "Kubernetes manifests", "Kustomize"]
+  - name: "CI/CD"
+    keywords: ["GitHub Actions", "ArgoCD", "Jenkins"]
+  - name: "Storage and networking"
+    keywords: ["Ceph", "WireGuard", "Bind9", "HashiCorp Vault"]
+  - name: "Programming"
+    keywords: ["Python", "Go", "C", "C++", "TypeScript", "Bash"]
+  - name: "Application stack"
+    keywords: ["FastAPI", "Celery", "Angular", "MySQL", "InfluxDB"]
+  - name: "Systems"
+    keywords: ["Linux", "Debian", "Arch Linux"]
+
+languages:
+  - language: "German"
+    fluency: "Native speaker"
+  - language: "English"
+    fluency: "Professional working proficiency"
+
+projects:
+  - name: "Internal Operations Platform"
+    description: >-
+      Full-stack platform that centralised company operations and replaced several
+      external tools: internal messenger, time tracking, ticket system, accounting,
+      Docker registry frontend, DNS management, WireGuard management and hosting
+      orchestration. Angular frontend, FastAPI backend, MySQL and InfluxDB, Celery workers.
+    keywords: ["Angular", "FastAPI", "Celery", "MySQL", "InfluxDB"]
+    roles: ["Architect", "Maintainer"]
+  - name: "atlas"
+    description: >-
+      Self-hosted model-serving stack — an OpenAI-compatible API, repeatable
+      capability benchmarks for the locally served models, and a metrics poller.
+    url: "https://github.com/PhilippTheServer/atlas"
+    keywords: ["Python", "FastAPI", "llama-swap", "uv"]
+    roles: ["Author"]
+  - name: "neteye"
+    description: >-
+      Distributed network monitoring in Go: an agent on every node, a central
+      aggregator, and an Angular frontend.
+    url: "https://github.com/PhilippTheServer/neteye-center"
+    keywords: ["Go", "Angular", "Monitoring"]
+    roles: ["Author"]
+  - name: "Server-Administration (Ansible)"
+    description: "The company's server infrastructure as code."
+    url: "https://github.com/PhilippTheServer/Server-Administration_ansible"
+    keywords: ["Ansible", "Linux"]
+    roles: ["Author"]
+  - name: "energy-data-api"
+    description: >-
+      FastAPI service over the German SMARD electricity market data, with an
+      Angular frontend.
+    url: "https://github.com/PhilippTheServer/energy-data-api"
+    keywords: ["Python", "FastAPI", "Angular"]
+    roles: ["Author"]
+  - name: "create_project_cli-tool"
+    description: >-
+      CLI that scaffolds a FastAPI or Angular repository, for people too lazy to
+      lay out the same directory tree twice.
+    url: "https://github.com/PhilippTheServer/create_project_cli-tool"
+    keywords: ["Python", "CLI"]
+    roles: ["Author"]
