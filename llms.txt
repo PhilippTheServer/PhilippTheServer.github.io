@@ -32,7 +32,7 @@ Container orchestration: Docker (daily driver), Kubernetes, Portainer, Harbor. I
 
 - [Home]({{ '/' | absolute_url }}): short introduction, what he runs, selected work
 - [About]({{ '/about/' | absolute_url }}): full background, roles with dates, education, complete stack
-- [Projects]({{ '/projects/' | absolute_url }}): public projects grouped by infrastructure, self-hosted AI, monitoring, services and tools, and notes
+- [Projects]({{ '/projects/' | absolute_url }}): public projects grouped by infrastructure, self-hosted AI, services and tools, and notes
 - [Full text of every page]({{ '/llms-full.txt' | absolute_url }}): the whole site in one file
 - [profile.json]({{ '/profile.json' | absolute_url }}): schema.org Person JSON-LD, identical to the JSON-LD embedded in every page's head
 - [resume.json]({{ '/resume.json' | absolute_url }}): JSON Resume v1 — roles, education, skills, projects

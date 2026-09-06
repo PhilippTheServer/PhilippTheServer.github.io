@@ -6,8 +6,8 @@ permalink: /projects/
 nav_order: 3
 description: >-
   Projects by Philipp Lehmann — infrastructure as code, self-hosted model serving,
-  network monitoring in Go, FastAPI services and Angular frontends, plus the
-  lecture notes and dotfiles that come with being a student.
+  FastAPI services and Angular frontends, plus the lecture notes and dotfiles that
+  come with being a student.
 ---
 
 Everything below is public on [GitHub](https://github.com/PhilippTheServer). The
@@ -80,27 +80,6 @@ but is not open source.
     <p>A self-hosted agentic coding system, built to find out how much of the workflow
     can run on hardware I own.</p>
     <div class="tags"><span>Python</span><span>Agents</span></div>
-  </li>
-</ul>
-
-## Monitoring
-
-<ul class="projects">
-  <li class="project">
-    <h3><a href="https://github.com/PhilippTheServer/neteye-agent">neteye-agent</a></h3>
-    <p>Network agent in Go, deployed on every node, collecting what the node can see
-    that the centre cannot.</p>
-    <div class="tags"><span>Go</span></div>
-  </li>
-  <li class="project">
-    <h3><a href="https://github.com/PhilippTheServer/neteye-center">neteye-center</a></h3>
-    <p>The aggregator the agents report to.</p>
-    <div class="tags"><span>Go</span></div>
-  </li>
-  <li class="project">
-    <h3><a href="https://github.com/PhilippTheServer/neteye-frontend">neteye-frontend</a></h3>
-    <p>Angular frontend for the collected network metrics.</p>
-    <div class="tags"><span>TypeScript</span><span>Angular</span></div>
   </li>
 </ul>
 

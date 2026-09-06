@@ -62,12 +62,6 @@ not count as running. There is no configuration living only in someone's shell h
     <div class="tags"><span>Python</span><span>FastAPI</span><span>llama-swap</span><span>uv</span></div>
   </li>
   <li class="project">
-    <h3><a href="https://github.com/PhilippTheServer/neteye-center">neteye</a></h3>
-    <p>Distributed network monitoring in Go: an agent on every node, a central
-    aggregator, and an Angular frontend to look at what they found.</p>
-    <div class="tags"><span>Go</span><span>Angular</span><span>Monitoring</span></div>
-  </li>
-  <li class="project">
     <h3><a href="https://github.com/PhilippTheServer/Server-Administration_ansible">Server-Administration</a></h3>
     <p>The company's server infrastructure as code. The reason a rebuild is a pipeline
     run rather than an afternoon.</p>

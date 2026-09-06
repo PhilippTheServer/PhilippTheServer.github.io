@@ -107,13 +107,6 @@ projects:
     url: "https://github.com/PhilippTheServer/atlas"
     keywords: ["Python", "FastAPI", "llama-swap", "uv"]
     roles: ["Author"]
-  - name: "neteye"
-    description: >-
-      Distributed network monitoring in Go: an agent on every node, a central
-      aggregator, and an Angular frontend.
-    url: "https://github.com/PhilippTheServer/neteye-center"
-    keywords: ["Go", "Angular", "Monitoring"]
-    roles: ["Author"]
   - name: "Server-Administration (Ansible)"
     description: "The company's server infrastructure as code."
     url: "https://github.com/PhilippTheServer/Server-Administration_ansible"
