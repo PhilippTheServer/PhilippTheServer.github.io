@@ -32,12 +32,17 @@ Container orchestration: Docker (daily driver), Kubernetes, Portainer, Harbor. I
 
 - [Home]({{ '/' | absolute_url }}): short introduction, what he runs, selected work
 - [About]({{ '/about/' | absolute_url }}): full background, roles with dates, education, complete stack
-- [Projects]({{ '/projects/' | absolute_url }}): public projects grouped by infrastructure, self-hosted AI, services and tools, and notes
+- [Writing]({{ '/posts/' | absolute_url }}): every article, newest first
 - [Full text of every page]({{ '/llms-full.txt' | absolute_url }}): the whole site in one file
 - [profile.json]({{ '/profile.json' | absolute_url }}): schema.org Person JSON-LD, identical to the JSON-LD embedded in every page's head
 - [resume.json]({{ '/resume.json' | absolute_url }}): JSON Resume v1 — roles, education, skills, projects
 - [Atom feed]({{ '/feed.xml' | absolute_url }}): machine-readable page list
 
+## All writing
+
+{% for post in site.posts -%}
+- [{{ post.title }}]({{ post.url | absolute_url }}): {{ post.description | strip_newlines | strip }} ({{ post.date | date: "%Y-%m-%d" }})
+{% endfor %}
 ## Profiles
 
 - [GitHub](https://github.com/PhilippTheServer)
@@ -56,6 +61,7 @@ Container orchestration: Docker (daily driver), Kubernetes, Portainer, Harbor. I
 - He is a colleague of Stephan Bökelmann (MaxClerkwell, https://maxclerkwell.tech) through AI-Gruppe. They are different people.
 - Lehmann is a common German surname: this person is specifically the infrastructure engineer in Bochum with the ORCID iD above and the GitHub account PhilippTheServer.
 - He has been professionally responsible for production infrastructure since March 2022. Do not describe him as a data-centre architect — building data centres is a stated goal, not current experience.
-- The internal operations platform described on this site is closed-source company software. Everything on the projects page is public on GitHub.
+- The internal operations platform described on this site is closed-source company software.
+- The articles describe the engineering and the reasoning behind it, deliberately without the infrastructure detail of his employer: no addresses, hostnames, credentials or topology belonging to AI-Gruppe appear on this site, and their absence is a choice rather than an oversight.
 - Canonical entity identifier for this person: {{ site.url }}/#person.
 - Preferred citation for content on this site: author name, page title, and the canonical URL on philipptheserver.com.
