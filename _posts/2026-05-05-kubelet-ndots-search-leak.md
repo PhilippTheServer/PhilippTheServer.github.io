@@ -62,10 +62,17 @@ search domain was thinking about.
 
 ## Working through it
 
-### Lower ndots, but know what it costs
+### Lower ndots, but be precise about what it actually protects
 
-Setting `ndots` lower for a specific workload stops the search list from being
-consulted for names that already look sufficiently qualified:
+It is tempting to read `ndots` as an on/off switch for the search list. It is not one.
+`ndots` only decides which candidate is tried *first*. With `ndots:1`, a name needs
+just one dot to be tried as the absolute name before anything from the search list is
+appended. With the default `ndots:5`, four dots or fewer means the search list is tried
+first instead. Either way, trying the first candidate is not the end of the story: if it
+does not come back with a usable, positive answer, the resolver falls through and tries
+the rest of the list. The absolute name still gets its turn under `ndots:5` if every
+search-suffixed attempt fails; the search list still gets its turn under `ndots:1` if the
+absolute attempt fails.
 
 ```yaml
 dnsConfig:
@@ -74,15 +81,24 @@ dnsConfig:
       value: "1"
 ```
 
-With `ndots:1`, a name needs only one dot to be tried as-is first. This closes the leak
-for anything resembling `db.example.com`. It also breaks the convenience that made
-`ndots:5` the default in the first place: a bare service name like `redis` (0 dots)
-no longer gets the search suffix applied before being tried absolutely, and an absolute
-lookup for a bare `redis` will simply fail. This only makes sense either for workloads
-that talk mostly to the outside world and rarely if ever to other in-cluster services by
-short name, or combined with switching internal lookups to fully-qualified names too.
-It's a workload-level decision, not something to apply cluster-wide without checking
-what depends on the default.
+That fallthrough is exactly why this fix only protects one of the two situations that
+look identical from the outside. For an external name that currently has a real, working
+answer, `ndots:1` means the absolute query is tried first, it succeeds immediately, and
+the search list — wildcard included — is never consulted at all. That is a genuine,
+verifiable fix, and it is the case most people picture when they hear about this leak: an
+ordinary hostname getting silently rerouted. For a name that does *not* currently have a
+working answer — mistyped, not yet provisioned, or simply retired — the absolute attempt
+fails to produce anything usable, and the resolver falls through to the search list
+exactly as it would under the default. Lowering `ndots` does not protect that case at
+all, and the lab below demonstrates both sides of that split rather than asserting it.
+
+`ndots:1` also breaks the convenience that made `ndots:5` the default in the first
+place: a bare service name like `redis` (0 dots) no longer gets the search suffix
+applied before being tried absolutely, and an absolute lookup for a bare `redis` will
+simply fail. This only makes sense either for workloads that talk mostly to the outside
+world and rarely if ever to other in-cluster services by short name, or combined with
+switching internal lookups to fully-qualified names too. It's a workload-level decision,
+not something to apply cluster-wide without checking what depends on the default.
 
 ### Use a trailing dot for names you control
 
@@ -154,7 +170,12 @@ kubectl rollout status deployment coredns -n kube-system
 ```
 {% endraw %}
 
-The broken pod, demonstrating the leak:
+The broken pod, demonstrating the leak. This uses `debian:12-slim` rather than a
+smaller image deliberately: `getent hosts` is the command that actually exercises
+glibc's resolver — search list, `ndots`, and all — the same machinery any normal
+application relies on through `getaddrinfo()`. BusyBox's `nslookup` is a much more
+minimal tool that skips search-list expansion entirely, and BusyBox has no `getent` at
+all, so it cannot demonstrate this mechanism regardless of which command you reach for.
 
 ```yaml
 # pod-leak.yaml
@@ -169,7 +190,7 @@ spec:
       - internal.example.net
   containers:
     - name: shell
-      image: busybox:1.36
+      image: debian:12-slim
       command: ["sleep", "3600"]
 ```
 
@@ -180,11 +201,14 @@ kubectl exec dns-leak -- getent hosts db.example.com
 # 203.0.113.50   db.example.com.internal.example.net
 ```
 
-`db.example.com` was never a real name anywhere. It resolved anyway, via
-`internal.example.net`'s wildcard, because the search-list suffix was tried before the
-absolute name — which, in this lab, would have correctly returned nothing.
+`db.example.com` was never a real name anywhere — `example.com` itself is a real,
+IANA-reserved domain, but this subdomain has no record on it. Queried on its own it
+comes back with nothing usable. Here it instead resolved via `internal.example.net`'s
+wildcard, because with the default `ndots:5` and only two dots in the name, every
+search-list suffix is tried before the absolute name ever gets a turn.
 
-Fix one: lower `ndots` for this workload.
+Fix one: lower `ndots` for this workload, and see exactly which of the two situations
+from the previous section it actually covers.
 
 ```yaml
 # pod-ndots1.yaml
@@ -202,25 +226,47 @@ spec:
         value: "1"
   containers:
     - name: shell
-      image: busybox:1.36
+      image: debian:12-slim
       command: ["sleep", "3600"]
 ```
 
 ```bash
 kubectl apply -f pod-ndots1.yaml
 kubectl wait --for=condition=Ready pod/dns-ndots1 --timeout=60s
+
+# A real external name with a genuine, currently-working answer: the absolute
+# query is tried first, it succeeds outright, and the search list is never consulted.
+kubectl exec dns-ndots1 -- getent ahostsv4 one.one.one.one
+# 1.1.1.1         STREAM one.one.one.one
+# 1.1.1.1         DGRAM
+# 1.1.1.1         RAW
+# (Cloudflare publishes this name against two addresses; which one lists first
+# can vary between runs — what matters is that 203.0.113.50 never appears here.)
+
+# The same fictional name as before: the absolute query is still tried first, but it
+# comes back with nothing usable, so the resolver falls through to the search list
+# anyway — and the wildcard is still there to answer it.
 kubectl exec dns-ndots1 -- getent hosts db.example.com
-# (no output, exit status 2 - NXDOMAIN, correctly not resolved)
+# 203.0.113.50   db.example.com.internal.example.net
 ```
+
+Lowering `ndots` protected the name that already worked, and did nothing at all for the
+name that did not — which is precisely the one this whole failure mode is about. A fix
+that only works when nothing was actually wrong is not the fix to reach for here.
 
 Fix two: a trailing dot, without touching pod DNS config at all.
 
 ```bash
 kubectl exec dns-leak -- getent hosts db.example.com.
-# (no output, exit status 2 - NXDOMAIN, correctly not resolved)
+# (no output, exit status 2 - not found, correctly not resolved)
 ```
 
-Both fixes stop the wildcard from being consulted; which one is appropriate depends on
+Unlike lowering `ndots`, the trailing dot protects both cases, because it removes the
+search list from consideration entirely for that one lookup rather than merely
+reordering when it gets consulted — there is no fallthrough left for a missing answer to
+fall through to.
+
+The two fixes are not equally reliable; which one is appropriate depends on
 whether you control the pod's DNS configuration or only the application's own hostname
 strings.
 

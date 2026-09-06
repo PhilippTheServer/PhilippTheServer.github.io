@@ -174,10 +174,12 @@ vault write auth/jwt/role/myapp-role \
   policies="myapp-policy" \
   ttl="15m"
 
-vault secrets enable -path=secret kv-v2
-
 vault kv put secret/myapp/config api_key="example-not-a-real-secret"
 ```
+
+Dev mode already mounts a `kv-v2` secrets engine at `secret/` on startup, which is why
+there is no `vault secrets enable` step here — running one against a fresh dev server
+fails with "path is already in use". A non-dev Vault needs that step; this lab does not.
 
 ### Prove it works offline, before ESO enters the picture
 
@@ -214,6 +216,20 @@ metadata:
   namespace: default
 ```
 
+Find the address a pod inside `kind` can actually reach the Vault container at. On
+Docker Desktop, `host.docker.internal` resolves to the host and would work directly; on
+native Linux, it resolves to nothing — pods reach the host through the `kind` Docker
+network's own gateway address instead, since Vault's published port is bound to every
+interface on the host, gateway included:
+
+{% raw %}
+```bash
+VAULT_FROM_POD=$(docker network inspect kind --format '{{json .IPAM.Config}}' \
+  | python3 -c "import json,sys; print([c['Gateway'] for c in json.load(sys.stdin) if '.' in c['Gateway']][0])")
+echo "$VAULT_FROM_POD"   # e.g. 172.22.0.1 — substitute this into secret-store.yaml below
+```
+{% endraw %}
+
 ```yaml
 # secret-store.yaml
 apiVersion: external-secrets.io/v1beta1
@@ -224,7 +240,7 @@ metadata:
 spec:
   provider:
     vault:
-      server: "http://host.docker.internal:8200"
+      server: "http://172.22.0.1:8200"   # the address printed above, not host.docker.internal
       path: secret
       version: v2
       auth:
@@ -259,10 +275,10 @@ spec:
         property: api_key
 ```
 
-`server` above uses `host.docker.internal` so a pod inside `kind` can reach the Vault
-container on the Docker host; in a real isolated topology this would instead be whatever
-address Vault is reachable at from the cluster's egress path, if any exists at all — the
-technique works even if that address only accepts the JWT login and nothing else.
+`server` above is the lab's stand-in for "wherever Vault is reachable from the cluster's
+egress path, if anywhere at all" — in a real isolated topology this would be whatever
+narrow, JWT-login-only path exists, not a full network route. The technique works
+either way, because it never depends on Vault being able to reach back.
 
 ```bash
 kubectl apply -f service-account.yaml -f secret-store.yaml -f external-secret.yaml

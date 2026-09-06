@@ -115,8 +115,65 @@ large number of files, then times pod startup twice under each `fsGroupChangePol
 so the comparison that matters — the *second* mount of the same, already-correctly-owned
 volume — is something you actually measure rather than take on faith.
 
+The seed step below uses a plain shell loop with `:` output redirection rather than
+`xargs`/`touch`, deliberately: forking a new `touch` process per file costs far more
+than the filesystem operation itself and would make the seed step, not the chown, the
+slow part. Three million files is also a deliberately large number — on fast local
+storage a recursive chown of a few hundred thousand files finishes in well under a
+second, too fast to see the effect this article is about at all.
+
+One more thing has to be deliberate: kind's default `standard` StorageClass provisions
+`hostPath`-backed volumes, and the `hostPath` volume plugin is explicitly excluded from
+kubelet's fsGroup ownership management — it never chowns a `hostPath` volume at all, no
+matter what `fsGroupChangePolicy` says. Using it here would silently prove nothing. The
+demonstration needs a volume type kubelet actually manages ownership for, which is what
+most real CSI-backed storage is, so this uses Kubernetes' built-in `local` PersistentVolume
+type instead — a directory on the node, bound the same way any statically-provisioned
+storage is.
+
 ```bash
 kind create cluster --name fsgroup-demo
+```
+
+Create the directory the local volume will use, and a StorageClass with
+`volumeBindingMode: WaitForFirstConsumer`, which `local` volumes require so the PVC binds
+only once a pod scheduling decision has already fixed which node it needs to be on:
+
+```bash
+docker exec fsgroup-demo-control-plane mkdir -p /mnt/fsgroup-demo-data
+```
+
+```yaml
+# storageclass.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-fsgroup-demo
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+```
+
+```yaml
+# pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: fsgroup-data-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes: ["ReadWriteOnce"]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-fsgroup-demo
+  local:
+    path: /mnt/fsgroup-demo-data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values: ["fsgroup-demo-control-plane"]
 ```
 
 ```yaml
@@ -127,10 +184,10 @@ metadata:
   name: fsgroup-data
 spec:
   accessModes: ["ReadWriteOnce"]
-  storageClassName: standard
+  storageClassName: local-fsgroup-demo
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
 ```
 
 ```yaml
@@ -149,7 +206,7 @@ spec:
           command:
             - sh
             - -c
-            - "seq 1 200000 | xargs -P4 -I{} touch /data/file-{} && echo done"
+            - "i=1; while [ $i -le 3000000 ]; do : > /data/file-$i; i=$((i+1)); done; echo done"
           volumeMounts:
             - name: data
               mountPath: /data
@@ -158,6 +215,12 @@ spec:
           persistentVolumeClaim:
             claimName: fsgroup-data
 ```
+
+The two pods below use different `fsGroup` values on purpose. Both pods share the same
+volume in this walkthrough, run one after the other, so if they asked for the same
+`fsGroup` the second pod's "first" mount would already find the root correctly owned by
+the first pod's chown and look fast for the wrong reason. Different groups keep the two
+comparisons honest and independent of run order.
 
 ```yaml
 # pod-always.yaml
@@ -190,7 +253,7 @@ metadata:
   name: fsgroup-onrootmismatch
 spec:
   securityContext:
-    fsGroup: 2000
+    fsGroup: 3000
     fsGroupChangePolicy: OnRootMismatch
   containers:
     - name: app
@@ -208,9 +271,11 @@ spec:
 Seed the volume once, then bring each pod up twice, timing every start:
 
 ```bash
+kubectl apply -f storageclass.yaml
+kubectl apply -f pv.yaml
 kubectl apply -f pvc.yaml
 kubectl apply -f seed-job.yaml
-kubectl wait --for=condition=Complete job/seed-files --timeout=120s
+kubectl wait --for=condition=Complete job/seed-files --timeout=300s
 
 kubectl apply -f pod-always.yaml
 time kubectl wait --for=condition=Ready pod/fsgroup-always --timeout=300s   # first mount: full walk
@@ -225,9 +290,9 @@ kubectl apply -f pod-onrootmismatch.yaml
 time kubectl wait --for=condition=Ready pod/fsgroup-onrootmismatch --timeout=300s   # second mount: root check only, walk skipped
 ```
 
-The absolute numbers depend on your machine's disk and filesystem, and 200,000 files on
+The absolute numbers depend on your machine's disk and filesystem, and 3,000,000 files on
 a laptop SSD will not reproduce an hours-long production hang — that requires the
-millions-of-files scale this article opened with. What is reproducible, and is the
+tens-of-millions-of-files scale some real volumes reach. What is reproducible, and is the
 actual point, is the *shape* of the result: the `Always` pod takes roughly the same time
 on both its first and second start, while the `OnRootMismatch` pod's second start is
 markedly faster than its first, because the root directory's ownership already matches
@@ -252,5 +317,5 @@ does not apply to you.
 
 **Measure on your own data.** The relative difference between `Always` and
 `OnRootMismatch` on a second mount is the whole demonstration; the absolute numbers on a
-laptop with 200,000 files will not resemble the absolute numbers on a production volume
+laptop with 3,000,000 files will not resemble the absolute numbers on a production volume
 with five million, and only the latter tells you what you actually need to know.
