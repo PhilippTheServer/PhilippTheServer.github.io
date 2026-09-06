@@ -1,0 +1,42 @@
+{%- comment -%}
+  BlogPosting for one article. Emitted after the Person node, never instead of it: the
+  Person stays the first JSON-LD block in the document, which is the node check_site.rb
+  compares against profile.json.
+
+  `author` and `publisher` are REFERENCES to the Person node by @id rather than inlined
+  copies of it. An inlined copy is a second place the same facts live, and the job title
+  in it would have been wrong for exactly as long as profile.json was.
+{%- endcomment -%}
+{%- assign post_url = page.url | absolute_url -%}
+{%- assign body_text = content | strip_html | normalize_whitespace -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": {{ post_url | append: "#article" | jsonify }},
+  "url": {{ post_url | jsonify }},
+  "mainEntityOfPage": { "@type": "WebPage", "@id": {{ post_url | jsonify }} },
+  "headline": {{ page.title | jsonify }},
+  {%- if page.subtitle %}
+  "alternativeHeadline": {{ page.subtitle | jsonify }},
+  {%- endif %}
+  "description": {{ page.description | strip_newlines | strip | jsonify }},
+  "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
+  "dateModified": {{ page.last_modified_at | default: page.date | date_to_xmlschema | jsonify }},
+  "author": { "@id": {{ site.url | append: "/#person" | jsonify }} },
+  "publisher": { "@id": {{ site.url | append: "/#person" | jsonify }} },
+  "isPartOf": { "@id": {{ site.url | append: "/posts/#blog" | jsonify }} },
+  "inLanguage": {{ site.lang | jsonify }},
+  "wordCount": {{ body_text | number_of_words }},
+  {%- if page.tags and page.tags.size > 0 %}
+  "keywords": {{ page.tags | join: ", " | jsonify }},
+  "about": [
+    {%- for tag in page.tags %}
+    { "@type": "Thing", "name": {{ tag | jsonify }} }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ],
+  {%- endif %}
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+</script>
