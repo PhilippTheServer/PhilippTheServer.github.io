@@ -1,0 +1,2157 @@
+{
+ "scheduled": [
+  {
+   "n": 1,
+   "date": "2025-08-26",
+   "slug": "ansible-ssh-port-migration",
+   "title": "Migrating the SSH Port Mid-Playbook Without Locking Ansible Out",
+   "labels": [
+    "ansible",
+    "security",
+    "linux",
+    "infrastructure-as-code"
+   ],
+   "source": "iac",
+   "problem": "Changing sshd's port during provisioning severs the control connection mid-run unless the config check, restart, and connection update are sequenced correctly."
+  },
+  {
+   "n": 2,
+   "date": "2025-08-29",
+   "slug": "ansible-role-idempotence",
+   "title": "Ansible Role Idempotence: Why a changed=0 Run Is the Only Proof You Have",
+   "labels": [
+    "ansible",
+    "infrastructure-as-code",
+    "testing"
+   ],
+   "source": "iac",
+   "problem": "A playbook that reports changes on every run has stopped being a drift detector, and nobody notices because it still exits zero."
+  },
+  {
+   "n": 3,
+   "date": "2025-09-02",
+   "slug": "docker-compose-convergence-ansible",
+   "title": "Deploying Docker Compose from Ansible Without Shelling Out",
+   "labels": [
+    "ansible",
+    "docker",
+    "infrastructure-as-code"
+   ],
+   "source": "iac",
+   "problem": "Wrapping `docker compose up` in a shell task with changed_when:false can never report a real change or work in check mode."
+  },
+  {
+   "n": 4,
+   "date": "2025-09-05",
+   "slug": "sysctl-reasserted-after-docker",
+   "title": "Reasserting Kernel Sysctls That Docker Silently Reverts",
+   "labels": [
+    "linux",
+    "docker",
+    "security"
+   ],
+   "source": "iac",
+   "problem": "Docker rewrites several net.ipv4 sysctls when it creates bridges, undoing boot-time hardening with no error and no log line."
+  },
+  {
+   "n": 5,
+   "date": "2025-09-09",
+   "slug": "docker-registry-credentials-two-users",
+   "title": "Docker Registry Credentials for Two Local Users on One Host",
+   "labels": [
+    "docker",
+    "ansible",
+    "linux"
+   ],
+   "source": "iac",
+   "problem": "Docker reads the config of whoever invokes the CLI, so writing only root's credential leaves the deploy user unauthenticated and failing silently."
+  },
+  {
+   "n": 6,
+   "date": "2025-09-12",
+   "slug": "linux-file-permissions-setgid",
+   "title": "chmod -R and the setgid Bit: Why a Four-Digit Mode Is Not Enough",
+   "labels": [
+    "linux",
+    "docker",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "A four-digit chmod does not clear setgid, so a directory keeps propagating group ownership after an apparently correct fix."
+  },
+  {
+   "n": 7,
+   "date": "2025-09-16",
+   "slug": "fastapi-project-layout",
+   "title": "A Feature-Module Layout for a FastAPI Application That Keeps Growing",
+   "labels": [
+    "fastapi",
+    "python",
+    "architecture"
+   ],
+   "source": "taberna",
+   "problem": "A single app collapses into one giant routers.py where nobody can add a feature without touching code they do not own."
+  },
+  {
+   "n": 8,
+   "date": "2025-09-19",
+   "slug": "fastapi-response-envelope",
+   "title": "Designing a Consistent FastAPI Response Envelope",
+   "labels": [
+    "fastapi",
+    "api-design",
+    "python"
+   ],
+   "source": "taberna",
+   "problem": "Ad-hoc return values leave every client guessing whether a payload is wrapped and every error a different shape."
+  },
+  {
+   "n": 9,
+   "date": "2025-09-23",
+   "slug": "fastapi-exception-hierarchy",
+   "title": "An Exception Hierarchy and One Handler for FastAPI Error Responses",
+   "labels": [
+    "fastapi",
+    "python",
+    "api-design"
+   ],
+   "source": "taberna",
+   "problem": "Bare HTTPExceptions scattered across a codebase produce inconsistent payloads and lose the context needed to debug them."
+  },
+  {
+   "n": 10,
+   "date": "2025-09-26",
+   "slug": "pydantic-closed-vocabulary",
+   "title": "Closed-Vocabulary Pydantic Validation for a Public Ingest Endpoint",
+   "labels": [
+    "fastapi",
+    "api-design"
+   ],
+   "source": "taberna",
+   "problem": "An endpoint anyone can POST to will accept a typo'd field and silently drop it, hiding a client bug indefinitely."
+  },
+  {
+   "n": 11,
+   "date": "2025-09-30",
+   "slug": "layered-configuration-precedence",
+   "title": "Configuration Precedence: Docker Secrets, Kubernetes Secrets, Environment, .env, Default",
+   "labels": [
+    "python",
+    "infrastructure-as-code",
+    "docker",
+    "kubernetes"
+   ],
+   "source": "taberna",
+   "problem": "A service reading only environment variables forces every deployment target to shoehorn secrets into one mechanism, and nothing says which value won."
+  },
+  {
+   "n": 12,
+   "date": "2025-10-03",
+   "slug": "uv-ruff-python-tooling",
+   "title": "Replacing pip, venv, flake8, black and isort with uv and Ruff",
+   "labels": [
+    "python",
+    "ci-cd",
+    "automation"
+   ],
+   "source": "taberna",
+   "problem": "requirements.txt gives no lockfile guarantee, and four separate lint tools triple the config surface for a small team."
+  },
+  {
+   "n": 13,
+   "date": "2025-10-07",
+   "slug": "python-cli-scaffolding",
+   "title": "A Python CLI That Scaffolds a Project Structure You Actually Want",
+   "labels": [
+    "python",
+    "architecture",
+    "automation"
+   ],
+   "source": "taberna",
+   "problem": "Starting a new service means recreating the same layout, Dockerfile and ignore rules by hand, or copy-pasting from the last one."
+  },
+  {
+   "n": 14,
+   "date": "2025-10-10",
+   "slug": "edge-node-provisioning",
+   "title": "Provisioning a Single-Board Computer as an Industrial Edge Node",
+   "labels": [
+    "linux",
+    "embedded",
+    "infrastructure-as-code"
+   ],
+   "source": "horus",
+   "problem": "Turning a bare carrier board into a working node is a manual sequence that differs subtly between board revisions."
+  },
+  {
+   "n": 15,
+   "date": "2025-10-14",
+   "slug": "poe-multicast-discovery",
+   "title": "Powering and Discovering Peripherals over PoE with Multicast Announcements",
+   "labels": [
+    "networking",
+    "embedded"
+   ],
+   "source": "horus",
+   "problem": "Separate power cabling to each sensor multiplies installation cost, and every new module otherwise needs manual addressing."
+  },
+  {
+   "n": 16,
+   "date": "2025-10-17",
+   "slug": "dns-read-merge-write",
+   "title": "Managing a Shared DNS Zone Through a Replace-Everything API",
+   "labels": [
+    "dns",
+    "automation",
+    "infrastructure-as-code",
+    "api-design"
+   ],
+   "source": "iac",
+   "problem": "Registrar APIs often expose only 'replace the whole zone', so naive automation deletes every record it does not manage."
+  },
+  {
+   "n": 17,
+   "date": "2025-10-21",
+   "slug": "graceful-shutdown-go",
+   "title": "A Minimal Go HTTP Service with chi, Timeouts and Graceful Shutdown",
+   "labels": [
+    "go",
+    "reliability"
+   ],
+   "source": "taberna",
+   "problem": "ListenAndServe drops in-flight requests on SIGTERM and gives you nowhere obvious to put middleware or timeouts."
+  },
+  {
+   "n": 18,
+   "date": "2025-10-24",
+   "slug": "docker-multistage-images",
+   "title": "Multi-Stage Docker Builds: Shipping a Runtime Without the Toolchain",
+   "labels": [
+    "docker",
+    "performance"
+   ],
+   "source": "horus",
+   "problem": "Building in the same image you ship means every runtime container carries a compiler it will never use."
+  },
+  {
+   "n": 19,
+   "date": "2025-10-28",
+   "slug": "infrastructure-as-code",
+   "title": "Infrastructure as Code with Ansible: Making a Host Reproducible from the Repository",
+   "labels": [
+    "infrastructure-as-code",
+    "ansible",
+    "linux",
+    "reliability"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 20,
+   "date": "2025-10-31",
+   "slug": "ceph-layered-benchmark",
+   "title": "A Layered Storage Benchmark: Isolating Device, Network and Protocol Bottlenecks",
+   "labels": [
+    "ceph",
+    "storage",
+    "testing",
+    "performance"
+   ],
+   "source": "iac",
+   "problem": "One throughput number hides whether the bottleneck is a slow disk, a saturated link, or protocol contention."
+  },
+  {
+   "n": 21,
+   "date": "2025-11-04",
+   "slug": "smr-drives-in-clusters",
+   "title": "SMR Drives in a Replicated Cluster: Finding the Disk That Ruins the Pool",
+   "labels": [
+    "ceph",
+    "storage",
+    "embedded",
+    "linux"
+   ],
+   "source": "iac",
+   "problem": "Drive-managed SMR disks look identical in inventory and collapse under sustained random writes, dragging the whole pool down."
+  },
+  {
+   "n": 22,
+   "date": "2025-11-07",
+   "slug": "ceph-crush-hybrid-tiering",
+   "title": "CRUSH Hybrid Rules: Pinning the Read Primary to SSD Without Rebalancing",
+   "labels": [
+    "ceph",
+    "storage",
+    "performance"
+   ],
+   "source": "iac",
+   "problem": "Metadata-heavy reads suffer on spinning disks, but moving the whole pool to flash triggers a rebalance there is no room for."
+  },
+  {
+   "n": 23,
+   "date": "2025-11-11",
+   "slug": "ceph-full-osd-threshold",
+   "title": "Capacity Planning Against the Fullest OSD, Not the Average",
+   "labels": [
+    "ceph",
+    "storage",
+    "performance",
+    "reliability"
+   ],
+   "source": "iac",
+   "problem": "Placement is pseudo-random, so a cluster that looks 70% full can have a disk at 90% \u2014 and one full OSD stops cluster-wide writes."
+  },
+  {
+   "n": 24,
+   "date": "2025-11-14",
+   "slug": "ceph-recovery-throttling",
+   "title": "Tuning Ceph Recovery: The Trade Between Degraded Time and Client Latency",
+   "labels": [
+    "ceph",
+    "storage",
+    "performance",
+    "reliability"
+   ],
+   "source": "iac",
+   "problem": "Recovery I/O arrives exactly when you have less hardware than usual; too aggressive looks like an outage, too gentle risks the second failure."
+  },
+  {
+   "n": 25,
+   "date": "2025-11-18",
+   "slug": "vault-ssh-certificate-authority",
+   "title": "Replacing Distributed SSH Keys with a Vault Certificate Authority",
+   "labels": [
+    "vault",
+    "security",
+    "tls"
+   ],
+   "source": "iac",
+   "problem": "Distributing and rotating static public keys across a fleet does not scale and leaves no audit trail of who accessed what."
+  },
+  {
+   "n": 26,
+   "date": "2025-11-21",
+   "slug": "vault-kv2-patch-vs-put",
+   "title": "Vault KV-v2: Why put Silently Wipes Every Sibling Field",
+   "labels": [
+    "vault",
+    "secrets-management",
+    "security"
+   ],
+   "source": "iac",
+   "problem": "put replaces the whole secret, so adding one field destroys the others \u2014 and there is no single-key delete."
+  },
+  {
+   "n": 27,
+   "date": "2025-11-25",
+   "slug": "vault-agent-sidecar",
+   "title": "Runtime Secret Injection with a Vault Agent Sidecar and a Wrapped AppRole",
+   "labels": [
+    "vault",
+    "secrets-management",
+    "security",
+    "docker"
+   ],
+   "source": "iac",
+   "problem": "Rendering secrets into config files at deploy time leaves plaintext on disk and makes rotation a redeploy."
+  },
+  {
+   "n": 28,
+   "date": "2025-11-28",
+   "slug": "vault-auto-unseal-tang",
+   "title": "Auto-Unsealing Vault Without Cloud KMS or a TPM, Using Tang and Clevis",
+   "labels": [
+    "vault",
+    "security",
+    "linux"
+   ],
+   "source": "iac",
+   "problem": "Manual unsealing does not scale once services depend on the secret store at boot, but cloud KMS means trusting a third party."
+  },
+  {
+   "n": 29,
+   "date": "2025-12-02",
+   "slug": "redis-sorted-set-conveyor",
+   "title": "Tracking Moving Objects with Redis Sorted Sets and an Atomic Lua Tick",
+   "labels": [
+    "redis",
+    "architecture"
+   ],
+   "source": "horus",
+   "problem": "Tracking several objects entering and leaving a line needs 'where is everything now' and 'drop what left' without a database."
+  },
+  {
+   "n": 30,
+   "date": "2025-12-05",
+   "slug": "redis-pipeline-decomposition",
+   "title": "Chaining Single-Purpose Redis Consumers into a Processing Pipeline",
+   "labels": [
+    "redis",
+    "architecture",
+    "python"
+   ],
+   "source": "horus",
+   "problem": "A monolithic 'process all the data' service becomes untestable once it does detection, tracking, calibration and statistics at once."
+  },
+  {
+   "n": 31,
+   "date": "2025-12-09",
+   "slug": "redis-single-writer-config",
+   "title": "A Single-Writer Rule for Configuration Held in Redis",
+   "labels": [
+    "redis",
+    "infrastructure-as-code",
+    "architecture",
+    "reliability"
+   ],
+   "source": "horus",
+   "problem": "When several services write the same key, a read after a write can return another writer's value and nobody owns the truth."
+  },
+  {
+   "n": 32,
+   "date": "2025-12-12",
+   "slug": "redis-maxmemory-stream-trim",
+   "title": "Sizing Redis maxmemory Against a Stream Trim Threshold",
+   "labels": [
+    "redis",
+    "performance",
+    "databases",
+    "reliability"
+   ],
+   "source": "k8s",
+   "problem": "Trimming only runs on write, so hitting the memory cap first means the stream can never shrink and every write is refused."
+  },
+  {
+   "n": 33,
+   "date": "2025-12-16",
+   "slug": "kubernetes",
+   "title": "Docker Compose or Kubernetes: What the Control Loop Actually Buys You",
+   "labels": [
+    "kubernetes",
+    "docker",
+    "architecture",
+    "gitops"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 34,
+   "date": "2025-12-19",
+   "slug": "uuid-normalization",
+   "title": "UUID Case Normalization as a Recurring Cross-Service Bug",
+   "labels": [
+    "reliability",
+    "architecture",
+    "python",
+    "testing"
+   ],
+   "source": "horus",
+   "problem": "An uppercase UUID from one service and a lowercase one from another create two keys instead of one, silently."
+  },
+  {
+   "n": 35,
+   "date": "2025-12-23",
+   "slug": "cpp-redis-consumer-migration",
+   "title": "Migrating Redis Consumers from Python to C++ on Constrained Hardware",
+   "labels": [
+    "cpp",
+    "python",
+    "redis",
+    "performance"
+   ],
+   "source": "horus",
+   "problem": "A dozen Python consumers running continuously become the CPU and memory bottleneck on an edge device."
+  },
+  {
+   "n": 36,
+   "date": "2025-12-26",
+   "slug": "cpp-base-image-dependencies",
+   "title": "A Shared Multi-Stage Base Image for a C++ Service Fleet",
+   "labels": [
+    "cpp",
+    "docker",
+    "performance"
+   ],
+   "source": "horus",
+   "problem": "A dozen services each rebuilding the same HTTP framework and JSON library turn a one-line change into a multi-minute build."
+  },
+  {
+   "n": 37,
+   "date": "2025-12-30",
+   "slug": "mqtt-persistent-sessions",
+   "title": "MQTT Persistent Sessions and Retained Messages for Offline Subscribers",
+   "labels": [
+    "redis",
+    "reliability",
+    "embedded"
+   ],
+   "source": "k8s",
+   "problem": "A message published while a subscriber is offline is lost under clean-session defaults, and late subscribers see no current state."
+  },
+  {
+   "n": 38,
+   "date": "2026-01-02",
+   "slug": "order-state-machine",
+   "title": "Modelling an Order Lifecycle as an Explicit State Machine",
+   "labels": [
+    "python",
+    "architecture",
+    "api-design"
+   ],
+   "source": "taberna",
+   "problem": "Letting any code path assign order.status means invalid transitions are caught only by whoever remembers to check."
+  },
+  {
+   "n": 39,
+   "date": "2026-01-06",
+   "slug": "stripe-webhook-idempotency",
+   "title": "Idempotent Payment Webhooks with a Deduplication Table",
+   "labels": [
+    "python",
+    "reliability",
+    "api-design"
+   ],
+   "source": "taberna",
+   "problem": "Providers deliver at-least-once and retry on any non-2xx, so a naive handler double-processes payments on every redelivery."
+  },
+  {
+   "n": 40,
+   "date": "2026-01-09",
+   "slug": "stock-reservation-check-constraint",
+   "title": "Preventing Overselling with a Database CHECK Constraint",
+   "labels": [
+    "databases",
+    "performance"
+   ],
+   "source": "taberna",
+   "problem": "Two customers buying the last unit at the same moment is a race that check-then-decrement code cannot reliably win."
+  },
+  {
+   "n": 41,
+   "date": "2026-01-13",
+   "slug": "bff-normalising-upstreams",
+   "title": "One Dashboard on Five Unrelated Backends: Normalising at the Boundary",
+   "labels": [
+    "fastapi",
+    "architecture",
+    "api-design",
+    "frontend"
+   ],
+   "source": "ygg",
+   "problem": "A portal surfacing tickets, time tracking and CI status becomes an unmaintainable ad-hoc proxy without a common shape."
+  },
+  {
+   "n": 42,
+   "date": "2026-01-16",
+   "slug": "gpu-vram-budget-quantisation",
+   "title": "Sizing One GPU for Local LLM Inference: VRAM, Quantisation and KV Cache",
+   "labels": [
+    "llm",
+    "performance"
+   ],
+   "source": "atlas",
+   "problem": "Weights plus a long context and KV cache must fit fixed VRAM, and the wrong cache format silently triples latency."
+  },
+  {
+   "n": 43,
+   "date": "2026-01-20",
+   "slug": "llama-swap-model-swapping",
+   "title": "Serving Several Local Models on One GPU with On-Demand Loading",
+   "labels": [
+    "llm",
+    "performance",
+    "architecture"
+   ],
+   "source": "atlas",
+   "problem": "One GPU holds one large model, but different tasks want different models and manual restarts are impractical."
+  },
+  {
+   "n": 44,
+   "date": "2026-01-23",
+   "slug": "openai-compatible-proxy",
+   "title": "An OpenAI-Compatible Proxy in Front of a Local Model Server",
+   "labels": [
+    "llm",
+    "fastapi",
+    "api-design",
+    "identity"
+   ],
+   "source": "atlas",
+   "problem": "Every tool expects the OpenAI shape, but a local server needs auth and a health check that never triggers a model load."
+  },
+  {
+   "n": 45,
+   "date": "2026-01-27",
+   "slug": "benchmark-determinism",
+   "title": "Making a Benchmark Deterministic Against a Server Tuned for Interactive Use",
+   "labels": [
+    "testing",
+    "llm"
+   ],
+   "source": "atlas",
+   "problem": "Every run scores differently, so a real regression cannot be told apart from sampling noise."
+  },
+  {
+   "n": 46,
+   "date": "2026-01-30",
+   "slug": "benchmark-your-own-tasks",
+   "title": "Why a Leaderboard Score Does Not Predict Your Workload",
+   "labels": [
+    "testing",
+    "llm"
+   ],
+   "source": "atlas",
+   "problem": "A public ranking says nothing about whether a model calls your tools correctly or survives your context lengths."
+  },
+  {
+   "n": 47,
+   "date": "2026-02-03",
+   "slug": "tool-call-ast-scoring",
+   "title": "Scoring Tool Calls by Parsed Structure Instead of String Equality",
+   "labels": [
+    "llm",
+    "testing"
+   ],
+   "source": "atlas",
+   "problem": "String comparison fails on equivalent arguments and passes on wrong calls that happen to contain the right substring."
+  },
+  {
+   "n": 48,
+   "date": "2026-02-06",
+   "slug": "ceph",
+   "title": "Running Ceph on Commodity Hardware: Failure Domains and the Four Things That Bite",
+   "labels": [
+    "ceph",
+    "storage",
+    "reliability",
+    "performance"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 49,
+   "date": "2026-02-10",
+   "slug": "dry-run-first-design",
+   "title": "Building the Dry-Run Path First, and Testing That It Sends Nothing",
+   "labels": [
+    "testing",
+    "python",
+    "automation",
+    "infrastructure-as-code"
+   ],
+   "source": "atlas",
+   "problem": "A dry-run flag bolted on afterwards drifts out of sync with the real code path exactly when you need to trust it."
+  },
+  {
+   "n": 50,
+   "date": "2026-02-13",
+   "slug": "oidc-confidential-introspection-client",
+   "title": "A Confidential OIDC Client That Exists Only to Introspect Tokens",
+   "labels": [
+    "identity",
+    "security"
+   ],
+   "source": "k8s",
+   "problem": "An API validating a token minted for a public SPA client cannot use that client to call introspection, which itself needs authentication."
+  },
+  {
+   "n": 51,
+   "date": "2026-02-17",
+   "slug": "oidc-introspection-error-shapes",
+   "title": "A 500 That Was a Misconfigured Client, Not an Auth Failure",
+   "labels": [
+    "identity",
+    "api-design",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "Assuming introspection always returns an `active` field turns a client misconfiguration into an unhandled error on every request."
+  },
+  {
+   "n": 52,
+   "date": "2026-02-20",
+   "slug": "trusting-two-cas",
+   "title": "Trusting an Internal and a Public Certificate Authority in One Process",
+   "labels": [
+    "tls",
+    "security"
+   ],
+   "source": "k8s",
+   "problem": "Configuring trust for an internal CA cuts the same process off from the public chain it needs to reach an external identity provider."
+  },
+  {
+   "n": 53,
+   "date": "2026-02-24",
+   "slug": "buildkit-remote-driver",
+   "title": "Running BuildKit as a Remote Builder Without a Docker Daemon",
+   "labels": [
+    "docker",
+    "ci-cd"
+   ],
+   "source": "k8s",
+   "problem": "A CI worker under containerd has no docker.sock, so buildx's default driver cannot start BuildKit at all."
+  },
+  {
+   "n": 54,
+   "date": "2026-02-27",
+   "slug": "buildkit-rootless-tradeoff",
+   "title": "Rootless BuildKit: What fuse-overlayfs Costs on a Cold Cache",
+   "labels": [
+    "docker",
+    "security",
+    "performance"
+   ],
+   "source": "k8s",
+   "problem": "The standard BuildKit image needs a privileged context, which is unattractive on a cluster watching for privileged workloads."
+  },
+  {
+   "n": 55,
+   "date": "2026-03-03",
+   "slug": "go-embed-spa",
+   "title": "Embedding a Built Frontend Into a Go Binary with go:embed",
+   "labels": [
+    "go",
+    "frontend",
+    "architecture"
+   ],
+   "source": "k8s",
+   "problem": "Running a static file server and an API as two processes is more moving parts than the app needs, and they can version-skew."
+  },
+  {
+   "n": 56,
+   "date": "2026-03-06",
+   "slug": "docker-build-api-streaming",
+   "title": "Designing a Docker Image Build API: Job Model and Streamed Logs",
+   "labels": [
+    "go",
+    "docker",
+    "api-design"
+   ],
+   "source": "taberna",
+   "problem": "A build is not request/response, and a client needs to watch output live rather than poll for a final status."
+  },
+  {
+   "n": 57,
+   "date": "2026-03-10",
+   "slug": "angular-layering",
+   "title": "Layering an Angular Application: core, shared, features and the Rule That Holds",
+   "labels": [
+    "frontend",
+    "architecture"
+   ],
+   "source": "taberna",
+   "problem": "Without enforced layering, API calls end up inside presentational components and every screen becomes its own client."
+  },
+  {
+   "n": 58,
+   "date": "2026-03-13",
+   "slug": "angular-runtime-config",
+   "title": "Runtime Configuration for an Angular Container Without Rebuilding",
+   "labels": [
+    "frontend",
+    "docker",
+    "infrastructure-as-code",
+    "networking"
+   ],
+   "source": "taberna",
+   "problem": "Baking a backend URL into the build means a different deployment target needs a full rebuild instead of a variable."
+  },
+  {
+   "n": 59,
+   "date": "2026-03-17",
+   "slug": "multi-service-compose-dev",
+   "title": "A Multi-Service docker-compose That a New Contributor Can Actually Start",
+   "labels": [
+    "docker",
+    "identity",
+    "testing"
+   ],
+   "source": "ygg",
+   "problem": "A backend needing an identity provider, a database, a cache and a time-series store is hard to stand up reproducibly."
+  },
+  {
+   "n": 60,
+   "date": "2026-03-20",
+   "slug": "alembic-at-entrypoint",
+   "title": "Running Alembic Migrations Once, Before the Workers Fork",
+   "labels": [
+    "databases",
+    "docker"
+   ],
+   "source": "taberna",
+   "problem": "Migrating from application code that starts N workers risks running the migration N times, or serving requests mid-migration."
+  },
+  {
+   "n": 61,
+   "date": "2026-03-24",
+   "slug": "transactional-outbox",
+   "title": "The Transactional Outbox: Never Losing a Job You Already Committed",
+   "labels": [
+    "python",
+    "architecture",
+    "reliability",
+    "databases"
+   ],
+   "source": "taberna",
+   "problem": "Enqueueing after commit leaves a gap where the state change is permanent but the job never runs and nothing retries."
+  },
+  {
+   "n": 62,
+   "date": "2026-03-27",
+   "slug": "argocd-app-of-apps",
+   "title": "Argo CD App-of-Apps: Bootstrapping a Bare Cluster from One Root Application",
+   "labels": [
+    "kubernetes",
+    "gitops",
+    "automation"
+   ],
+   "source": "k8s",
+   "problem": "A fresh cluster has nothing installed, and hand-applying manifests in the right order does not survive a rebuild."
+  },
+  {
+   "n": 63,
+   "date": "2026-03-31",
+   "slug": "observatory-monitoring",
+   "title": "Alerting on Symptoms Instead of Metrics: Designing Alerts People Do Not Ignore",
+   "labels": [
+    "observability",
+    "alerting",
+    "reliability",
+    "testing"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 64,
+   "date": "2026-04-03",
+   "slug": "argocd-applicationsets",
+   "title": "ApplicationSets: Onboarding a Workload With a Directory and a Pull Request",
+   "labels": [
+    "kubernetes",
+    "gitops",
+    "automation"
+   ],
+   "source": "k8s",
+   "problem": "Registering each new service with its own Application object is repetitive and easy to forget."
+  },
+  {
+   "n": 65,
+   "date": "2026-04-07",
+   "slug": "argocd-sync-waves",
+   "title": "Sync Waves and the CRD-Before-Consumer Ordering Problem",
+   "labels": [
+    "kubernetes",
+    "gitops",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "Deploying a CRD and a resource using it in the same sync races, and pruning the CRD owner can delete every object built on it."
+  },
+  {
+   "n": 66,
+   "date": "2026-04-10",
+   "slug": "gitops-image-tag-pinning",
+   "title": "Pinning Image Tags to Git SHAs Because GitOps Diffs Manifests, Not Registries",
+   "labels": [
+    "gitops",
+    "ci-cd",
+    "docker"
+   ],
+   "source": "k8s",
+   "problem": "With a floating tag, CI can push a new image and nothing in the manifest changes, so no rollout happens."
+  },
+  {
+   "n": 67,
+   "date": "2026-04-14",
+   "slug": "gitops-bootstrap-circularity",
+   "title": "Breaking the Circular Dependency in GitOps Secret Delivery",
+   "labels": [
+    "kubernetes",
+    "gitops",
+    "secrets-management"
+   ],
+   "source": "iac",
+   "problem": "A secrets operator deployed by the GitOps controller cannot also deliver that controller's own login secret."
+  },
+  {
+   "n": 68,
+   "date": "2026-04-17",
+   "slug": "ceph-csi-storageclasses",
+   "title": "Ceph CSI StorageClasses: RBD for Block, CephFS for Shared Volumes",
+   "labels": [
+    "kubernetes",
+    "ceph",
+    "storage"
+   ],
+   "source": "k8s",
+   "problem": "Databases need exclusive block devices and multi-pod workloads need shared volumes, from one storage cluster."
+  },
+  {
+   "n": 69,
+   "date": "2026-04-21",
+   "slug": "static-persistent-volumes",
+   "title": "Importing Pre-Existing Storage as a Static PersistentVolume",
+   "labels": [
+    "kubernetes",
+    "storage",
+    "ceph",
+    "reliability"
+   ],
+   "source": "k8s",
+   "problem": "Data that already exists outside Kubernetes must be mountable without being provisioned, and must survive a mistaken delete."
+  },
+  {
+   "n": 70,
+   "date": "2026-04-24",
+   "slug": "object-storage-durability-boundary",
+   "title": "Object Storage as the Durability Boundary for a Container Registry",
+   "labels": [
+    "kubernetes",
+    "storage",
+    "docker"
+   ],
+   "source": "k8s",
+   "problem": "Blobs on a cluster-managed volume are one reclaim-policy or prune mistake away from deletion."
+  },
+  {
+   "n": 71,
+   "date": "2026-04-28",
+   "slug": "fsgroup-recursive-chown",
+   "title": "fsGroup Recursive chown Hangs on Large Volumes",
+   "labels": [
+    "kubernetes",
+    "storage",
+    "ceph",
+    "performance"
+   ],
+   "source": "k8s",
+   "problem": "Kubernetes chowns every file at mount time, which can hang pod startup for hours on a volume with millions of files."
+  },
+  {
+   "n": 72,
+   "date": "2026-05-01",
+   "slug": "k8s-dns-canary",
+   "title": "A DNS Canary CronJob as a Regression Test for Split-Horizon Resolution",
+   "labels": [
+    "kubernetes",
+    "dns",
+    "observability",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "Pods can inherit a search domain that resolves public names to an internal blackhole, and the regression can silently reappear."
+  },
+  {
+   "n": 73,
+   "date": "2026-05-05",
+   "slug": "kubelet-ndots-search-leak",
+   "title": "ndots and the Accidental Search-Domain Leak in Pod DNS",
+   "labels": [
+    "kubernetes",
+    "dns",
+    "networking"
+   ],
+   "source": "k8s",
+   "problem": "A pod's search list can append an internal domain to every external lookup, resolving it to nothing useful or worse."
+  },
+  {
+   "n": 74,
+   "date": "2026-05-08",
+   "slug": "cni-mtu-inheritance",
+   "title": "How a VPN Client Silently Shrinks Your Pod Network MTU",
+   "labels": [
+    "kubernetes",
+    "networking"
+   ],
+   "source": "iac",
+   "problem": "A CNI auto-detecting MTU from the lowest interface drops the pod network to fragmented packets with no error, just worse throughput."
+  },
+  {
+   "n": 75,
+   "date": "2026-05-12",
+   "slug": "cert-manager-internal-ca",
+   "title": "cert-manager for Mesh-Only Names That No ACME Challenge Can Reach",
+   "labels": [
+    "kubernetes",
+    "tls"
+   ],
+   "source": "k8s",
+   "problem": "Internal services need TLS but have no public record for an HTTP-01 or DNS-01 challenge to validate against."
+  },
+  {
+   "n": 76,
+   "date": "2026-05-15",
+   "slug": "netbird-vpn",
+   "title": "Overlay Mesh Networking with NetBird: Peer Addressing and the Public DNS Fallthrough",
+   "labels": [
+    "networking",
+    "dns",
+    "security",
+    "linux"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 77,
+   "date": "2026-05-19",
+   "slug": "eso-vault-jwt-offline",
+   "title": "External Secrets with Offline JWT Validation When Vault Cannot Reach the Cluster",
+   "labels": [
+    "kubernetes",
+    "vault",
+    "secrets-management",
+    "security"
+   ],
+   "source": "k8s",
+   "problem": "The standard Kubernetes auth method needs a callback into the API server, which fails when the two are isolated by design."
+  },
+  {
+   "n": 78,
+   "date": "2026-05-22",
+   "slug": "cannot-ever-vs-currently-broken",
+   "title": "Separating 'Cannot Ever' From 'Currently Broken' in Sweep Automation",
+   "labels": [
+    "automation",
+    "testing",
+    "api-design",
+    "observability"
+   ],
+   "source": "k8s",
+   "problem": "Treating two causes of one error code the same let a real regression pass as expected behaviour for months."
+  },
+  {
+   "n": 79,
+   "date": "2026-05-26",
+   "slug": "netbird-zero-trust-groups",
+   "title": "Group-Based Default-Deny Instead of Hand-Maintained Peer Lists",
+   "labels": [
+    "networking",
+    "identity"
+   ],
+   "source": "iac",
+   "problem": "Nobody can read a per-peer VPN config and answer who is allowed to reach the database tier."
+  },
+  {
+   "n": 80,
+   "date": "2026-05-29",
+   "slug": "wireguard-routing-asymmetry",
+   "title": "WireGuard Route Selection: Per-Host /32 Versus Subnet Routes With NAT",
+   "labels": [
+    "networking",
+    "linux"
+   ],
+   "source": "iac",
+   "problem": "A subnet route to peers that are themselves mesh members breaks the return path, silently and asymmetrically."
+  },
+  {
+   "n": 81,
+   "date": "2026-06-02",
+   "slug": "dns-wildcard-empty-non-terminal",
+   "title": "DNS Wildcards and Empty Non-Terminals: The Answer That Is Not an Error",
+   "labels": [
+    "dns",
+    "tls",
+    "testing"
+   ],
+   "source": "iac",
+   "problem": "A leftover challenge record makes its parent an empty non-terminal, and a wildcard is forbidden from answering for it."
+  },
+  {
+   "n": 82,
+   "date": "2026-06-05",
+   "slug": "keycloak-realm-as-code",
+   "title": "Realm-as-Code: Reconciling Clients and Roles But Never Users or Signing Keys",
+   "labels": [
+    "identity",
+    "gitops",
+    "security"
+   ],
+   "source": "iac",
+   "problem": "Managing a realm by hand causes drift, but naive config-as-code deletes live accounts or rotates the keys backing every token."
+  },
+  {
+   "n": 83,
+   "date": "2026-06-09",
+   "slug": "oidc-client-shapes",
+   "title": "OIDC Client Shapes: A Token-Validating API Is Not a Login Client",
+   "labels": [
+    "identity",
+    "security",
+    "api-design"
+   ],
+   "source": "iac",
+   "problem": "Treating every client the same conflates 'users log in here' with 'this validates a token', and the wrong shape accepts unintended flows."
+  },
+  {
+   "n": 84,
+   "date": "2026-06-12",
+   "slug": "keycloak-azp-enforcement",
+   "title": "Enforcing Client Identity Alongside Realm Roles",
+   "labels": [
+    "identity",
+    "security",
+    "fastapi"
+   ],
+   "source": "taberna",
+   "problem": "A realm role is not enough: a user signed into an untrusted client still carries it, so role-only checks admit the wrong caller."
+  },
+  {
+   "n": 85,
+   "date": "2026-06-16",
+   "slug": "forward-auth-legacy-services",
+   "title": "Forward Auth: Putting Real Authentication in Front of Software That Has None",
+   "labels": [
+    "identity",
+    "networking",
+    "security"
+   ],
+   "source": "iac",
+   "problem": "The services you most want protected are often the ones that cannot speak modern auth at all."
+  },
+  {
+   "n": 86,
+   "date": "2026-06-19",
+   "slug": "entity-graph-model",
+   "title": "An Entity Graph as the Data Model for a Heterogeneous Estate",
+   "labels": [
+    "observability",
+    "architecture",
+    "go"
+   ],
+   "source": "k8s",
+   "problem": "Hosts, volumes, links and alerts have different shapes but need one model with containment, edges and a uniform health rollup."
+  },
+  {
+   "n": 87,
+   "date": "2026-06-23",
+   "slug": "atomic-graph-swap",
+   "title": "Merging Concurrent Polls Without Ever Serving a Half-Built Graph",
+   "labels": [
+    "go",
+    "performance",
+    "observability",
+    "reliability"
+   ],
+   "source": "k8s",
+   "problem": "A console polling several sources must never show a state where some landed and others did not."
+  },
+  {
+   "n": 88,
+   "date": "2026-06-26",
+   "slug": "health-rules-engine",
+   "title": "A Rules File for Health Evaluation, Validated at Load Time",
+   "labels": [
+    "observability",
+    "go"
+   ],
+   "source": "k8s",
+   "problem": "Hardcoding a threshold per metric does not scale, and a typo in a rules file must fail at startup rather than silently at runtime."
+  },
+  {
+   "n": 89,
+   "date": "2026-06-30",
+   "slug": "keycloak",
+   "title": "Self-Hosted Identity with Keycloak: Central Offboarding and Forward Auth",
+   "labels": [
+    "identity",
+    "security",
+    "architecture"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 90,
+   "date": "2026-07-03",
+   "slug": "textfile-collector-probes",
+   "title": "Host Probes via the Textfile Collector Pattern",
+   "labels": [
+    "observability",
+    "linux"
+   ],
+   "source": "k8s",
+   "problem": "Custom host measurements need to reach the pipeline without writing and running a full exporter daemon."
+  },
+  {
+   "n": 91,
+   "date": "2026-07-07",
+   "slug": "http-service-discovery",
+   "title": "Prometheus HTTP Service Discovery Backed by a Live Inventory",
+   "labels": [
+    "observability",
+    "automation",
+    "networking"
+   ],
+   "source": "k8s",
+   "problem": "A hand-maintained target list drifts the moment infrastructure changes, leaving new hosts silently unmonitored."
+  },
+  {
+   "n": 92,
+   "date": "2026-07-10",
+   "slug": "blackbox-published-names",
+   "title": "Probing the Names You Publish, Not the Services You Run",
+   "labels": [
+    "observability",
+    "dns"
+   ],
+   "source": "k8s",
+   "problem": "A service can report itself perfectly healthy while being unreachable, because everything it measures is inside the boundary that broke."
+  },
+  {
+   "n": 93,
+   "date": "2026-07-14",
+   "slug": "dead-mans-switch",
+   "title": "A Dead-Man's Switch for the Monitoring System Itself",
+   "labels": [
+    "alerting",
+    "observability",
+    "reliability"
+   ],
+   "source": "iac",
+   "problem": "A monitoring pipeline cannot alert on its own total outage through the path that is down."
+  },
+  {
+   "n": 94,
+   "date": "2026-07-17",
+   "slug": "alertmanager-mqtt-retained",
+   "title": "Turning Alertmanager Webhooks Into Retained MQTT State",
+   "labels": [
+    "alerting",
+    "redis",
+    "observability",
+    "api-design"
+   ],
+   "source": "k8s",
+   "problem": "Downstream systems want to know what is firing right now, including systems that connect after an alert started."
+  },
+  {
+   "n": 95,
+   "date": "2026-07-21",
+   "slug": "canvas-pixel-testing",
+   "title": "Testing That a Canvas Diagram Actually Painted Pixels",
+   "labels": [
+    "testing",
+    "frontend"
+   ],
+   "source": "k8s",
+   "problem": "A DOM-only assertion passes while the canvas renders in an empty viewport, which is exactly what a layout bug produces."
+  },
+  {
+   "n": 96,
+   "date": "2026-07-24",
+   "slug": "issue-to-pr-daemon",
+   "title": "A Deterministic Daemon That Turns a Labelled Issue Into a Pull Request",
+   "labels": [
+    "agents",
+    "python",
+    "ci-cd"
+   ],
+   "source": "atlas",
+   "problem": "Letting a model decide what to commit and push is hard to make auditable without a strict split of side effects."
+  },
+  {
+   "n": 97,
+   "date": "2026-07-28",
+   "slug": "label-as-contract",
+   "title": "The Label as Contract: Consent and Priority as the Whole Queue",
+   "labels": [
+    "agents",
+    "security"
+   ],
+   "source": "atlas",
+   "problem": "An autonomous worker needs an explicit, auditable opt-in per unit of work, or it acts on anything that looks prioritised."
+  },
+  {
+   "n": 98,
+   "date": "2026-07-31",
+   "slug": "testing-an-agent-harness",
+   "title": "Testing an Agent Harness Without Ever Calling the Model",
+   "labels": [
+    "testing",
+    "agents",
+    "python"
+   ],
+   "source": "atlas",
+   "problem": "The daemon deciding what an agent may do is ordinary deterministic code, and testing it by running the model is slow and irreproducible."
+  },
+  {
+   "n": 99,
+   "date": "2026-08-04",
+   "slug": "evidence-over-assertion",
+   "title": "Verifying an Agent's Work Against Reality, Not Its Own Report",
+   "labels": [
+    "agents",
+    "testing",
+    "ci-cd"
+   ],
+   "source": "atlas",
+   "problem": "A run can exit cleanly, claim success, and have changed nothing at all."
+  },
+  {
+   "n": 100,
+   "date": "2026-08-07",
+   "slug": "atlas-agentic-ops",
+   "title": "Self-Hosted LLM Inference: Serving, Benchmarking and Agent Guardrails",
+   "labels": [
+    "llm",
+    "agents",
+    "testing",
+    "security"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 101,
+   "date": "2026-08-11",
+   "slug": "agent-permissions-inversion",
+   "title": "From a Large Allowlist to Three Denials: Permissions for a Coding Agent",
+   "labels": [
+    "agents",
+    "security",
+    "linux"
+   ],
+   "source": "atlas",
+   "problem": "A deny-by-default command list becomes a treadmill, because the set a competent worker needs is not enumerable in advance."
+  },
+  {
+   "n": 102,
+   "date": "2026-08-14",
+   "slug": "prompt-injection-untrusted-issues",
+   "title": "Treating Issue Bodies as Untrusted Input",
+   "labels": [
+    "security",
+    "agents",
+    "llm"
+   ],
+   "source": "atlas",
+   "problem": "An agent reading issues is reading text that contributors control, which is an injection surface if treated as instructions."
+  },
+  {
+   "n": 103,
+   "date": "2026-08-18",
+   "slug": "data-locality-by-default",
+   "title": "One Local Endpoint for Every Agent Session",
+   "labels": [
+    "llm",
+    "security",
+    "python"
+   ],
+   "source": "atlas",
+   "problem": "An IDE assistant, a terminal agent and a daemon each send code somewhere unless one thing enforces a single point of egress."
+  },
+  {
+   "n": 104,
+   "date": "2026-08-21",
+   "slug": "microservice-decomposition-heuristic",
+   "title": "When Microservice Decomposition Is the Wrong Default",
+   "labels": [
+    "architecture",
+    "docker"
+   ],
+   "source": "horus",
+   "problem": "Independent versioning and deployment have a real cost even when the combined logic fits one process."
+  },
+  {
+   "n": 105,
+   "date": "2026-08-25",
+   "slug": "openapi-docs-contract-test",
+   "title": "Keeping Documentation Honest with an OpenAPI Snapshot Diff",
+   "labels": [
+    "documentation",
+    "testing",
+    "ci-cd"
+   ],
+   "source": "taberna",
+   "problem": "Hand-written docs and a live API drift apart silently, sometimes describing tables that were never built."
+  },
+  {
+   "n": 106,
+   "date": "2026-08-28",
+   "slug": "testing-real-expressions",
+   "title": "Testing Infrastructure Code by Executing Its Real Expressions",
+   "labels": [
+    "testing",
+    "ansible",
+    "ci-cd",
+    "infrastructure-as-code"
+   ],
+   "source": "iac",
+   "problem": "A test that paraphrases what an expression should do drifts from the expression, and both keep passing."
+  },
+  {
+   "n": 107,
+   "date": "2026-09-01",
+   "slug": "opentaberna",
+   "title": "Documentation as a Repository: Publishing a Wiki.js Site from Reviewed Markdown",
+   "labels": [
+    "documentation",
+    "testing",
+    "ci-cd",
+    "architecture"
+   ],
+   "source": "existing",
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+  },
+  {
+   "n": 108,
+   "date": "2026-09-04",
+   "slug": "meta-infrastructure-overview",
+   "title": "The Whole Estate in One Article: How Every Layer Fits Together",
+   "labels": [
+    "infrastructure-as-code",
+    "kubernetes",
+    "ceph",
+    "observability",
+    "architecture"
+   ],
+   "source": "iac",
+   "problem": "Individual articles describe the parts; nothing describes how the parts became one system, or in what order they had to arrive."
+  }
+ ],
+ "backlog": [
+  {
+   "slug": "sensor-calibration-ema",
+   "title": "Per-Channel Polynomial Calibration and EMA Smoothing in One Pipeline Stage",
+   "labels": [
+    "embedded",
+    "python",
+    "redis"
+   ],
+   "source": "horus",
+   "problem": "Recalculating calibration in every consumer duplicates both the logic and the coefficients."
+  },
+  {
+   "slug": "cpk-as-a-stream",
+   "title": "Computing Cpk Continuously Instead of as a Batch Report",
+   "labels": [
+    "performance",
+    "observability",
+    "redis",
+    "python"
+   ],
+   "source": "horus",
+   "problem": "Process capability is traditionally an offline report, but an operator watching a live line needs a current value per zone."
+  },
+  {
+   "slug": "vcpkg-cross-compilation",
+   "title": "Cross-Compiling a vcpkg C++ Project to ARM64",
+   "labels": [
+    "cpp",
+    "ci-cd",
+    "embedded"
+   ],
+   "source": "horus",
+   "problem": "A dependency's build step tries to run a host binary that does not exist for the target, and the fix is an environment variable."
+  },
+  {
+   "slug": "cpp-websocket-fanout",
+   "title": "Fanning Redis Pub/Sub Out to Many WebSocket Clients in C++",
+   "labels": [
+    "cpp",
+    "redis",
+    "performance"
+   ],
+   "source": "horus",
+   "problem": "Every browser tab holding its own Redis subscription does not scale and exposes the store to untrusted clients."
+  },
+  {
+   "slug": "mqtt-acls",
+   "title": "Per-Account MQTT ACLs as the Real Authorization Boundary",
+   "labels": [
+    "redis",
+    "identity",
+    "security",
+    "embedded"
+   ],
+   "source": "k8s",
+   "problem": "A shared broker serving many flows needs each account restricted, or one bug reads or spoofs another flow's messages."
+  },
+  {
+   "slug": "sql-timezone-day-bucketing",
+   "title": "Timezone-Correct Day Bucketing for Revenue Reporting",
+   "labels": [
+    "databases",
+    "architecture"
+   ],
+   "source": "taberna",
+   "problem": "Grouping by day on UTC timestamps quietly moves evening orders into the next day for any shop east of Greenwich."
+  },
+  {
+   "slug": "analytics-in-sql-not-client",
+   "title": "Computing Analytics in SQL Instead of From the Last Page of Results",
+   "labels": [
+    "databases",
+    "fastapi"
+   ],
+   "source": "taberna",
+   "problem": "Deriving revenue in the frontend from the last N orders gives numbers that stop being true once volume passes the page size."
+  },
+  {
+   "slug": "adapter-interfaces-providers",
+   "title": "Adapter Interfaces for Swappable Payment, Carrier and Mail Providers",
+   "labels": [
+    "python",
+    "architecture",
+    "testing",
+    "api-design"
+   ],
+   "source": "taberna",
+   "problem": "Calling a vendor SDK from business logic means a provider swap is a rewrite of every call site, not a new class."
+  },
+  {
+   "slug": "influxdb-attendance-events",
+   "title": "Storing Time-Attendance Events in InfluxDB and Rolling Them Up on Read",
+   "labels": [
+    "databases",
+    "fastapi",
+    "frontend"
+   ],
+   "source": "ygg",
+   "problem": "Clock-in events are time-series data, and modelling them relationally makes 'hours this week' slow and verbose."
+  },
+  {
+   "slug": "upstream-200-for-bad-credentials",
+   "title": "When an Upstream Answers 200 for Wrong Credentials",
+   "labels": [
+    "api-design",
+    "identity",
+    "reliability",
+    "fastapi"
+   ],
+   "source": "ygg",
+   "problem": "Some registry APIs return 200 and an empty catalog whether you are unauthenticated or simply wrong, so integration reports 'connected, nothing here'."
+  },
+  {
+   "slug": "power-metering-self-hosting",
+   "title": "Metering GPU and CPU Power to a Currency Figure",
+   "labels": [
+    "observability",
+    "llm",
+    "python"
+   ],
+   "source": "atlas",
+   "problem": "The case for self-hosting is unclear without a measured cost per session, and most setups have no wall-power sensor."
+  },
+  {
+   "slug": "dual-arch-ci-pipelines",
+   "title": "Building One Tag Natively on Two CPU Architectures",
+   "labels": [
+    "ci-cd",
+    "docker",
+    "embedded"
+   ],
+   "source": "horus",
+   "problem": "An amd64 runner building arm64 under emulation can be an order of magnitude slower, which matters for a fleet of edge devices."
+  },
+  {
+   "slug": "design-tokens-discipline",
+   "title": "Design Tokens Over Literal Colours in Templates",
+   "labels": [
+    "frontend",
+    "architecture",
+    "documentation"
+   ],
+   "source": "taberna",
+   "problem": "Hex values scattered across templates make a UI drift screen by screen and 'what does this colour mean' stops having an answer."
+  },
+  {
+   "slug": "angular-ssr-behind-proxy",
+   "title": "Server-Side Rendering Angular Behind a Reverse Proxy",
+   "labels": [
+    "frontend",
+    "networking",
+    "docker"
+   ],
+   "source": "ygg",
+   "problem": "SSR turns the frontend into a long-running process that must be reachable from the proxy, unlike a static bundle."
+  },
+  {
+   "slug": "pdf-report-generation",
+   "title": "Generating a Print-Ready PDF Report from JSON Without a Browser",
+   "labels": [
+    "python",
+    "fastapi",
+    "documentation"
+   ],
+   "source": "horus",
+   "problem": "Operators need a printable record with a chart and thresholds, and a headless browser is a heavy dependency for it."
+  },
+  {
+   "slug": "sensor-data-simulation",
+   "title": "Simulating Sensor Data So the Pipeline Can Be Tested Without Hardware",
+   "labels": [
+    "testing",
+    "redis",
+    "embedded"
+   ],
+   "source": "horus",
+   "problem": "Testing an event pipeline end to end normally needs physical hardware on a bench, which cannot run in CI."
+  },
+  {
+   "slug": "pure-function-domain-logic",
+   "title": "Testing Domain Calculations as Pure Functions Without a Database",
+   "labels": [
+    "python",
+    "testing",
+    "architecture"
+   ],
+   "source": "taberna",
+   "problem": "Business calculations written as methods on a database model need a session and fixtures to test what is really arithmetic."
+  },
+  {
+   "slug": "registry-blob-redirect",
+   "title": "Registry Blob Redirects That Point Somewhere the Client Cannot Reach",
+   "labels": [
+    "docker",
+    "storage",
+    "networking"
+   ],
+   "source": "k8s",
+   "problem": "An S3-backed registry can redirect a download to an internal endpoint that external clients cannot resolve."
+  },
+  {
+   "slug": "init-container-ordering",
+   "title": "An Init Container That Cannot Fix What It Runs Before",
+   "labels": [
+    "kubernetes",
+    "reliability",
+    "docker",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "A repair container that runs once at pod creation cannot re-run when the main container crashloops, and can succeed vacuously."
+  },
+  {
+   "slug": "binfmt-daemonset",
+   "title": "A DaemonSet That Registers a Kernel Feature and Then Does Nothing",
+   "labels": [
+    "kubernetes",
+    "docker"
+   ],
+   "source": "k8s",
+   "problem": "Cross-architecture builds need binfmt handlers registered as host kernel state, which is lost on every reboot."
+  },
+  {
+   "slug": "statefulset-immutable-resize",
+   "title": "Resizing a Volume Behind an Immutable StatefulSet Template",
+   "labels": [
+    "kubernetes",
+    "storage",
+    "architecture"
+   ],
+   "source": "k8s",
+   "problem": "volumeClaimTemplates storage size is immutable, so growing a PVC leaves the manifest permanently disagreeing with reality."
+  },
+  {
+   "slug": "cronjob-not-job-for-sweeps",
+   "title": "Why a Sweep Belongs in a CronJob and Not a Job",
+   "labels": [
+    "kubernetes",
+    "automation",
+    "gitops",
+    "reliability"
+   ],
+   "source": "k8s",
+   "problem": "A failed one-shot Job is terminally unhealthy and blocks reconciliation of the whole application until someone deletes it."
+  },
+  {
+   "slug": "cpu-feature-scheduling",
+   "title": "CPU Instruction Sets as a Scheduling Constraint",
+   "labels": [
+    "kubernetes",
+    "embedded",
+    "reliability"
+   ],
+   "source": "k8s",
+   "problem": "A chart's default dependency can crash with an illegal instruction on older CPUs, looking like a random crash rather than an incompatibility."
+  },
+  {
+   "slug": "eso-envfrom-fanout",
+   "title": "One ExternalSecret, Many Environment Variables",
+   "labels": [
+    "kubernetes",
+    "secrets-management",
+    "vault"
+   ],
+   "source": "k8s",
+   "problem": "Wiring a dozen values through repeated secretKeyRef entries is verbose and drifts between Deployments."
+  },
+  {
+   "slug": "secret-rotation-blast-radius",
+   "title": "Rotation Blast Radius When the Same Credential Is Copied Per Namespace",
+   "labels": [
+    "secrets-management",
+    "vault",
+    "kubernetes",
+    "security"
+   ],
+   "source": "k8s",
+   "problem": "Every copy of a credential is one more place a rotation must reach, and the one you miss keeps working until it does not."
+  },
+  {
+   "slug": "registry-robot-accounts",
+   "title": "Scoped Robot Accounts Instead of a Human Credential on a CI Machine",
+   "labels": [
+    "docker",
+    "secrets-management",
+    "ci-cd",
+    "security"
+   ],
+   "source": "k8s",
+   "problem": "A person's credential on an unattended device ties that device to an account that rotates unpredictably and grants too much."
+  },
+  {
+   "slug": "registry-scan-wedged-state",
+   "title": "A Wedged Scan That Blocks Every Future Scan of the Same Artifact",
+   "labels": [
+    "docker",
+    "automation",
+    "security",
+    "api-design"
+   ],
+   "source": "k8s",
+   "problem": "A scan stuck pending is indistinguishable from one still running, and blocks every later request for that artifact."
+  },
+  {
+   "slug": "populated-field-is-not-evidence",
+   "title": "A Populated Field Is Not Evidence the Thing It Names Exists",
+   "labels": [
+    "testing",
+    "automation",
+    "api-design"
+   ],
+   "source": "k8s",
+   "problem": "A non-empty summary synthesised from a failed scan passed a check meant to prove the scan succeeded."
+  },
+  {
+   "slug": "acme-challenge-pruning",
+   "title": "Pruning Stale ACME Challenge Records Without Killing an Issuance in Flight",
+   "labels": [
+    "dns",
+    "tls",
+    "automation",
+    "testing"
+   ],
+   "source": "iac",
+   "problem": "Deleting a leftover record restores a name, but deleting one still in use costs an issuance a retry."
+  },
+  {
+   "slug": "proxy-auth-headers-trust",
+   "title": "Trusting Proxy Auth Headers Without Implementing Authorization Twice",
+   "labels": [
+    "identity",
+    "networking",
+    "security",
+    "api-design"
+   ],
+   "source": "k8s",
+   "problem": "A service behind an authenticating proxy needs to know who is calling without duplicating the proxy's job and disagreeing with it."
+  },
+  {
+   "slug": "graceful-source-degradation",
+   "title": "Degrading Gracefully When One Data Source Fails",
+   "labels": [
+    "observability",
+    "reliability",
+    "go"
+   ],
+   "source": "k8s",
+   "problem": "A naive merge lets one upstream's outage blank entities it does not even own, turning a partial failure into a total one."
+  },
+  {
+   "slug": "worst-status-rollup",
+   "title": "Rolling Worst Status Up a Containment Tree Without Per-Type Logic",
+   "labels": [
+    "observability",
+    "performance",
+    "architecture"
+   ],
+   "source": "k8s",
+   "problem": "A parent should reflect the worst problem beneath it without hand-written rollup code for every entity type."
+  },
+  {
+   "slug": "path-mtu-binary-search",
+   "title": "Finding Path MTU with a Binary Search Over ICMP Probes",
+   "labels": [
+    "networking",
+    "performance",
+    "observability"
+   ],
+   "source": "k8s",
+   "problem": "Testing packet sizes linearly wastes probes; the search space has an obvious logarithmic structure."
+  },
+  {
+   "slug": "read-only-query-proxy",
+   "title": "A Bounded Read-Only Query Proxy That Is Not a Reverse Proxy",
+   "labels": [
+    "observability",
+    "security",
+    "api-design"
+   ],
+   "source": "k8s",
+   "problem": "Exposing a metrics backend to a browser lets a client issue unbounded queries against internal infrastructure."
+  },
+  {
+   "slug": "drift-detection-declared-observed",
+   "title": "Detecting Drift Between a Declared Inventory and an Observed Mesh",
+   "labels": [
+    "infrastructure-as-code",
+    "observability",
+    "networking"
+   ],
+   "source": "k8s",
+   "problem": "An inventory declares intent and the live controller knows reality, and nothing compares the two automatically."
+  },
+  {
+   "slug": "never-reported-vs-zero",
+   "title": "Distinguishing 'Never Reported' From 'Reported Zero' in a Dashboard",
+   "labels": [
+    "frontend",
+    "observability"
+   ],
+   "source": "k8s",
+   "problem": "Collapsing a missing sample and a genuine zero into the same digit hides exactly the problem worth seeing."
+  },
+  {
+   "slug": "compound-graph-layout",
+   "title": "Why Force-Directed Layouts Diverge on Compound Graphs",
+   "labels": [
+    "frontend",
+    "performance"
+   ],
+   "source": "k8s",
+   "problem": "Moving a compound parent translates its whole subtree, and those translations compound across runs."
+  },
+  {
+   "slug": "relayout-decision",
+   "title": "Deciding When to Re-Layout a Live-Updating Graph",
+   "labels": [
+    "frontend",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "Re-running layout on every refresh throws away the user's pan and zoom; never re-running hides real structural change."
+  },
+  {
+   "slug": "percent-encoding-composite-ids",
+   "title": "Percent-Encoding Composite Identifiers That Contain Separators",
+   "labels": [
+    "api-design",
+    "frontend",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "An ID built from two fields can contain a slash, and path normalisation silently corrupts exactly those lookups."
+  },
+  {
+   "slug": "mcp-tools-over-same-handlers",
+   "title": "Exposing an Internal API as MCP Tools Without a Second Implementation",
+   "labels": [
+    "llm",
+    "api-design",
+    "go"
+   ],
+   "source": "k8s",
+   "problem": "An agent-facing surface built separately from the human-facing one drifts apart the moment either is changed."
+  },
+  {
+   "slug": "stuck-agent-filesystem-watch",
+   "title": "Detecting a Stuck Agent by Watching the Filesystem, Not the Log",
+   "labels": [
+    "agents",
+    "reliability",
+    "python"
+   ],
+   "source": "atlas",
+   "problem": "Pattern-matching log output kills runs that are actively producing work, because tools log the same line for different actions."
+  },
+  {
+   "slug": "salvage-partial-agent-work",
+   "title": "Salvaging a Stopped Run as a Draft Pull Request",
+   "labels": [
+    "agents",
+    "ci-cd",
+    "reliability"
+   ],
+   "source": "atlas",
+   "problem": "Discarding a killed run's uncommitted work means the next attempt starts from zero, which gets it killed again."
+  },
+  {
+   "slug": "merge-rate-kill-switch",
+   "title": "A Kill Switch Based on Merge Rate",
+   "labels": [
+    "agents",
+    "automation",
+    "observability",
+    "reliability"
+   ],
+   "source": "atlas",
+   "problem": "An automation loop producing pull requests nobody merges will keep burning compute on work being silently rejected."
+  },
+  {
+   "slug": "dependency-aware-queueing",
+   "title": "Encoding 'Do Not Start This Yet' for a Chain of Dependent Issues",
+   "labels": [
+    "agents",
+    "automation",
+    "architecture"
+   ],
+   "source": "atlas",
+   "problem": "A worker taking the highest-priority issue every cycle will start several steps of a migration at once against a stale base."
+  },
+  {
+   "slug": "github-api-search-scoped-discovery",
+   "title": "Polling the GitHub API Without Tripping the Rate Limit",
+   "labels": [
+    "agents",
+    "api-design",
+    "python",
+    "automation"
+   ],
+   "source": "atlas",
+   "problem": "Listing issues repository by repository scales calls with repository count, not with the work actually queued."
+  },
+  {
+   "slug": "speculative-decoding",
+   "title": "Speculative Decoding: Doubling Single-Stream Generation Throughput",
+   "labels": [
+    "llm",
+    "performance",
+    "testing"
+   ],
+   "source": "atlas",
+   "problem": "A single-stream local server is generation-bound, and ordinary batching does not help when only one request runs at a time."
+  },
+  {
+   "slug": "model-swap-config-pitfall",
+   "title": "One Unpinned Config Key That Doubles Your Model-Swap Cost",
+   "labels": [
+    "llm",
+    "infrastructure-as-code",
+    "reliability"
+   ],
+   "source": "atlas",
+   "problem": "Agent tooling using a separate small model for background tasks turns every background call into a full reload on one GPU."
+  },
+  {
+   "slug": "compile-time-api-documentation",
+   "title": "Enforcing API Documentation at Compile Time in C++",
+   "labels": [
+    "cpp",
+    "documentation",
+    "testing"
+   ],
+   "source": "horus",
+   "problem": "OpenAPI specs for hand-registered endpoints rot because nothing forces an update when an endpoint changes."
+  },
+  {
+   "slug": "offline-swagger-ui",
+   "title": "Serving API Documentation on a Network With No Internet Access",
+   "labels": [
+    "documentation",
+    "docker"
+   ],
+   "source": "horus",
+   "problem": "Interactive docs normally load assets from a CDN, which breaks entirely on a firewalled industrial network."
+  },
+  {
+   "slug": "remerging-microservices",
+   "title": "Merging Seven REST Services Into One Binary Without a Rewrite",
+   "labels": [
+    "architecture",
+    "cpp",
+    "docker"
+   ],
+   "source": "horus",
+   "problem": "A fleet of small services shares an operational cost that a full rewrite would risk paying twice."
+  },
+  {
+   "slug": "angular-route-registry",
+   "title": "One Registry for Routes, Navigation and Role Requirements",
+   "labels": [
+    "frontend",
+    "identity",
+    "testing"
+   ],
+   "source": "ygg",
+   "problem": "When paths, labels and role checks live in three places, a route ends up reachable without a permission check."
+  },
+  {
+   "slug": "jemalloc-page-size",
+   "title": "Debugging a jemalloc Page-Size Incompatibility on Newer ARM Hardware",
+   "labels": [
+    "embedded",
+    "reliability",
+    "linux"
+   ],
+   "source": "horus",
+   "problem": "A newer board defaulting to a 16KB kernel page size crashes a distro-packaged service that worked unmodified on the last revision."
+  },
+  {
+   "slug": "meta-repo-submodules",
+   "title": "A Meta-Repository of Submodules for a Reproducible Device Build",
+   "labels": [
+    "ci-cd",
+    "embedded"
+   ],
+   "source": "horus",
+   "problem": "A build depending on a dozen independently versioned repos needs one checkout pinning an exact commit of each."
+  },
+  {
+   "slug": "stacklight-commander",
+   "title": "Driving Physical Indicator Hardware From Aggregated Health Keys",
+   "labels": [
+    "embedded",
+    "observability",
+    "redis",
+    "python"
+   ],
+   "source": "horus",
+   "problem": "A dozen services each integrating with the alarm hardware means a dozen slightly different integrations."
+  },
+  {
+   "slug": "inotify-config-loader",
+   "title": "An inotify Config Loader That Turns Files Into Live Keys",
+   "labels": [
+    "redis",
+    "infrastructure-as-code",
+    "python",
+    "linux"
+   ],
+   "source": "horus",
+   "problem": "Services reading live config need on-disk changes to take effect without a restart or a polling loop."
+  },
+  {
+   "slug": "documentation-link-tests",
+   "title": "Link-Index and Anchor Tests for Documentation That Rots Quietly",
+   "labels": [
+    "documentation",
+    "testing",
+    "ci-cd",
+    "python"
+   ],
+   "source": "iac",
+   "problem": "A page nobody links is undiscoverable, and a link to a heading breaks the moment that heading is reworded."
+  },
+  {
+   "slug": "privacy-first-analytics",
+   "title": "Analytics With No Column Capable of Identifying Anyone",
+   "labels": [
+    "security",
+    "databases",
+    "architecture",
+    "fastapi"
+   ],
+   "source": "taberna",
+   "problem": "A consent banner can cost most of your sessions, corrupting the funnel it was meant to measure."
+  },
+  {
+   "slug": "optional-opentelemetry",
+   "title": "Wiring OpenTelemetry So a Collector Outage Is Not Your Outage",
+   "labels": [
+    "observability",
+    "python",
+    "reliability"
+   ],
+   "source": "taberna",
+   "problem": "An integration that raises when the collector is unreachable turns misconfigured observability into a real incident."
+  },
+  {
+   "slug": "otel-gauges-on-a-worker",
+   "title": "Why Business Metric Gauges Belong on a Worker, Not an SDK Callback",
+   "labels": [
+    "observability",
+    "python"
+   ],
+   "source": "taberna",
+   "problem": "A gauge callback awaiting a session on an event loop it does not own registers cleanly and then reports nothing."
+  },
+  {
+   "slug": "revisioned-time-series",
+   "title": "A Revisioned Model for Time-Series Data That Gets Restated",
+   "labels": [
+    "databases",
+    "architecture",
+    "python"
+   ],
+   "source": "taberna",
+   "problem": "Overwriting a republished value destroys the ability to know it ever changed or what was known at the time."
+  },
+  {
+   "slug": "returns-on-immutable-orders",
+   "title": "Modelling Returns Without Mutating the Order They Came From",
+   "labels": [
+    "architecture",
+    "databases",
+    "api-design"
+   ],
+   "source": "taberna",
+   "problem": "Bolting refund logic onto the order table blurs what was ordered with what came back."
+  },
+  {
+   "slug": "read-only-status-endpoint",
+   "title": "A Read-Only Status Endpoint Using Only the Standard Library",
+   "labels": [
+    "python",
+    "observability",
+    "databases"
+   ],
+   "source": "atlas",
+   "problem": "A daemon's state is invisible from outside the process, and a web framework is disproportionate for three read-only routes."
+  },
+  {
+   "slug": "mysql-double-fsync",
+   "title": "A Throughput Cliff Hiding Behind Two Independent fsync Settings",
+   "labels": [
+    "databases",
+    "storage",
+    "performance"
+   ],
+   "source": "k8s",
+   "problem": "Fixing one durability setting still leaves every commit synchronously flushing over a slow network device."
+  }
+ ],
+ "vocabulary": [
+  "linux",
+  "ansible",
+  "infrastructure-as-code",
+  "docker",
+  "kubernetes",
+  "gitops",
+  "ceph",
+  "storage",
+  "databases",
+  "redis",
+  "networking",
+  "dns",
+  "security",
+  "vault",
+  "secrets-management",
+  "identity",
+  "tls",
+  "observability",
+  "alerting",
+  "testing",
+  "python",
+  "fastapi",
+  "go",
+  "cpp",
+  "frontend",
+  "llm",
+  "agents",
+  "embedded",
+  "api-design",
+  "architecture",
+  "performance",
+  "reliability",
+  "ci-cd",
+  "automation",
+  "documentation"
+ ]
+}
