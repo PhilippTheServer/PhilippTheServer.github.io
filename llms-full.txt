@@ -12,7 +12,8 @@ sitemap: false
 > Structured identity: {{ '/profile.json' | absolute_url }} · CV: {{ '/resume.json' | absolute_url }}
 
 {% assign doc_pages = site.pages | where_exp: "p", "p.nav_order" | sort: "nav_order" -%}
-{% for p in doc_pages %}
+{% assign everything = doc_pages | concat: site.posts -%}
+{% for p in everything %}
 ================================================================================
 # {{ p.title }}
 {{ p.url | absolute_url }}

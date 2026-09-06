@@ -21,6 +21,10 @@ author:
 feed:
   path: feed.xml
   posts_limit: 20
+  title: "Philipp Lehmann — writing"
+
+# Articles are posts; the date lives in the front matter, not in the URL.
+permalink: /posts/:title/
 
 markdown: kramdown
 highlighter: rouge

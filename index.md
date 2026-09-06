@@ -6,7 +6,8 @@ nav_order: 1
 description: >-
   Philipp Lehmann — infrastructure engineer in Bochum. Head of Administration
   and IT at Nerd Force1 UG (AI-Gruppe), IT-Security student at Ruhr University
-  Bochum. Docker, Kubernetes, Ceph, Ansible, and the internal tooling on top.
+  Bochum. Writing about Docker, Kubernetes, Ceph, Ansible, monitoring and
+  self-hosted AI.
 ---
 
 <h1 class="hero-name">Philipp Lehmann</h1>
@@ -44,32 +45,34 @@ up to the full-stack internal tooling that sits on top of it.
 The rule I hold everything to: if a host cannot be rebuilt from the repository, it does
 not count as running. There is no configuration living only in someone's shell history.
 
-## Selected work
+## Writing
+
+I write things down after I have learned them the expensive way. The full set is under
+[Writing](/posts/); these three are where I would start.
 
 <ul class="projects">
   <li class="project">
-    <h3>Internal Operations Platform</h3>
-    <p>The company's own platform, which centralised operations and replaced several
-    external tools: internal messenger, time tracking, tickets, accounting, Docker
-    registry frontend, DNS management, WireGuard management and hosting orchestration.</p>
-    <div class="tags"><span>Angular</span><span>FastAPI</span><span>Celery</span><span>MySQL</span><span>InfluxDB</span></div>
+    <h3><a href="/posts/infrastructure-as-code/">A host you cannot rebuild is not running</a></h3>
+    <p>Infrastructure as code is not a tool choice, it is a rule about where truth lives —
+    and the temptation to break it always arrives at three in the morning.</p>
+    <div class="tags"><span>Ansible</span><span>Terraform</span><span>Linux</span></div>
   </li>
   <li class="project">
-    <h3><a href="https://github.com/PhilippTheServer/atlas">atlas</a></h3>
-    <p>Self-hosted model serving — an OpenAI-compatible API, repeatable capability
-    benchmarks for the locally served models, and a metrics poller. Because sending
-    everything to someone else's GPU is a decision, not a default.</p>
-    <div class="tags"><span>Python</span><span>FastAPI</span><span>llama-swap</span><span>uv</span></div>
+    <h3><a href="/posts/ceph/">Ceph without a vendor's price list</a></h3>
+    <p>Replicated storage across ordinary machines instead of one expensive box with a
+    support contract — and the four failure modes that only show up once you are already
+    unhappy.</p>
+    <div class="tags"><span>Ceph</span><span>Storage</span></div>
   </li>
   <li class="project">
-    <h3><a href="https://github.com/PhilippTheServer/Server-Administration_ansible">Server-Administration</a></h3>
-    <p>The company's server infrastructure as code. The reason a rebuild is a pipeline
-    run rather than an afternoon.</p>
-    <div class="tags"><span>Ansible</span><span>Linux</span></div>
+    <h3><a href="/posts/observatory-monitoring/">Alert on symptoms, not on metrics</a></h3>
+    <p>The outages nobody catches are the ones where every metric is green. What to do
+    about the failures that live between healthy components.</p>
+    <div class="tags"><span>Monitoring</span><span>Alerting</span></div>
   </li>
 </ul>
 
-[All projects →](/projects/)
+[Everything I have written →](/posts/)
 
 ## Community
 

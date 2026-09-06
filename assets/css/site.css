@@ -226,3 +226,85 @@ code {
 .site-foot ul { list-style: none; margin: 0; padding: 0; }
 .site-foot li { margin-bottom: 0.3rem; }
 .colophon { margin: 1.75rem 0 0; font-size: 0.85rem; }
+
+/* ---------- articles ---------- */
+
+.post-meta {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  margin: 0 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+}
+
+.post-tags { display: inline-flex; flex-wrap: wrap; gap: 0.4rem; }
+.post-tags span {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+  border: 1px solid var(--rule);
+  background: var(--bg-sunk);
+  border-radius: 100px;
+  padding: 0.12rem 0.55rem;
+}
+
+.post-body > p:first-of-type { font-size: 1.08rem; }
+
+.post-body h2 {
+  font-size: 1.15rem;
+  margin: 2.75rem 0 0.9rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.post-body blockquote {
+  margin: 0 0 1.2rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--fg-muted);
+}
+
+.post-foot {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+.post-foot p { margin: 0 0 0.5rem; }
+
+/* ---------- article index ---------- */
+
+.post-list { list-style: none; padding: 0; margin: 0 0 2rem; }
+
+.post-entry {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--rule);
+  margin: 0;
+}
+.post-entry:first-child { padding-top: 0.5rem; }
+
+.post-entry h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.35rem;
+  border: 0;
+  padding: 0;
+}
+.post-entry h2 a { text-decoration: none; }
+.post-entry h2 a:hover { text-decoration: underline; }
+
+.post-entry-meta {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--fg-muted);
+  margin: 0 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.8rem;
+}
+
+.post-entry > p:last-child { margin: 0; color: var(--fg-muted); font-size: 0.95rem; }

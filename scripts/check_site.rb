@@ -8,6 +8,18 @@ SITE   = ARGV[0] || "_site"
 ORCID  = "0009-0002-3922-2471"
 DOMAIN = "philipptheserver.com"
 
+# Every article the site promises. Listed here rather than globbed, so deleting one is a
+# deliberate edit to this file instead of a silent disappearance.
+ARTICLES = %w[
+  infrastructure-as-code
+  kubernetes
+  ceph
+  observatory-monitoring
+  netbird-vpn
+  keycloak
+  atlas-agentic-ops
+].freeze
+
 @failures = []
 
 def fail!(msg) = @failures << msg
@@ -28,12 +40,46 @@ rescue JSON::ParserError => e
 end
 
 # 1. Every file the site promises must exist.
-%w[
-  index.html about/index.html projects/index.html
+(%w[
+  index.html about/index.html posts/index.html
   llms.txt llms-full.txt profile.json resume.json
   ai.txt humans.txt robots.txt .well-known/security.txt
   feed.xml sitemap.xml favicon.svg assets/css/site.css CNAME
-].each { |f| fail!("#{f}: missing from the built site") unless File.file?(File.join(SITE, f)) }
+] + ARTICLES.map { |a| "posts/#{a}/index.html" }).each do |f|
+  fail!("#{f}: missing from the built site") unless File.file?(File.join(SITE, f))
+end
+
+# The repository listing was replaced by the articles; it must not come back.
+fail!("projects/index.html: the repo list should be gone") if File.file?(File.join(SITE, "projects/index.html"))
+
+# An article nobody can find is an article that is not published. Each must be listed on
+# the index, named in llms.txt, carried in full by llms-full.txt, and in the feed.
+ARTICLES.each do |slug|
+  url = "/posts/#{slug}/"
+  index = read("posts/index.html")
+  fail!("posts/index.html: does not link #{url}") if index && !index.include?(%(href="#{url}"))
+
+  llms = read("llms.txt")
+  fail!("llms.txt: does not list #{url}") if llms && !llms.include?("https://#{DOMAIN}#{url}")
+
+  feed = read("feed.xml")
+  fail!("feed.xml: does not carry #{url}") if feed && !feed.include?("https://#{DOMAIN}#{url}")
+
+  article = read("posts/#{slug}/index.html")
+  next if article.nil?
+
+  headings = article.scan(%r{<h1 class="page-title"[^>]*>(.*?)</h1>}m).flatten
+  fail!("posts/#{slug}/: has no title") if headings.empty?
+  # Both layouts used to render the heading, so every article showed its title and
+  # subtitle twice. One heading, exactly.
+  fail!("posts/#{slug}/: renders its title #{headings.length} times") if headings.length > 1
+  title = headings.first&.strip
+
+  full = read("llms-full.txt")
+  if full && title && !full.include?(title)
+    fail!("llms-full.txt: does not carry the text of #{url}")
+  end
+end
 
 # 2. The two JSON files must parse.
 profile = parse_json("profile.json")
@@ -88,7 +134,8 @@ end
 
 # 5. The JSON-LD embedded in each page must be byte-for-byte the same object as
 #    profile.json — the page and the file can never claim different things.
-%w[index.html about/index.html projects/index.html].each do |page|
+(%w[index.html about/index.html posts/index.html] +
+ ARTICLES.map { |a| "posts/#{a}/index.html" }).each do |page|
   html = read(page) or next
   block = html[%r{<script type="application/ld\+json">(.*?)</script>}m, 1]
   if block.nil?
@@ -132,7 +179,8 @@ end
 cname = read("CNAME")&.strip
 fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == DOMAIN
 
-%w[index.html about/index.html projects/index.html].each do |page|
+(%w[index.html about/index.html posts/index.html] +
+ ARTICLES.map { |a| "posts/#{a}/index.html" }).each do |page|
   html = read(page) or next
   fail!("#{page}: no canonical link to https://#{DOMAIN}") unless html.include?(%(rel="canonical" href="https://#{DOMAIN}))
 end
@@ -140,10 +188,10 @@ end
 # 9. llms-full.txt must actually carry the pages, not just its own header.
 full = read("llms-full.txt")
 if full
-  ["Philipp Lehmann", "About", "Projects"].each do |title|
+  ["Philipp Lehmann", "About"].each do |title|
     fail!("llms-full.txt: page #{title.inspect} is missing") unless full.include?("# #{title}\n")
   end
-  fail!("llms-full.txt: suspiciously short (#{full.length} bytes) — page bodies did not render") if full.length < 6_000
+  fail!("llms-full.txt: suspiciously short (#{full.length} bytes) — bodies did not render") if full.length < 40_000
   fail!("llms-full.txt: contains unrendered Liquid") if full.include?("{{") || full.include?("{%")
 end
 

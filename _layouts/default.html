@@ -12,12 +12,16 @@
     <nav class="nav" aria-label="Primary">
       <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
       <a href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
-      <a href="{{ '/projects/' | relative_url }}"{% if page.url == '/projects/' %} aria-current="page"{% endif %}>Projects</a>
+      <a href="{{ '/posts/' | relative_url }}"{% if page.url == '/posts/' or page.layout == 'post' %} aria-current="page"{% endif %}>Writing</a>
     </nav>
   </header>
 
   <main id="content" class="content">
-    {%- if page.title and page.url != '/' -%}
+    {%- comment -%}
+      A post renders its own heading in _layouts/post.html, because the date and tags
+      belong directly under the title. Rendering it here too would duplicate both lines.
+    {%- endcomment -%}
+    {%- if page.title and page.url != '/' and page.layout != 'post' -%}
     <h1 class="page-title">{{ page.title }}</h1>
     {%- if page.subtitle %}<p class="page-subtitle">{{ page.subtitle }}</p>{% endif -%}
     {%- endif -%}
