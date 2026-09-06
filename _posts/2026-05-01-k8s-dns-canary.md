@@ -32,13 +32,13 @@ The genuinely awkward part is what happens after you fix it. You find the
 bad search domain, or the Corefile rewrite rule someone added eight months
 ago for a migration that finished, and you remove it. The fix works. Six
 months later, someone edits the CoreDNS `ConfigMap` for a completely
-unrelated reason — adding a stub-domain forwarder for a new internal zone,
-say — and in doing so reintroduces a rewrite that shadows the same name, or
-changes the upstream resolver order so an internal search entry wins again.
-Nothing in the change review catches it, because the reviewer is thinking
-about the new zone, not about a bug that was fixed and forgotten. The
-regression is silent by construction: DNS misresolution does not fail loudly,
-and there is no test in most clusters that would notice.
+unrelated reason — adding a stub-domain forwarder for a new internal zone —
+and reintroduces a rewrite that shadows the same name, or changes the
+upstream resolver order so an internal search entry wins again. Nothing in
+the change review catches it, because the reviewer is thinking about the new
+zone, not a bug fixed and forgotten. The regression is silent by
+construction: DNS misresolution does not fail loudly, and there is no test
+in most clusters that would notice.
 
 A one-off `dig` from your workstation at incident time does not protect
 against this. It proves the bug exists right now, on your machine, using
@@ -92,16 +92,14 @@ running it.
 
 Kubernetes already does the hard part here: a `Job` that fails increments
 `status.failed` and, with `backoffLimit` set low, stops retrying and sits
-there visibly failed. That is not nothing — `kubectl get jobs` shows it, and
+visibly failed. That is not nothing — `kubectl get jobs` shows it, and
 `kube-state-metrics` exports it as `kube_job_status_failed`, which anything
 already scraping Prometheus can alert on with a one-line rule. Building a
-bespoke notification path — a webhook out of the check script, a Slack
-message from inside the container — duplicates infrastructure most clusters
-already run for exactly this purpose. The honest scope for this article is
-the test signal itself: a Job that fails cleanly and specifically when the
-regression reappears. Wiring that failure into a specific alerting stack is
-a different, environment-specific piece of work, and reproducing one here
-would be a worse example than admitting the boundary.
+bespoke notification path duplicates infrastructure most clusters already
+run for this. The honest scope here is the test signal itself: a Job that
+fails cleanly and specifically when the regression reappears. Wiring that
+into a specific alerting stack is different, environment-specific work, and
+reproducing one here would be a worse example than admitting the boundary.
 
 ## The solution
 
@@ -130,31 +128,46 @@ data:
 
     fail=0
 
+    get_v4_addresses() {
+      # Space-separated IPv4 addresses from nslookup's output for $1. The
+      # pure dotted-quad match naturally excludes the query server's own
+      # "Address: <ip>:53" line and any IPv6 (AAAA) answers — busybox's
+      # nslookup prints both address families for a name that has both,
+      # and a well-known name can carry more than one address of either.
+      nslookup "$1" 2>/dev/null | awk '$1 == "Address:" && $2 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ { printf "%s ", $2 }'
+    }
+
     check_resolves_to() {
       name="$1"
       expected="$2"
-      got=$(nslookup "$name" 2>/dev/null | awk '/^Address/{a=$3} END{print a}')
-      if [ "$got" != "$expected" ]; then
-        echo "FAIL: $name resolved to '$got', expected '$expected'"
-        fail=1
-      else
-        echo "OK: $name -> $got"
-      fi
+      addrs=$(get_v4_addresses "$name")
+      case " $addrs" in
+        *" $expected "*)
+          echo "OK: $name -> $expected (of: $addrs)"
+          ;;
+        *)
+          echo "FAIL: $name resolved to [$addrs], expected to include '$expected'"
+          fail=1
+          ;;
+      esac
     }
 
     check_in_cidr() {
       name="$1"
-      cidr_prefix="$2"   # e.g. "10.96." or "10.97." — coarse check, laptop-scale only
-      got=$(nslookup "$name" 2>/dev/null | awk '/^Address/{a=$3} END{print a}')
-      case "$got" in
-        ${cidr_prefix}*)
-          echo "OK: $name -> $got (in $cidr_prefix.0.0/16-ish range)"
-          ;;
-        *)
-          echo "FAIL: $name resolved to '$got', expected prefix '$cidr_prefix'"
-          fail=1
-          ;;
-      esac
+      cidr_prefix="$2"   # e.g. "10.96." — coarse check, laptop-scale only
+      addrs=$(get_v4_addresses "$name")
+      match=0
+      for a in $addrs; do
+        case "$a" in
+          ${cidr_prefix}*) match=1 ;;
+        esac
+      done
+      if [ "$match" = "1" ]; then
+        echo "OK: $name -> $addrs (matches $cidr_prefix*)"
+      else
+        echo "FAIL: $name resolved to [$addrs], expected an address starting with '$cidr_prefix'"
+        fail=1
+      fi
     }
 
     check_nxdomain() {
@@ -178,6 +191,12 @@ data:
 
     exit $fail
 ```
+
+`one.one.one.one` resolves to more than one address (Cloudflare publishes it against both
+`1.1.1.1` and `1.0.0.1`, plus their IPv6 equivalents), which is exactly why the check
+above asks "is the address I expect present" rather than "is the address I expect the
+only, last one printed" — a check written the second way fails on a perfectly healthy
+answer the moment a name legitimately carries more than one record.
 
 The `CronJob` that runs it:
 
@@ -225,8 +244,8 @@ kubectl logs job/dns-canary-manual-1
 Expected output on a healthy cluster:
 
 ```
-OK: kubernetes.default.svc.cluster.local -> 10.96.0.1 (in 10.96. range)
-OK: one.one.one.one -> 1.1.1.1
+OK: kubernetes.default.svc.cluster.local -> 10.96.0.1  (matches 10.96.*)
+OK: one.one.one.one -> 1.1.1.1 (of: 1.1.1.1 1.0.0.1 )
 OK: this-name-should-never-exist.invalid did not resolve, as expected
 ```
 
@@ -240,10 +259,15 @@ liability the moment its operator changes it.
 
 Reintroduce a split-horizon-style blackhole entirely inside the lab
 cluster, by patching CoreDNS's `Corefile` to rewrite the external name to
-loopback:
+loopback. Save just the current `Corefile` text first, not a full
+`kubectl get -o yaml` dump — restoring a full object dump with `kubectl
+apply` later carries its old `resourceVersion` along and the API server
+will refuse it as a conflict the moment anything else has touched the
+object since:
 
 ```bash
-kubectl -n kube-system get configmap coredns -o yaml > /tmp/coredns-backup.yaml
+kubectl -n kube-system get configmap coredns -o jsonpath='{.data.Corefile}' \
+  > /tmp/coredns-original-corefile.txt
 
 kubectl -n kube-system patch configmap coredns --type merge -p '{
   "data": {
@@ -264,17 +288,22 @@ kubectl logs job/dns-canary-manual-2
 ```
 
 ```
-OK: kubernetes.default.svc.cluster.local -> 10.96.0.1 (in 10.96. range)
-FAIL: one.one.one.one resolved to '127.0.0.1', expected '1.1.1.1'
+OK: kubernetes.default.svc.cluster.local -> 10.96.0.1  (matches 10.96.*)
+FAIL: one.one.one.one resolved to [127.0.0.1 ], expected to include '1.1.1.1'
 OK: this-name-should-never-exist.invalid did not resolve, as expected
 ```
 
 `kubectl get job dns-canary-manual-2` shows the Job failed rather than
 completed — this is the signal a `kube_job_status_failed` alert would pick
-up. Revert and confirm it clears:
+up. Revert by rebuilding a clean `ConfigMap` from the saved `Corefile` text
+and replacing the live one outright, and confirm it clears:
 
 ```bash
-kubectl -n kube-system apply -f /tmp/coredns-backup.yaml
+kubectl -n kube-system create configmap coredns \
+  --from-file=Corefile=/tmp/coredns-original-corefile.txt \
+  --dry-run=client -o yaml > /tmp/coredns-restore.yaml
+
+kubectl -n kube-system replace -f /tmp/coredns-restore.yaml
 kubectl -n kube-system rollout restart deployment coredns
 kubectl -n kube-system rollout status deployment coredns
 

@@ -60,39 +60,35 @@ func (s *Server) refresh(ctx context.Context) {
 Each field write is properly locked, so nothing here is a data race in the memory
 sense. But a reader that takes `s.mu` between the hosts goroutine's unlock and the
 alerts goroutine's lock sees the new host list next to the old alert list - a
-combination that was never true of the actual system at any single instant. If a
-host just went down and its alert has not landed yet, the graph briefly asserts
-"host up, no alerts" and "host up, disk alert firing" as two different reads a few
-microseconds apart, neither of which is what happened.
+combination that was never true of the system at any single instant. If a host just
+went down and its alert has not landed yet, the graph briefly asserts "host up, no
+alerts" and "host up, disk alert firing" as two reads a few microseconds apart,
+neither of which is what happened.
 
 This is what makes the bug dangerous rather than merely embarrassing: it does not
-crash, it does not deadlock, and it does not show up in `go test -race`, because
-every access to every field is correctly synchronized. What is wrong is not memory
-safety but atomicity - the merge is four independent critical sections, and nothing
-stops a reader from interleaving between any two of them. The bug survives code
-review because the locking looks careful. It survives light load because the
-interleaving window is a handful of microseconds around four goroutine completions.
-It shows up in production as a dashboard that occasionally contradicts itself for
-one poll cycle, which people either don't notice or blame on the data source.
+crash, deadlock, or show up in `go test -race`, because every field access is
+correctly synchronized. What is wrong is not memory safety but atomicity - the merge
+is four independent critical sections, and nothing stops a reader interleaving
+between any two of them. The bug survives review because the locking looks careful,
+survives light load because the interleaving window is microseconds wide, and shows
+up in production as a dashboard that occasionally contradicts itself for one poll
+cycle - which people either don't notice or blame on the data source.
 
-The same shape appears any time a single logical read has to reflect an all-or-
-nothing view assembled from more than one independently updated piece of state -
-struct fields, map entries, or rows joined across two tables refreshed on different
-schedules.
+The same shape appears any time a single logical read must reflect an all-or-nothing
+view assembled from more than one independently updated piece of state - struct
+fields, map entries, or rows joined across tables refreshed on different schedules.
 
 ## Working through it
 
 ### Locking narrower or wider does not fix it
 
-The instinct when told "the lock window is too small" is to make it bigger:
-hold `s.mu` across the whole `refresh`, from before the fetches start to after
-they finish. That removes the interleaving, but it also serializes the fetches
-behind the slowest one and blocks every reader for the full duration of the
-merge - exactly the coupling that fetching concurrently was meant to avoid. Going
-the other way and shrinking each critical section further does not help either;
-it shrinks the window a reader can land in without ever closing it. The axis that
-matters is not how tightly you lock each field. It is when you make the new state
-visible at all.
+The instinct when told "the lock window is too small" is to make it bigger: hold
+`s.mu` across the whole `refresh`. That removes the interleaving, but it serializes
+the fetches behind the slowest one and blocks every reader for the whole merge -
+exactly the coupling that fetching concurrently was meant to avoid. Shrinking each
+critical section further does not help either; it narrows the window a reader can
+land in without ever closing it. The axis that matters is not how tightly you lock
+each field. It is when you make the new state visible at all.
 
 ### Build the whole snapshot before anyone can see it
 
@@ -124,44 +120,39 @@ happens to that source's contribution on failure - which does not have to be the
 same policy for every source, and should not silently fail the whole merge.
 
 The policy used below is to keep the previous snapshot's value for that field and
-mark it degraded, rather than leaving it empty or aborting. An empty host list is
-a worse lie than a slightly stale one: a console that briefly shows yesterday's
-host list is more useful than one that shows none. `errgroup.WithContext` runs
-the four fetches concurrently under a shared deadline, but every goroutine
-returns `nil` regardless of what its own fetch did - one source's error must
-never fail the group or cancel the other three.
+mark it degraded, rather than leaving it empty or aborting. An empty host list is a
+worse lie than a stale one: a console that briefly shows yesterday's host list is
+more useful than one that shows none. `errgroup.WithContext` runs the four fetches
+concurrently under a shared deadline, but every goroutine returns `nil` regardless
+of its own fetch's outcome - one source's error must never fail the group or
+cancel the other three.
 
 ### The swap does not protect a caller who reads the pointer twice
 
-A subtler trap: even with `atomic.Pointer[Graph]` correctly implemented on the
-write side, a handler that calls `Load()` once per field it needs reopens the
-same hole the mutex version had, because the pointer can be swapped in between
-the two `Load()` calls. The rule is to take the pointer once and read every field
-off that one local copy. It costs one variable, and it is exactly the kind of
-thing that quietly regresses when someone "simplifies" a handler into several
-small getters later.
+A subtler trap: even with `atomic.Pointer[Graph]` correct on the write side, a
+handler that calls `Load()` once per field it needs reopens the same hole the
+mutex version had, because the pointer can be swapped between the two `Load()`
+calls. The rule is to take the pointer once and read every field off that one
+local copy - a cost of one variable, and exactly the kind of thing that quietly
+regresses when someone "simplifies" a handler into several small getters later.
 
 ### A second, genuine data race, found while building this
 
 While writing the version below, per-source health status was first kept in a
 shared `map[string]SourceHealth`, with each fetch goroutine writing its own key
-directly. `go test -race` caught that immediately: a concurrent-write report
-naming two goroutines, each one traced back to a different source's closure,
-writing with no synchronization between them. Two goroutines writing to two
-different keys of the same Go map is still unsafe - a map is not decomposable
-into independent per-key storage the way a struct's fields are, and an internal
-resize touches memory shared across every key. The fix was mechanical: give each
-goroutine its own local `SourceHealth` variable and assemble the map from those
-four variables after `errgroup.Wait()` returns, once nothing is running
-concurrently.
+directly. `go test -race` caught it immediately: two goroutines writing to two
+different keys of the same map is still unsafe - a Go map gives no per-key
+isolation, and an internal resize touches memory shared across every key. The
+fix was mechanical: give each goroutine its own local `SourceHealth` variable and
+assemble the map from those four variables after `errgroup.Wait()` returns.
 
-The contrast between the two bugs in this article is the useful part. The
-mutex-per-field version at the top is invisible to `-race` because every access
-is fully synchronized and merely wrong in sequence - a domain-level atomicity
-violation. The map-write version is invisible to a quick read of the code because
-each line looks like an independent, harmless write - a genuine memory race. They
-need different tools: an invariant test written against the actual read model
-for the first, the race detector for the second. This program keeps both.
+The contrast between the two bugs here is the useful part. The mutex-per-field
+version is invisible to `-race` because every access is fully synchronized and
+merely wrong in sequence - a domain-level atomicity violation. The map-write
+version is invisible to a quick read of the code, because each line looks like an
+independent, harmless write - a genuine memory race. They need different tools:
+an invariant test against the actual read model for the first, the race detector
+for the second. This program keeps both.
 
 ## The solution
 
@@ -284,52 +275,48 @@ func randLatency(minMS, maxMS int) time.Duration {
 	return time.Duration(minMS+rand.Intn(maxMS-minMS+1)) * time.Millisecond
 }
 
+type errStub string
+
+func (e errStub) Error() string { return string(e) }
+
+// maybeFail simulates one source call: it sleeps for a random latency in
+// [minMS, maxMS], then fails with probability failRate. Every fetchX below
+// is this same shape with different numbers, standing in for whatever a
+// real inventory, storage, network or alerting client would do.
+func maybeFail(ctx context.Context, minMS, maxMS int, failRate float64, name string) error {
+	if err := sleepOrDone(ctx, randLatency(minMS, maxMS)); err != nil {
+		return err
+	}
+	if rand.Float64() < failRate {
+		return errStub(name + ": request failed")
+	}
+	return nil
+}
+
 func fetchHosts(ctx context.Context) ([]Host, error) {
-	if err := sleepOrDone(ctx, randLatency(20, 180)); err != nil {
+	if err := maybeFail(ctx, 20, 180, 0.08, "host inventory"); err != nil {
 		return nil, err
 	}
-	if rand.Float64() < 0.08 {
-		return nil, errStub("host inventory: connection reset")
-	}
-	return []Host{
-		{Name: "node-a", State: "ready"},
-		{Name: "node-b", State: "ready"},
-		{Name: "node-c", State: "ready"},
-	}, nil
+	return []Host{{Name: "node-a", State: "ready"}, {Name: "node-b", State: "ready"}}, nil
 }
 
 func fetchStorage(ctx context.Context) ([]StorageStatus, error) {
-	if err := sleepOrDone(ctx, randLatency(20, 220)); err != nil {
+	if err := maybeFail(ctx, 20, 220, 0.08, "storage backend"); err != nil {
 		return nil, err
 	}
-	if rand.Float64() < 0.08 {
-		return nil, errStub("storage backend: read timeout")
-	}
-	return []StorageStatus{
-		{Pool: "pool-0", Healthy: true},
-		{Pool: "pool-1", Healthy: rand.Float64() > 0.1},
-	}, nil
+	return []StorageStatus{{Pool: "pool-0", Healthy: true}, {Pool: "pool-1", Healthy: rand.Float64() > 0.1}}, nil
 }
 
 func fetchLinks(ctx context.Context) ([]LinkState, error) {
-	if err := sleepOrDone(ctx, randLatency(20, 160)); err != nil {
+	if err := maybeFail(ctx, 20, 160, 0.08, "network fabric"); err != nil {
 		return nil, err
 	}
-	if rand.Float64() < 0.08 {
-		return nil, errStub("network fabric: no response")
-	}
-	return []LinkState{
-		{Link: "leaf-1<->spine-1", Up: true},
-		{Link: "leaf-2<->spine-1", Up: rand.Float64() > 0.05},
-	}, nil
+	return []LinkState{{Link: "leaf-1<->spine-1", Up: true}, {Link: "leaf-2<->spine-1", Up: rand.Float64() > 0.05}}, nil
 }
 
 func fetchAlerts(ctx context.Context) ([]Alert, error) {
-	if err := sleepOrDone(ctx, randLatency(20, 140)); err != nil {
+	if err := maybeFail(ctx, 20, 140, 0.08, "alert manager"); err != nil {
 		return nil, err
-	}
-	if rand.Float64() < 0.08 {
-		return nil, errStub("alert manager: 503")
 	}
 	if rand.Float64() < 0.3 {
 		return []Alert{{Source: "storage", Severity: "warning"}}, nil
@@ -337,25 +324,19 @@ func fetchAlerts(ctx context.Context) ([]Alert, error) {
 	return []Alert{}, nil
 }
 
-type errStub string
-
-func (e errStub) Error() string { return string(e) }
-
 // mergeOnce fetches every source concurrently, bounded by mergeTimeout, and
-// builds one brand new Graph in local variables. Nothing here is shared with
-// any reader until the caller stores the returned pointer. A source that
-// fails or times out falls back to its last known good contribution from
-// prev and is marked degraded; it never blocks or corrupts the others.
+// builds one brand new Graph in local variables not shared with any reader
+// until the caller stores the returned pointer. A source that fails or
+// times out falls back to prev's last known good value and is marked
+// degraded; it never blocks or corrupts the others.
 func mergeOnce(ctx context.Context, prev *Graph, gen uint64) *Graph {
 	ctx, cancel := context.WithTimeout(ctx, mergeTimeout)
 	defer cancel()
 
-	// Each goroutine below owns exactly one pair of variables, and no two
-	// goroutines ever touch the same one. A map keyed by source name looks
-	// tempting here, but a single map written from four goroutines is a data
-	// race even when every goroutine writes a different key - a Go map gives
-	// no per-key isolation. These locals, joined into a map only after
-	// g.Wait(), sidestep that.
+	// Each goroutine owns exactly one pair of variables below, joined into a
+	// map only after g.Wait(). A map keyed by source name looks tempting
+	// instead, but writing it from four goroutines is a data race even when
+	// each writes a different key - a Go map gives no per-key isolation.
 	var (
 		hosts         []Host
 		storage       []StorageStatus
@@ -545,14 +526,11 @@ import (
 	"time"
 )
 
-// TestNoTornSnapshot hammers one Merger with many concurrent writers
-// (overlapping merge cycles, as if several ticks raced each other) and many
+// TestNoTornSnapshot hammers one Merger with overlapping writers and
 // concurrent readers, both direct via Snapshot() and over HTTP. Every
-// observed Graph must pass Verify(): its checksum, computed once at build
-// time from its own Hosts/Storage/Links/Alerts, must still match those same
-// fields now. If any reader ever saw a Graph assembled from two different
-// merge cycles, this would fail - and go test -race would additionally flag
-// any unsynchronized access to the fields themselves.
+// observed Graph must pass Verify(): a Graph assembled from two different
+// merge cycles could not satisfy its own checksum, so this catches tearing
+// without any external log of what was published to compare against.
 func TestNoTornSnapshot(t *testing.T) {
 	merger := NewMerger()
 
@@ -564,8 +542,7 @@ func TestNoTornSnapshot(t *testing.T) {
 
 	var wg sync.WaitGroup
 
-	// Writers: simulate overlapping merge cycles firing concurrently, which
-	// is worse than the real ticker ever does, on purpose.
+	// Writers: overlapping merge cycles, deliberately worse than the ticker.
 	for i := 0; i < 8; i++ {
 		wg.Add(1)
 		go func(id int) {
@@ -585,7 +562,7 @@ func TestNoTornSnapshot(t *testing.T) {
 		}(i)
 	}
 
-	// Readers: read the pointer directly and verify the invariant.
+	// Readers: direct.
 	for i := 0; i < 16; i++ {
 		wg.Add(1)
 		go func() {
@@ -605,8 +582,7 @@ func TestNoTornSnapshot(t *testing.T) {
 		}()
 	}
 
-	// Readers: same check, but through the HTTP handler, to exercise the
-	// encode-under-concurrent-swap path too.
+	// Readers: over HTTP, to exercise the encode-under-swap path too.
 	for i := 0; i < 8; i++ {
 		wg.Add(1)
 		go func() {
@@ -647,18 +623,13 @@ go test -race -v ./...   # PASS: TestNoTornSnapshot
 ```
 
 `go run .` rebuilds the graph every 500ms from four simulated sources, each taking
-between 20 and 220ms and failing roughly 8% of the time. `go test -race ./...` runs
-`TestNoTornSnapshot`, which drives eight concurrent writers issuing overlapping
-merges against one `Merger` for two seconds, alongside twenty-four concurrent
-readers - sixteen calling `Snapshot()` directly, eight going through the HTTP
-handler - and on every single read calls `Graph.Verify()`. Any reader that ever
-saw fields stitched together from two different merge cycles would fail that
-comparison immediately; the test needs no external log of published snapshots to
-check against, because a torn `Graph`, if one ever existed, could not satisfy its
-own checksum. Under this design every run reports `PASS` regardless of how hard
-you hammer it, because `atomic.Pointer[Graph]` plus build-then-publish make a
-torn read structurally unreachable rather than merely unlikely under the load
-this test happens to generate.
+20-220ms and failing roughly 8% of the time. `go test -race ./...` drives eight
+concurrent writers issuing overlapping merges against one `Merger` for two seconds,
+alongside twenty-four concurrent readers - direct and over HTTP - each calling
+`Graph.Verify()` on every read. The test reports `PASS` regardless of how hard you
+hammer it, because `atomic.Pointer[Graph]` plus build-then-publish make a torn read
+structurally unreachable, not merely unlikely under the load this happens to
+generate.
 
 ## Conclusion
 

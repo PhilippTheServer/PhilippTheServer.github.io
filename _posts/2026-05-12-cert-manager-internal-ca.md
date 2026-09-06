@@ -215,17 +215,30 @@ Correct output shows the issuer matching the lab CA's subject and the SAN carryi
 requested name, with no CA contact and no challenge involved at any point:
 
 ```
-        Issuer: CN = philipptheserver-lab-root-ca
-        Subject: CN = myapp.mesh.internal
-            DNS:myapp.mesh.internal
+        Issuer: CN=philipptheserver-lab-root-ca
+        Subject:
+                DNS:myapp.mesh.internal
 ```
+
+The `Subject:` line is empty, not a typo in this example: cert-manager only fills in a
+certificate's Subject Common Name when the `Certificate` resource explicitly sets
+`spec.commonName`. Leaving it out, as above, produces a certificate that carries the
+requested name solely as a SAN entry — which is what every modern TLS client actually
+checks against; the CN has been ignored by browsers for hostname matching for years. Add
+`commonName: myapp.mesh.internal` to the spec if something you don't control still reads
+the Subject field.
 
 That certificate is real and correctly signed, but nothing trusts it yet. Making the
 trust-distribution cost concrete: extract the CA's public certificate and add it to a
-client's trust bundle before the client will accept a connection secured with it.
+client's trust bundle before the client will accept a connection secured with it. Pull
+it from the issued certificate's own Secret, not from `mesh-root-ca-secret` directly —
+cert-manager automatically writes a `ca.crt` entry into every Secret it populates from a
+`Certificate`, pointing at the issuing CA, which is the normal way to hand a workload's
+peers what they need to trust it without also handing out the CA Issuer's own Secret
+from the `cert-manager` namespace:
 
 ```bash
-kubectl get secret mesh-root-ca-secret -n cert-manager \
+kubectl get secret myapp-mesh-tls \
   -o jsonpath='{.data.ca\.crt}' | base64 -d > mesh-root-ca.crt
 
 # On a Debian/Ubuntu client that needs to trust it:
