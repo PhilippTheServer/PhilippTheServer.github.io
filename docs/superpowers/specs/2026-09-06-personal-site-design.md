@@ -11,14 +11,17 @@ together.
 
 ## Facts and their source
 
-Biographical claims come from the ORCID record 0009-0002-3922-2471, not from
-memory or from the GitHub profile README, because the ORCID record is the
-authoritative and dated one:
+Biographical claims come from the ORCID record 0009-0002-3922-2471 rather than from
+memory or from the GitHub profile README, because it is dated and self-asserted.
+
+**It is not infallible.** Its employment entry read "Head of Administration and IT",
+which was out of date — the correct title is CTO (issue #7). Where the record and
+Philipp disagree, Philipp wins, and this site is authoritative for the current role:
 
 | Fact | Value |
 | --- | --- |
 | Name | Philipp Lehmann |
-| Role | Head of Administration and IT, Nerd Force1 UG, since 2022-03 |
+| Role | CTO, Nerd Force1 UG (at Nerd Force1 since 2022-03) |
 | Role | Executive Office, open Skunkforce e.V., since 2025-01 |
 | Education | B.Sc. IT Security / Information Engineering, Ruhr University Bochum, since 2021-10 |
 | Location | Bochum, North Rhine-Westphalia, Germany |

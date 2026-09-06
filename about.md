@@ -5,16 +5,16 @@ subtitle: The longer version, with dates.
 permalink: /about/
 nav_order: 2
 description: >-
-  Background, roles and education of Philipp Lehmann — Head of Administration and
-  IT at Nerd Force1 UG (AI-Gruppe) since 2022, Executive Office at open Skunkforce
-  e.V. since 2025, IT-Security student at Ruhr University Bochum since 2021.
+  Background, roles and education of Philipp Lehmann — CTO at Nerd Force1 UG
+  (AI-Gruppe), Executive Office at open Skunkforce e.V. since 2025, IT-Security
+  student at Ruhr University Bochum since 2021.
 ---
 
 <ul class="facts">
   <li><span class="k">Name</span> <span>Philipp Lehmann</span></li>
   <li><span class="k">Handle</span> <span>PhilippTheServer</span></li>
   <li><span class="k">Based in</span> <span>Bochum, North Rhine-Westphalia, Germany</span></li>
-  <li><span class="k">Role</span> <span>Head of Administration and IT, Nerd Force1 UG (AI-Gruppe)</span></li>
+  <li><span class="k">Role</span> <span>CTO, Nerd Force1 UG (AI-Gruppe)</span></li>
   <li><span class="k">Studying</span> <span>B.Sc. IT Security / Information Engineering, Ruhr University Bochum</span></li>
   <li><span class="k">ORCID</span> <span><a href="https://orcid.org/0009-0002-3922-2471">0009-0002-3922-2471</a></span></li>
   <li><span class="k">Contact</span> <span><a href="mailto:philipp.lehmann@gruppe.ai">philipp.lehmann@gruppe.ai</a></span></li>
@@ -39,24 +39,24 @@ could recover from.
 
 ## Roles
 
-### Head of Administration and IT · Nerd Force1 UG · since March 2022
+### CTO · Nerd Force1 UG
 
-Nerd Force1 is part of the [AI-Gruppe](https://gruppe.ai) umbrella brand. I am
-responsible for the company's IT: the servers, the network, the platforms, and the
-internal tooling.
+At Nerd Force1 since March 2022. It is part of the [AI-Gruppe](https://gruppe.ai)
+umbrella brand. I am responsible for the company's technology: the servers, the network,
+the platforms, and the internal tooling.
 
 <ul class="stack">
   <li><b>Docker standalone cluster</b> carrying the bulk of company workloads</li>
   <li><b>Kubernetes cluster</b> for orchestrated workloads, delivered with ArgoCD</li>
   <li><b>Ceph cluster</b> providing distributed storage across bare metal</li>
-  <li><b>Internal network</b>: WireGuard VPN and Bind9 DNS, defined in the repository</li>
+  <li><b>Internal network</b>: a NetBird overlay mesh and Bind9 DNS, defined in the repository</li>
   <li><b>The whole server estate as Ansible</b>, so a rebuild is a pipeline run</li>
 </ul>
 
 The largest single piece of work is the **internal operations platform** — a full-stack
 application that centralised operations and replaced several external tools at once. It
 carries the internal messenger, time tracking, the ticket system, accounting, a Docker
-registry frontend, DNS management, WireGuard management and hosting orchestration.
+registry frontend, DNS management, VPN management and hosting orchestration.
 Angular on the front, FastAPI on the back, MySQL and InfluxDB underneath, Celery workers
 for anything that should not block a request.
 
@@ -83,7 +83,7 @@ reading someone's scan of a scan.
   <li><span class="k">Containers</span> <span>Docker (daily), Kubernetes, Portainer, Harbor</span></li>
   <li><span class="k">IaC</span> <span>Ansible, Terraform, Kubernetes manifests, Kustomize</span></li>
   <li><span class="k">CI/CD</span> <span>GitHub Actions, ArgoCD, Jenkins</span></li>
-  <li><span class="k">Storage &amp; net</span> <span>Ceph, WireGuard, Bind9, HashiCorp Vault</span></li>
+  <li><span class="k">Storage &amp; net</span> <span>Ceph, NetBird, Bind9, HashiCorp Vault</span></li>
   <li><span class="k">Languages</span> <span>Python, Go, C, C++, TypeScript, Bash</span></li>
   <li><span class="k">Apps</span> <span>FastAPI, Celery, Angular, MySQL, InfluxDB</span></li>
   <li><span class="k">Systems</span> <span>Linux — Debian in production, Arch on my own machines</span></li>
