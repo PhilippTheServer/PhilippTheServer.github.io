@@ -13,7 +13,7 @@ layout: default
       </time>
       {%- if page.tags and page.tags.size > 0 %}
       <span class="post-tags">
-        {%- for tag in page.tags %}<span>{{ tag }}</span>{% endfor -%}
+        {%- for tag in page.tags %}<a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}">{{ tag }}</a>{% endfor -%}
       </span>
       {%- endif %}
     </p>

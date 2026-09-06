@@ -1,0 +1,60 @@
+# The article tag vocabulary. CLOSED SET.
+#
+# A tag on an article that is not listed here fails the build (_plugins/tag_pages.rb).
+# That is deliberate: the first pass at labelling this blog produced 147 tags of which 78
+# were used exactly once, which filters nothing and tells a reader nothing. A vocabulary
+# that is only advisory becomes that again within a month.
+#
+# The value is the description shown on /tags/<tag>/ and in that page's meta description.
+# Adding a tag means adding a line here and meaning it.
+
+# ── what it runs on ──────────────────────────────────────────────────────────
+linux: "The operating system underneath everything: permissions, systemd, sysctl, and the parts that bite."
+ansible: "Configuration management: roles, handlers, idempotence, and the discipline that makes it worth having."
+infrastructure-as-code: "Keeping the repository, not the machine, as the source of truth about a system."
+docker: "Containers, images, registries and the build tooling around them."
+kubernetes: "Running workloads on a cluster: scheduling, storage, networking and the failure modes."
+gitops: "Reconciling a cluster toward a repository instead of deploying at it."
+
+# ── what it stores in ────────────────────────────────────────────────────────
+ceph: "Distributed storage on commodity hardware: placement, failure domains, recovery."
+storage: "Volumes, object stores and the durability questions that decide where data lives."
+databases: "Relational, time-series and the schema decisions that outlive the code."
+redis: "Redis as a pipeline substrate: streams, sorted sets, pub/sub and their limits."
+
+# ── what it talks over ───────────────────────────────────────────────────────
+networking: "Overlay meshes, routing, MTU, and the layers that fail quietly."
+dns: "Resolution, wildcards, split horizons, and the failures that return success."
+
+# ── who is allowed ───────────────────────────────────────────────────────────
+security: "Hardening, boundaries, and being honest about what a control actually protects."
+vault: "HashiCorp Vault: secret storage, dynamic credentials and unsealing."
+secrets-management: "Getting a secret to a process without leaving it on disk or in git."
+identity: "OIDC, Keycloak, roles and the difference between authentication and authorization."
+tls: "Certificates, chains of trust, and issuing them without a public endpoint."
+
+# ── whether it is working ────────────────────────────────────────────────────
+observability: "Metrics, probes and models of an estate — knowing what a system is doing."
+alerting: "Deciding what is worth waking someone for, and proving the alerting itself is alive."
+testing: "Tests that fail when the thing they describe breaks, including for infrastructure."
+
+# ── what it is written in ────────────────────────────────────────────────────
+python: "Python services, tooling and the packaging around them."
+fastapi: "Building HTTP APIs with FastAPI and Pydantic."
+go: "Go services: concurrency, HTTP, and shipping a single binary."
+cpp: "C++ services and the build systems that make them reproducible."
+frontend: "Angular, TypeScript, and interfaces that show the truth about a system."
+
+# ── what it is ───────────────────────────────────────────────────────────────
+llm: "Serving language models on your own hardware, and measuring whether they are any good."
+agents: "Automation driven by a model, and the guardrails that make it safe to run."
+embedded: "Edge hardware, industrial peripherals and the constraints of small machines."
+
+# ── how it is built ──────────────────────────────────────────────────────────
+api-design: "Response shapes, error models and contracts a client can rely on."
+architecture: "Decomposition, boundaries and deciding what should not be built."
+performance: "Finding the actual bottleneck rather than the one you assumed."
+reliability: "Behaving correctly when something is already broken."
+ci-cd: "Pipelines, builds and getting a change from a branch to a running system."
+automation: "Removing a task rather than documenting it."
+documentation: "Documentation that is reviewed, tested and therefore still true."
