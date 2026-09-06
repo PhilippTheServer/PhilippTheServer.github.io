@@ -112,7 +112,23 @@ end
   fail!("#{f}: the ORCID iD #{ORCID} is missing") unless body.include?(ORCID)
 end
 
-# 7. The canonical domain.
+# 7. Retired projects must not reappear. neteye was dropped from the site deliberately
+#    (issue #3); it lives on in the GitHub account but is not presented as current work.
+#    Every generated file derives from the pages, so one stray card would put it back in
+#    resume.json, llms-full.txt and the JSON-LD at once.
+RETIRED = %w[neteye].freeze
+
+RETIRED.each do |name|
+  %w[
+    index.html about/index.html projects/index.html
+    llms.txt llms-full.txt profile.json resume.json
+  ].each do |f|
+    body = read(f) or next
+    fail!("#{f}: mentions retired project #{name.inspect}") if body.downcase.include?(name)
+  end
+end
+
+# 8. The canonical domain.
 cname = read("CNAME")&.strip
 fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == DOMAIN
 
@@ -121,7 +137,7 @@ fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == 
   fail!("#{page}: no canonical link to https://#{DOMAIN}") unless html.include?(%(rel="canonical" href="https://#{DOMAIN}))
 end
 
-# 8. llms-full.txt must actually carry the pages, not just its own header.
+# 9. llms-full.txt must actually carry the pages, not just its own header.
 full = read("llms-full.txt")
 if full
   ["Philipp Lehmann", "About", "Projects"].each do |title|
@@ -131,7 +147,7 @@ if full
   fail!("llms-full.txt: contains unrendered Liquid") if full.include?("{{") || full.include?("{%")
 end
 
-# 9. No file that gets served should leak an unrendered Liquid tag.
+# 10. No file that gets served should leak an unrendered Liquid tag.
 %w[llms.txt ai.txt humans.txt robots.txt .well-known/security.txt profile.json resume.json].each do |f|
   body = read(f) or next
   fail!("#{f}: contains unrendered Liquid") if body.include?("{{") || body.include?("{%")

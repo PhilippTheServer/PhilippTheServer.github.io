@@ -69,7 +69,7 @@ html-proofer dependency; the plugin makes it a direct one.
 - `/` — introduction, what he runs, four selected projects, community, contact
 - `/about/` — roles with dates, education, full stack, what's next
 - `/projects/` — public repositories grouped by infrastructure, self-hosted AI,
-  monitoring, services and tools, and notes/config
+  services and tools, and notes/config
 
 Page bodies contain no Liquid. Root-relative links (`/about/`) are used instead
 of `relative_url`, which is identical output while `baseurl` is empty and keeps
