@@ -3,7 +3,7 @@ layout: post
 title: "Alert on symptoms, not on metrics"
 subtitle: "Monitoring that tells you a user is unhappy, instead of that a number moved."
 date: 2026-09-06 10:00:00 +0200
-tags: [Monitoring, Prometheus, Alerting]
+tags: [Monitoring, Alerting, Observability]
 description: >-
   Most monitoring failures are not missing data. They are the wrong alert on
   good data — and the one class of outage nobody catches is the one where every
