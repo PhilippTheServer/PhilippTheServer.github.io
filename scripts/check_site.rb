@@ -237,7 +237,53 @@ llms&.each_line&.with_index(1) do |line, n|
   fail!("llms.txt:#{n}: names WireGuard without NetBird beside it")
 end
 
-# 9. The canonical domain.
+# 9. Article structured data. Descriptive titles and a sitemap get a page crawled;
+#    this is what lets a crawler know the page IS an article — headline, date, author,
+#    keywords, language. Its absence was the largest indexing gap the site had.
+ARTICLES.each do |slug|
+  html = read("posts/#{slug}/index.html") or next
+  blocks = html.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten
+
+  posting = blocks.map { |b| JSON.parse(b) rescue nil }.compact
+                  .find { |d| d["@type"] == "BlogPosting" }
+  if posting.nil?
+    fail!("posts/#{slug}/: no BlogPosting structured data")
+    next
+  end
+
+  title = html[%r{<h1 class="page-title"[^>]*>(.*?)</h1>}m, 1]&.strip
+  if title && posting["headline"] != title
+    fail!("posts/#{slug}/: BlogPosting headline #{posting['headline'].inspect} != page title #{title.inspect}")
+  end
+
+  %w[datePublished description url inLanguage].each do |key|
+    fail!("posts/#{slug}/: BlogPosting is missing #{key}") if posting[key].to_s.empty?
+  end
+
+  # The author must be a REFERENCE to the Person node, never an inlined copy — a copy is a
+  # second place the same facts live, and it drifts exactly like the job title did.
+  unless posting.dig("author", "@id") == "https://#{DOMAIN}/#person"
+    fail!("posts/#{slug}/: BlogPosting author must reference the Person node by @id, not inline it")
+  end
+  fail!("posts/#{slug}/: BlogPosting author must not inline a name") if posting.dig("author", "name")
+
+  words = posting["wordCount"].to_i
+  fail!("posts/#{slug}/: wordCount is #{words}, which cannot be right") if words < 200
+end
+
+blog_index = read("posts/index.html")
+if blog_index
+  blog = blog_index.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten
+                   .map { |b| JSON.parse(b) rescue nil }.compact
+                   .find { |d| d["@type"] == "Blog" }
+  if blog.nil?
+    fail!("posts/index.html: no Blog structured data")
+  elsif Array(blog["blogPost"]).length != ARTICLES.length
+    fail!("posts/index.html: Blog lists #{Array(blog['blogPost']).length} posts, expected #{ARTICLES.length}")
+  end
+end
+
+# 10. The canonical domain.
 cname = read("CNAME")&.strip
 fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == DOMAIN
 
@@ -247,7 +293,7 @@ fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == 
   fail!("#{page}: no canonical link to https://#{DOMAIN}") unless html.include?(%(rel="canonical" href="https://#{DOMAIN}))
 end
 
-# 10. llms-full.txt must actually carry the pages, not just its own header.
+# 11. llms-full.txt must actually carry the pages, not just its own header.
 full = read("llms-full.txt")
 if full
   ["Philipp Lehmann", "About"].each do |title|
@@ -257,7 +303,7 @@ if full
   fail!("llms-full.txt: contains unrendered Liquid") if full.include?("{{") || full.include?("{%")
 end
 
-# 11. No file that gets served should leak an unrendered Liquid tag.
+# 12. No file that gets served should leak an unrendered Liquid tag.
 %w[llms.txt ai.txt humans.txt robots.txt .well-known/security.txt profile.json resume.json].each do |f|
   body = read(f) or next
   fail!("#{f}: contains unrendered Liquid") if body.include?("{{") || body.include?("{%")
