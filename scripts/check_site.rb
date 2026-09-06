@@ -369,7 +369,71 @@ if File.directory?(posts_dir)
   end
 end
 
-# 11. The canonical domain.
+# 11. Article rendering. Code blocks are the most-read element on the site and were the
+#     worst-looking one: an unscoped `code { border }` rule painted a box around every LINE,
+#     because the <code> inside a <pre> is inline and spans many of them. These assertions
+#     pin the shape of the fix rather than its appearance.
+prose = read("assets/css/prose.css")
+if prose.nil?
+  fail!("assets/css/prose.css: missing — the article stylesheet")
+else
+  {
+    ":not(pre) > code" => "inline code must be scoped away from <pre>, or every line gets its own box",
+    "overflow-x: auto" => "a code block must scroll inside itself, never widen the page",
+    ".table-scroll" => "a wide table must scroll inside itself",
+    'content: attr(data-lang)' => "the language label",
+    ".highlight .k" => "a Rouge keyword colour, i.e. a syntax theme at all",
+    ".highlight .s" => "a Rouge string colour",
+    ".highlight .c" => "a Rouge comment colour",
+  }.each do |needle, why|
+    fail!("prose.css: no #{needle.inspect} — #{why}") unless prose.include?(needle)
+  end
+
+  # Both colour schemes, and both ways of choosing one.
+  fail!("prose.css: no dark tokens under prefers-color-scheme") unless prose.include?("prefers-color-scheme: dark")
+  fail!("prose.css: no dark tokens under an explicit [data-theme]") unless prose.include?('[data-theme="dark"]')
+end
+
+site_css = read("assets/css/site.css")
+if site_css
+  # The two stylesheets must agree on how a theme is chosen. They did not: prose.css
+  # honoured [data-theme] and site.css only had the media query, so an explicit dark theme
+  # gave dark code blocks on a light page with unreadable inline code.
+  unless site_css.include?('[data-theme="dark"]')
+    fail!("site.css: honours only prefers-color-scheme while prose.css also honours [data-theme] — an explicit theme would style one and not the other")
+  end
+  if site_css.match?(/^code \{/)
+    fail!("site.css: an unscoped `code {` rule is what boxed every line of every code block")
+  end
+end
+
+# Every article that renders a highlighted block must carry the language on it, and any
+# table must be wrapped. Both are added by _plugins/prose_markup.rb after conversion.
+ARTICLES.each do |slug|
+  html = read("posts/#{slug}/index.html") or next
+  html.scan(/<div class="language-([a-z0-9+#-]+) highlighter-rouge"/).flatten.each do |lang|
+    unless html.include?(%(data-lang="#{lang}"))
+      fail!("posts/#{slug}/: a #{lang} block carries no data-lang, so it renders with no language label")
+    end
+  end
+  tables = html.scan("<table>").length
+  wrapped = html.scan('class="table-scroll"').length
+  fail!("posts/#{slug}/: #{tables} table(s) but #{wrapped} scroll wrapper(s)") if tables != wrapped
+end
+
+# The style reference is what makes any of this reviewable.
+style = read("style/index.html")
+if style.nil?
+  fail!("style/index.html: the style reference is missing")
+else
+  %w[blockquote <table> <kbd> <dl> <hr <ol <ul footnotes highlighter-rouge].each do |component|
+    fail!("style/index.html: does not render #{component}") unless style.include?(component)
+  end
+  langs = style.scan(/data-lang="([a-z]+)"/).flatten.uniq
+  fail!("style/index.html: only #{langs.length} languages shown; the theme needs several to be reviewable") if langs.length < 4
+end
+
+# 12. The canonical domain.
 cname = read("CNAME")&.strip
 fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == DOMAIN
 
@@ -379,7 +443,7 @@ fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == 
   fail!("#{page}: no canonical link to https://#{DOMAIN}") unless html.include?(%(rel="canonical" href="https://#{DOMAIN}))
 end
 
-# 12. llms-full.txt must actually carry the pages, not just its own header.
+# 13. llms-full.txt must actually carry the pages, not just its own header.
 full = read("llms-full.txt")
 if full
   ["Philipp Lehmann", "About"].each do |title|
@@ -388,7 +452,7 @@ if full
   fail!("llms-full.txt: suspiciously short (#{full.length} bytes) — bodies did not render") if full.length < 40_000
 end
 
-# 13. No file that gets served should leak an unrendered Liquid tag.
+# 14. No file that gets served should leak an unrendered Liquid tag.
 # llms-full.txt is deliberately NOT in this list. It carries the full text of every
 # article, and an article about Ansible templating or Argo CD's Go templates contains
 # `{% ... %}` as its SUBJECT. Scanning it for braces cannot tell a rendering failure from
