@@ -23,7 +23,9 @@ The script runs Jekyll in Docker, so no local Ruby install is needed.
 build breaks, if an internal link or image is dead, if `profile.json` or
 `resume.json` stop being valid JSON, if the embedded JSON-LD drifts away from
 `profile.json`, if the ORCID iD disappears from any file that must carry it,
-or if `CNAME` stops naming the canonical domain.
+if the landing page loses the structure that makes it readable (hero, named
+sections, carded articles, fact list — see `check_site.rb`), or if `CNAME`
+stops naming the canonical domain.
 
 ## Machine-readable files
 

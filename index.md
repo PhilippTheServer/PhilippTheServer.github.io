@@ -15,8 +15,8 @@ description: >-
 
 <p class="pull">I like building infrastructure, mostly so I can break it again.</p>
 
-I am CTO at [Nerd Force1 UG](https://nerd-force1.de), part of
-the [AI-Gruppe](https://gruppe.ai) umbrella brand, and a B.Sc. student of IT Security at
+I am CTO at [Nerd Force1 UG](https://nerd-force1.de), part of the
+[AI-Gruppe](https://gruppe.ai) umbrella brand, and a B.Sc. student of IT Security at
 [Ruhr University Bochum](https://www.ruhr-uni-bochum.de/). I run self-hosted systems,
 container platforms and internal services — usually at the scale where a bad decision
 gets expensive before it gets noticed.

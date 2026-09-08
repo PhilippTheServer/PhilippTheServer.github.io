@@ -1,6 +1,12 @@
 #!/usr/bin/env ruby
 # Structural checks on the built site. Run by scripts/verify.sh and by CI.
 # Exits non-zero, listing every failure, if the site stops holding together.
+#
+# A few checks read the SOURCE (index.md, the article bodies in _posts) rather
+# than the build: a build that merely succeeds cannot tell a page that holds
+# together from one that does not, and some regressions are invisible in the
+# rendered output. Those checks live next to the rendered-HTML checks they
+# complement, and they run in the same pass.
 
 require "json"
 
@@ -461,6 +467,58 @@ end
 %w[llms.txt ai.txt humans.txt robots.txt .well-known/security.txt profile.json resume.json].each do |f|
   body = read(f) or next
   fail!("#{f}: contains unrendered Liquid") if body.include?("{{") || body.include?("{%")
+end
+
+# 15. The landing page must stay structured and readable (issue #23).
+#     The page is the first thing a reader sees, and a build that merely
+#     succeeds cannot tell a page that holds together from one that does not:
+#     Jekyll renders flat prose, bare bullet lists and inline links just as
+#     happily as it renders a page with a shape. So the shape is pinned here,
+#     in the source, from the components site.css already styles — a hero,
+#     named sections, carded articles, a fact list for contact — and the
+#     source itself is kept free of the things that made the first version
+#     hard to follow: bare markdown bullets, mixed indentation, trailing
+#     whitespace. The rendered HTML is checked by this file's article checks
+#     and by html-proofer; this is the check that fails if the structure
+#     regresses.
+landing = File.read(File.join(__dir__, "..", "index.md"))
+
+# The hero: name and role, the first thing a reader sees.
+fail!("index.md: the hero name is missing") unless landing.include?(%(<h1 class="hero-name">Philipp Lehmann</h1>))
+fail!("index.md: the hero role is missing") unless landing.include?(%(<p class="hero-role">))
+
+# The sections, in reading order. A landing page a reader can follow is a landing
+# page whose sections are named; unnamed blocks of prose are the regression.
+%w[What I run Writing Community What's next Elsewhere].each do |section|
+  fail!("index.md: missing the '#{section}' section") unless landing.include?("## #{section}")
+end
+
+# The selected articles are cards, not a bare list. The card markup is what
+# site.css styles; a bullet list of links is the shape the page had before.
+projects = landing.scan(%r{<ul class="projects">(.*?)</ul>}m).flatten
+fail!("index.md: the selected articles are not in a projects list") if projects.empty?
+cards = projects.first.to_s.scan(%r{<li class="project">}).length
+fail!("index.md: the selected articles are not cards (#{cards} found, expected at least 3)") if cards < 3
+
+# The contact block is a fact list, the component site.css styles for key/value
+# pairs. Inline links in a paragraph are the shape the page had before.
+fail!("index.md: the contact links are not in a facts list") unless landing.include?(%(<ul class="facts">))
+
+# No bare markdown bullets in the body: the lists on this page are the styled
+# components above, and a stray bullet is the shape the page had before.
+# The frontmatter is stripped first: its folded scalar is indented prose, not
+# a list, but the rule is about the rendered page.
+landing.sub(/^---\n.*?\n---\n/m, "").each_line.with_index(1) do |line, n|
+  fail!("index.md:#{n}: bare markdown bullet") if line =~ /\s*[-*+] /
+end
+
+# Indentation discipline: the page must not mix tab and space indentation, and
+# no line may carry trailing whitespace. Mixed indentation is the thing that
+# made the source of this page unreadable, and it is invisible in a build.
+landing.each_line.with_index(1) do |line, n|
+  next if line.strip.empty?
+  fail!("index.md:#{n}: mixes tab and space indentation") if line.start_with?("\t") && line.include?("\t ")
+  fail!("index.md:#{n}: trailing whitespace") if line =~ /[ \t]+\z/
 end
 
 if @failures.empty?
