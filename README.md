@@ -37,6 +37,7 @@ or if `CNAME` stops naming the canonical domain.
 | `/humans.txt` | The people and tools behind the site |
 | `/feed.xml` | Atom feed |
 | `/sitemap.xml` | Sitemap |
+| `/impressum/` | Legal notice (Angaben gemäß § 5 DDG), in German |
 
 `profile.json`, `resume.json` and the embedded JSON-LD are all generated from
 `_data/person.yml` and `_data/resume.yml`, so they cannot disagree.
