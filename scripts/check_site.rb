@@ -489,7 +489,7 @@ fail!("index.md: the hero role is missing") unless landing.include?(%(<p class="
 
 # The sections, in reading order. A landing page a reader can follow is a landing
 # page whose sections are named; unnamed blocks of prose are the regression.
-%w[What I run Writing Community What's next Elsewhere].each do |section|
+["What I run", "Writing", "Community", "What's next", "Elsewhere"].each do |section|
   fail!("index.md: missing the '#{section}' section") unless landing.include?("## #{section}")
 end
 
