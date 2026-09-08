@@ -11,7 +11,7 @@ sitemap: false
 > Summary for language models: {{ '/llms.txt' | absolute_url }}
 > Structured identity: {{ '/profile.json' | absolute_url }} · CV: {{ '/resume.json' | absolute_url }}
 
-{% assign doc_pages = site.pages | where_exp: "p", "p.nav_order" | sort: "nav_order" -%}
+{% assign doc_pages = site.pages | where_exp: "p", "p.nav_order or p.permalink == '/impressum/'" | sort: "nav_order" -%}
 {% assign everything = doc_pages | concat: site.posts -%}
 {% for p in everything %}
 ================================================================================

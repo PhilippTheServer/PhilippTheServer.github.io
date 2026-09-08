@@ -59,7 +59,7 @@ end
 
 # 1. Every file the site promises must exist.
 (%w[
-  index.html about/index.html posts/index.html
+  index.html about/index.html impressum/index.html posts/index.html
   llms.txt llms-full.txt profile.json resume.json
   ai.txt humans.txt robots.txt .well-known/security.txt
   feed.xml sitemap.xml favicon.svg assets/css/site.css CNAME
@@ -69,6 +69,27 @@ end
 
 # The repository listing was replaced by the articles; it must not come back.
 fail!("projects/index.html: the repo list should be gone") if File.file?(File.join(SITE, "projects/index.html"))
+
+# 2. The Impressum. A site published from Germany must name who is responsible for its
+#     content, and the link must live where a reader actually looks: the footer, on every
+#     page. The page itself is German, because the obligation is German — the rest of the
+#     site can stay English.
+impressum = read("impressum/index.html")
+if impressum.nil?
+  fail!("impressum/index.html: the Impressum page is missing")
+else
+  fail!("impressum/index.html: does not name the responsible person") unless impressum.include?("Philipp Lehmann")
+  fail!("impressum/index.html: does not carry the contact address") unless impressum.include?(%(href="mailto:philipp.lehmann@gruppe.ai"))
+  fail!("impressum/index.html: does not cite the legal basis") unless impressum.include?("§ 5 DDG")
+end
+
+# The footer is part of the default layout, so every page carries it. Check a spread of
+# pages rather than one: a link removed from the layout would drop from all of them at
+# once, and a link added by hand to a single page would not reach the rest.
+%w[index.html about/index.html impressum/index.html posts/index.html].each do |page|
+  html = read(page) or next
+  fail!("#{page}: the footer does not link the Impressum") unless html.include?(%(href="/impressum/"))
+end
 
 # An article nobody can find is an article that is not published. Each must be listed on
 # the index, named in llms.txt, carried in full by llms-full.txt, and in the feed.
@@ -97,11 +118,11 @@ ARTICLES.each do |slug|
   end
 end
 
-# 2. The two JSON files must parse.
+# 3. The two JSON files must parse.
 profile = parse_json("profile.json")
 resume  = parse_json("resume.json")
 
-# 3. profile.json must stay a usable schema.org Person.
+# 4. profile.json must stay a usable schema.org Person.
 if profile
   {
     "@context" => "https://schema.org",
@@ -130,7 +151,7 @@ if profile
   fail!("profile.json: worksFor.name is #{employer.inspect}") unless employer == "Nerd Force1 UG"
 end
 
-# 4. resume.json must stay valid JSON Resume.
+# 5. resume.json must stay valid JSON Resume.
 if resume
   %w[basics work education skills].each do |key|
     fail!("resume.json: #{key} is missing or empty") if resume[key].nil? || resume[key].empty?
@@ -148,7 +169,7 @@ if resume
   end
 end
 
-# 5. The JSON-LD embedded in each page must be byte-for-byte the same object as
+# 6. The JSON-LD embedded in each page must be byte-for-byte the same object as
 #    profile.json — the page and the file can never claim different things.
 (%w[index.html about/index.html posts/index.html] +
  ARTICLES.map { |a| "posts/#{a}/index.html" }).each do |page|
@@ -166,7 +187,7 @@ end
   end
 end
 
-# 6. The ORCID iD is what binds every one of these files to one person.
+# 7. The ORCID iD is what binds every one of these files to one person.
 %w[
   profile.json resume.json llms.txt llms-full.txt
   ai.txt humans.txt index.html about/index.html
@@ -175,7 +196,7 @@ end
   fail!("#{f}: the ORCID iD #{ORCID} is missing") unless body.include?(ORCID)
 end
 
-# 7. Retired projects must not reappear. neteye was dropped from the site deliberately
+# 8. Retired projects must not reappear. neteye was dropped from the site deliberately
 #    (issue #3); it lives on in the GitHub account but is not presented as current work.
 #    Every generated file derives from the pages, so one stray card would put it back in
 #    resume.json, llms-full.txt and the JSON-LD at once.
@@ -191,7 +212,7 @@ RETIRED.each do |name|
   end
 end
 
-# 8. Two facts I got wrong once, from sources that looked authoritative (issue #7).
+# 9. Two facts I got wrong once, from sources that looked authoritative (issue #7).
 #
 #    He became CTO on 2026-09-06. Before that he was Head of Administration and IT at the
 #    same employer since 2022-03-01, which is what the ORCID record still lists — his
@@ -255,7 +276,7 @@ llms&.each_line&.with_index(1) do |line, n|
   fail!("llms.txt:#{n}: names WireGuard without NetBird beside it")
 end
 
-# 9. Article structured data. Descriptive titles and a sitemap get a page crawled;
+# 10. Article structured data. Descriptive titles and a sitemap get a page crawled;
 #    this is what lets a crawler know the page IS an article — headline, date, author,
 #    keywords, language. Its absence was the largest indexing gap the site had.
 ARTICLES.each do |slug|
@@ -355,7 +376,7 @@ if blog_index
   end
 end
 
-# 10. Liquid inside a code fence, in the SOURCE. This one cannot be caught in the build
+# 11. Liquid inside a code fence, in the SOURCE. This one cannot be caught in the build
 #     output: Liquid runs before markdown, so `{{ ssh_port }}` in a fenced YAML block is
 #     evaluated and silently replaced with nothing. The article renders, the build passes,
 #     and the example is quietly wrong. The fix is {% raw %} around the fence; the check is
@@ -375,7 +396,7 @@ if File.directory?(posts_dir)
   end
 end
 
-# 11. Article rendering. Code blocks are the most-read element on the site and were the
+# 12. Article rendering. Code blocks are the most-read element on the site and were the
 #     worst-looking one: an unscoped `code { border }` rule painted a box around every LINE,
 #     because the <code> inside a <pre> is inline and spans many of them. These assertions
 #     pin the shape of the fix rather than its appearance.
@@ -439,7 +460,7 @@ else
   fail!("style/index.html: only #{langs.length} languages shown; the theme needs several to be reviewable") if langs.length < 4
 end
 
-# 12. The canonical domain.
+# 13. The canonical domain.
 cname = read("CNAME")&.strip
 fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == DOMAIN
 
@@ -449,16 +470,16 @@ fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == 
   fail!("#{page}: no canonical link to https://#{DOMAIN}") unless html.include?(%(rel="canonical" href="https://#{DOMAIN}))
 end
 
-# 13. llms-full.txt must actually carry the pages, not just its own header.
+# 14. llms-full.txt must actually carry the pages, not just its own header.
 full = read("llms-full.txt")
 if full
-  ["Philipp Lehmann", "About"].each do |title|
+  ["Philipp Lehmann", "About", "Impressum"].each do |title|
     fail!("llms-full.txt: page #{title.inspect} is missing") unless full.include?("# #{title}\n")
   end
   fail!("llms-full.txt: suspiciously short (#{full.length} bytes) — bodies did not render") if full.length < 40_000
 end
 
-# 14. No file that gets served should leak an unrendered Liquid tag.
+# 15. No file that gets served should leak an unrendered Liquid tag.
 # llms-full.txt is deliberately NOT in this list. It carries the full text of every
 # article, and an article about Ansible templating or Argo CD's Go templates contains
 # `{% ... %}` as its SUBJECT. Scanning it for braces cannot tell a rendering failure from
