@@ -245,7 +245,7 @@
     "reliability"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 20,
@@ -300,7 +300,7 @@
     "reliability"
    ],
    "source": "iac",
-   "problem": "Placement is pseudo-random, so a cluster that looks 70% full can have a disk at 90% \u2014 and one full OSD stops cluster-wide writes."
+   "problem": "Placement is pseudo-random, so a cluster that looks 70% full can have a disk at 90% — and one full OSD stops cluster-wide writes."
   },
   {
    "n": 24,
@@ -340,7 +340,7 @@
     "security"
    ],
    "source": "iac",
-   "problem": "put replaces the whole secret, so adding one field destroys the others \u2014 and there is no single-key delete."
+   "problem": "put replaces the whole secret, so adding one field destroys the others — and there is no single-key delete."
   },
   {
    "n": 27,
@@ -434,7 +434,7 @@
     "gitops"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 34,
@@ -629,7 +629,7 @@
     "performance"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 49,
@@ -823,7 +823,7 @@
     "testing"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 64,
@@ -994,7 +994,7 @@
     "linux"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 77,
@@ -1163,7 +1163,7 @@
     "architecture"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 90,
@@ -1304,7 +1304,7 @@
     "security"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 101,
@@ -1396,7 +1396,7 @@
     "architecture"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 108,
@@ -1430,7 +1430,7 @@
   {
    "n": 110,
    "date": "2026-09-11",
-   "slug": "fsgroup-recursive-chown",
+   "slug": "fsgroup-change-policy-root-mismatch",
    "title": "A Fifteen-Minute Pod Start, and the One Field That Makes kubelet Skip the chown",
    "labels": [
     "kubernetes",
@@ -1457,7 +1457,7 @@
   },
   {
    "n": 112,
-   "date": "2026-09-17",
+   "date": "2026-09-14",
    "slug": "clock-jump-scheduler",
    "title": "A Scheduler That Took a Measurement Every Second, Because the Clock Was Wrong",
    "labels": [
@@ -1471,7 +1471,7 @@
   },
   {
    "n": 113,
-   "date": "2026-09-20",
+   "date": "2026-09-14",
    "slug": "daily-pr-digest",
    "title": "A Daily Digest of What Actually Got Merged, Written by a Local LLM",
    "labels": [

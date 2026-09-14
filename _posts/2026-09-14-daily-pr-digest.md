@@ -2,7 +2,7 @@
 layout: post
 title: "A Daily Digest of What Actually Got Merged, Written by a Local LLM"
 subtitle: "An MQTT collector buffers every merged PR into SQLite; a timer at 18:00 asks a local model for a per-project summary, commits it to a repo, and publishes it to a feed."
-date: 2026-09-20 09:00:00 +0200
+date: 2026-09-14 09:00:00 +0200
 tags: [ci-cd, observability, python, architecture]
 description: >-
   Nobody reads the PR list at the end of the day, so we stopped asking them to.

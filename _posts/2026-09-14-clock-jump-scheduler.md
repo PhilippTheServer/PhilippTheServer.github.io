@@ -2,7 +2,7 @@
 layout: post
 title: "A Scheduler That Took a Measurement Every Second, Because the Clock Was Wrong"
 subtitle: "A device with no battery-backed RTC boots with a stale clock, NTP jumps it forward, and a wall-clock-aligned scheduler tries to catch up — one measurement at a time."
-date: 2026-09-17 09:00:00 +0200
+date: 2026-09-14 09:00:00 +0200
 tags: [embedded, reliability, python, linux]
 description: >-
   A periodic measurement loop on a small computer-on-module ran a full
