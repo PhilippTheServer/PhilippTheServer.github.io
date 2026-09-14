@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "A VPN Agent's Two Firewall Rules, and the Week They Broke Every Service on a Node"
-subtitle: "kube-proxy manages its chains with iptables-nft, which cannot parse rules that another program wrote directly to nftables."
+title: "kube-proxy in iptables Mode and Native nftables Rules in the Forward Chain"
+subtitle: "iptables-nft re-reads the chain it manages before rewriting it, and it cannot parse rules that another program wrote directly to nftables — so the sync aborts, quietly, forever."
 date: 2026-09-08 09:00:00 +0200
 tags: [kubernetes, networking, linux, reliability]
 description: >-
@@ -15,27 +15,24 @@ description: >-
 
 ## The problem
 
-A cluster node's service endpoints stopped updating. Not all of them, and not
-everywhere: on one worker, roughly a third of the endpoints behind each service
-were missing, and the node's kube-proxy had restarted over sixty times while
-still reporting nothing unusual. The cluster looked healthy. The service worked
-for clients that happened to be routed to a healthy endpoint, and failed for the
-rest. There was no event, no failed pod, no log line that named the cause.
+On modern systems, `iptables` and `nftables` are two frontends over the same kernel
+tables. kube-proxy in its default iptables mode speaks to those tables through the
+`iptables-nft` translation layer, which re-reads the chain it manages before it
+rewrites it. That re-read assumes it understands every rule it finds there.
 
-The node in question also ran a WireGuard-based mesh agent — the thing that
-gives every machine a stable address across sites. The mesh agent had been
-restarted on that node a few days earlier, for an unrelated reason, and nobody
-connected the two. That is the shape of this failure: the thing that broke the
-node is a normal, expected, documented action (restart the agent), and the
-thing it broke lives in a layer that no one thinks of as connected to a VPN.
+It does not, if another program has written rules into the same chain in a form
+that has no iptables equivalent. When that happens, the sync does not fail
+loudly. It aborts, backs off, retries, aborts again, and the node keeps
+forwarding service traffic according to rules that were correct whenever the
+last successful sync ran. The node stays Ready, the kube-proxy process stays
+Running, and nothing in the cluster's usual places names the cause.
 
-The mechanism is worth understanding, because it is not exotic. On modern
-systems, `iptables` and `nftables` are two frontends over the same kernel
-tables. kube-proxy, in its default iptables mode, speaks to those tables
-through the `iptables-nft` translation layer, which re-reads the chain it
-manages before it rewrites it. That re-read assumes it understands every rule
-it finds there. It does not, if another program has written rules into the same
-chain in a form that has no iptables equivalent.
+That is exactly what happened here. A mesh agent — the thing that gives every
+machine a stable address across sites — was restarted on a running node for an
+unrelated reason, and from then on roughly a third of the endpoints behind each
+service were missing on that one worker, for two weeks. The mesh agent had
+restarted. The cluster had a problem. Nobody connected the two, because a VPN
+agent is not the kind of thing you suspect when endpoints go stale.
 
 ## Working through it
 
@@ -83,8 +80,7 @@ iptables-nft-save
 or, depending on the version and the exact rule shape, an outright error.
 Either way the sync aborts. The kube-proxy process notices, backs off, and
 retries. It aborts again. It retries again. The chain is never rewritten, so
-the endpoints it is supposed to install never change, and the node keeps
-forwarding service traffic according to rules that were correct two weeks ago.
+the endpoints it is supposed to install never change.
 
 The important part of this failure mode is the *direction* of the blindness.
 kube-proxy is not broken, and it is not misconfigured. It is doing exactly what
@@ -95,7 +91,7 @@ write to it and in what form.
 ### Why the cluster did not raise its voice
 
 A node whose kube-proxy has stopped syncing does not leave a loud trace. The
-node is Ready. The kube-proxy pod (or service, in an RKE2-style installation)
+node is Ready. The kube-proxy pod — or service, in an RKE2-style installation —
 is Running. `kubectl get endpoints` shows the endpoints as they were last
 successfully written, which is a plausible-looking subset. What is missing is
 the delta: the endpoints that should have appeared and did not. Detecting that
@@ -203,7 +199,7 @@ And the two invariants that make it safe to run unattended:
 The general lesson is the part that transfers to other estates: when two
 programs share a kernel object — a netfilter chain here, but the same shape
 applies to a cgroup, a sysctl namespace, a mount point — the failure does not
-happen where either of them is, it happens in the cohabitation, and it is
+happen where either of them is. It happens in the cohabitation, and it is
 silent until a client notices. The cheap, durable answer is not to make the
 two programs smarter about each other; it is to have one named process whose
 job is to keep the shared object in the form the more fragile of the two
