@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "A Fifteen-Minute Pod Start, and the One Field That Makes kubelet Skip the chown"
-subtitle: "fsGroup on a volume with a million files chowns every one of them on every pod start — unless the root already matches."
+title: "fsGroupChangePolicy: OnRootMismatch and the setgid Invariant That Makes It Sound"
+subtitle: "A pod-level fsGroup makes kubelet recursively chown the entire volume on every mount. On a volume with 1.4 million files that is fifteen minutes per restart — unless the root already matches."
 date: 2026-09-11 09:00:00 +0200
 tags: [kubernetes, storage, performance, reliability]
 description: >-
