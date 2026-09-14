@@ -245,7 +245,7 @@
     "reliability"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 20,
@@ -300,7 +300,7 @@
     "reliability"
    ],
    "source": "iac",
-   "problem": "Placement is pseudo-random, so a cluster that looks 70% full can have a disk at 90% \u2014 and one full OSD stops cluster-wide writes."
+   "problem": "Placement is pseudo-random, so a cluster that looks 70% full can have a disk at 90% — and one full OSD stops cluster-wide writes."
   },
   {
    "n": 24,
@@ -340,7 +340,7 @@
     "security"
    ],
    "source": "iac",
-   "problem": "put replaces the whole secret, so adding one field destroys the others \u2014 and there is no single-key delete."
+   "problem": "put replaces the whole secret, so adding one field destroys the others — and there is no single-key delete."
   },
   {
    "n": 27,
@@ -434,7 +434,7 @@
     "gitops"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 34,
@@ -629,7 +629,7 @@
     "performance"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 49,
@@ -823,7 +823,7 @@
     "testing"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 64,
@@ -994,7 +994,7 @@
     "linux"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 77,
@@ -1163,7 +1163,7 @@
     "architecture"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 90,
@@ -1304,7 +1304,7 @@
     "security"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 101,
@@ -1396,7 +1396,7 @@
     "architecture"
    ],
    "source": "existing",
-   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
+   "problem": "RETITLED — full rewrite to the four-part structure"
   },
   {
    "n": 108,
@@ -1412,6 +1412,76 @@
    ],
    "source": "iac",
    "problem": "Individual articles describe the parts; nothing describes how the parts became one system, or in what order they had to arrive."
+  },
+  {
+   "n": 109,
+   "date": "2026-09-08",
+   "slug": "kube-proxy-native-nftables",
+   "title": "A VPN Agent's Two Firewall Rules, and the Week They Broke Every Service on a Node",
+   "labels": [
+    "kubernetes",
+    "networking",
+    "linux",
+    "reliability"
+   ],
+   "source": "iac",
+   "problem": "kube-proxy manages its chains with iptables-nft, which cannot parse rules that another program wrote directly to nftables."
+  },
+  {
+   "n": 110,
+   "date": "2026-09-11",
+   "slug": "fsgroup-change-policy-root-mismatch",
+   "title": "A Fifteen-Minute Pod Start, and the One Field That Makes kubelet Skip the chown",
+   "labels": [
+    "kubernetes",
+    "storage",
+    "performance",
+    "reliability"
+   ],
+   "source": "k8s",
+   "problem": "fsGroup on a volume with a million files chowns every one of them on every pod start — unless the root already matches."
+  },
+  {
+   "n": 111,
+   "date": "2026-09-14",
+   "slug": "nginx-map-uri-cache-policy",
+   "title": "An nginx Config That Refused to Start, and Where Per-Path Cache Policy Actually Belongs",
+   "labels": [
+    "docker",
+    "networking",
+    "observability",
+    "ci-cd"
+   ],
+   "source": "k8s",
+   "problem": "A regex location cannot carry a proxy_pass with a URI part — and splitting cache policy by routing is the wrong shape anyway."
+  },
+  {
+   "n": 112,
+   "date": "2026-09-14",
+   "slug": "clock-jump-scheduler",
+   "title": "A Scheduler That Took a Measurement Every Second, Because the Clock Was Wrong",
+   "labels": [
+    "embedded",
+    "reliability",
+    "python",
+    "linux"
+   ],
+   "source": "msu",
+   "problem": "A device with no battery-backed RTC boots with a stale clock, NTP jumps it forward, and a wall-clock-aligned scheduler tries to catch up — one measurement at a time."
+  },
+  {
+   "n": 113,
+   "date": "2026-09-14",
+   "slug": "daily-pr-digest",
+   "title": "A Daily Digest of What Actually Got Merged, Written by a Local LLM",
+   "labels": [
+    "ci-cd",
+    "observability",
+    "python",
+    "architecture"
+   ],
+   "source": "digest",
+   "problem": "Nobody reads the PR list at the end of the day, so the summary had to come to them, reach them, and outlive the day."
   }
  ],
  "backlog": [
