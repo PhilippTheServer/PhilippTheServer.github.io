@@ -1482,6 +1482,20 @@
    ],
    "source": "digest",
    "problem": "Nobody reads the PR list at the end of the day, so the summary had to come to them, reach them, and outlive the day."
+  },
+  {
+   "n": 114,
+   "date": "2026-09-15",
+   "slug": "headscale-behind-traefik-no-h2",
+   "title": "Running a Self-Hosted Tailscale Control Server Behind a Reverse Proxy, and the One TLS Setting That Makes It Work",
+   "labels": [
+    "networking",
+    "dns",
+    "security",
+    "docker"
+   ],
+   "source": "homelab",
+   "problem": "Headscale's docs say don't run it behind a reverse proxy, but its control connection speaks a noise protocol that is not HTTP/2-compatible — so the proxy has to offer only HTTP/1.1 on that one host, which is a single Traefik TLS option that is easy to get wrong and nearly impossible to diagnose when you do."
   }
  ],
  "backlog": [
