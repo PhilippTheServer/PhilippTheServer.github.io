@@ -1487,7 +1487,7 @@
    "n": 114,
    "date": "2026-09-15",
    "slug": "headscale-behind-traefik-no-h2",
-   "title": "Running a Self-Hosted Tailscale Control Server Behind a Reverse Proxy, and the One TLS Setting That Makes It Work",
+   "title": "Running a Self-Hosted Tailscale Control Server Behind a Reverse Proxy",
    "labels": [
     "networking",
     "dns",
