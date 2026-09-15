@@ -1,20 +1,19 @@
 ---
 layout: post
-title: "Running a Self-Hosted Tailscale Control Server Behind a Reverse Proxy, and the One TLS Setting That Makes It Work"
-subtitle: "Headscale's own documentation says not to put it behind a reverse proxy. The homelab does anyway, and the whole thing hangs on a single Traefik TLS option that strips HTTP/2."
+title: "Running a Self-Hosted Tailscale Control Server Behind a Reverse Proxy"
+subtitle: "Headscale's documentation says not to put it behind a reverse proxy. The homelab does anyway, and the reason is a single Traefik TLS option that strips HTTP/2 from the ALPN list."
 date: 2026-09-15 09:00:00 +0200
 tags: [networking, dns, security, docker]
 description: >-
   Headscale is a self-hosted replacement for Tailscale's control server, and its
-  documentation explicitly discourages running it behind a reverse proxy or in a
-  container. The homelab does both, because the control server needs to be
-  reachable from the internet for phones and laptops that are not on the LAN, and
-  everything else already sits behind one Traefik instance. The reason that works
-  is a single TLS option on the router: the noise protocol the clients speak over
-  the control connection is not HTTP/2-compatible, so the proxy has to offer only
-  HTTP/1.1 on that host. This walks through the setup, the one setting that makes
-  it work, and why the rest of the mesh (a subnet router, split DNS, and a
-  public DERP relay) is what turns a VPN into a network you actually use.
+  documentation discourages running it behind a reverse proxy or in a container.
+  The homelab does both, because the control server needs a public hostname and
+  everything else already routes through a single Traefik instance. The reason
+  that works is a single TLS option on the router: the noise protocol the clients
+  speak over the control connection is not HTTP/2-compatible, so the proxy has to
+  offer only HTTP/1.1 on that host. This walks through the setup, that one
+  setting, and why the rest of the mesh (a subnet router, split DNS, and a public
+  DERP relay) is what turns a VPN into a network you actually use.
 ---
 
 ## The problem
@@ -36,10 +35,10 @@ is to add one more router for the control server, exactly like every other
 service.
 
 The obvious move is also the one Headscale's documentation tells you not to do.
-The repository's own README says, in so many words, that they do not support or
-encourage running it behind a reverse proxy or in a container. The reason is not
-obvious from the sentence, and it is the reason the whole setup either works or
-does not: the protocol the clients speak to the control server is not plain
+The repository's README says they do not support or encourage running it behind a
+reverse proxy or in a container. That is fair guidance, and it is also the part
+of the setup that took the longest to figure out, because the reason is not in
+the sentence: the protocol the clients speak to the control server is not plain
 HTTPS.
 
 Tailscale's clients do not authenticate to the control server with a normal
@@ -142,7 +141,7 @@ resolves only inside the mesh, and the control server lives under a hostname
 that must resolve from anywhere, because a client on mobile data has to be able
 to find it before it is on the network at all.
 
-Third, and this is the one the whole article is about, the router carries
+Third, and the one that matters, the router carries
 `traefik.http.routers.headscale.tls.options=no-h2@file`. That label points at a
 named TLS option defined in Traefik's dynamic configuration:
 
@@ -244,14 +243,13 @@ Let's Encrypt resolver, the same `websecure` entrypoint, the same host-based
 routing as every other service. The control server is, from Traefik's point of
 view, just another HTTPS hostname with one extra constraint.
 
-The reason it is worth writing this down is that the failure is invisible until
-it is not. A client that negotiates HTTP/2 against a noise endpoint does not
-fail with a TLS error you can read in a log; it fails with the connection simply
-not establishing, or establishing and then stalling, and the obvious suspects
-(certificate, port forward, firewall) all check out. The one thing that differs
-between "works" and "does not" is a protocol version the client picked during
-handshake, which is the last place you look because the handshake reported
-success.
+The reason it is worth writing down is that the failure is quiet. A client that
+negotiates HTTP/2 against a noise endpoint does not fail with a TLS error you can
+read in a log; it fails with the connection simply not establishing, or
+establishing and then stalling, and the obvious suspects (certificate, port
+forward, firewall) all check out. The one thing that differs between "works" and
+"does not" is a protocol version the client picked during handshake, which is the
+last place you look because the handshake reported success.
 
 The subnet router is the second half of making it a network you use rather than
 a network you have. The Mini PC runs the Tailscale client as a native systemd
