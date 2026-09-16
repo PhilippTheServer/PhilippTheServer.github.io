@@ -5,11 +5,8 @@ subtitle: "buildx's default driver needs a docker.sock that a containerd-based C
 date: 2026-02-24 09:00:00 +0200
 tags: [docker, ci-cd]
 description: >-
-  A CI runner scheduled on a containerd node has no Docker daemon to hand buildx, so the
-  default docker-container driver cannot even start. This article sets up BuildKit as a
-  standalone, always-on builder that buildx talks to over TLS instead, with a complete
-  docker compose file, certificate generation and the exact buildx commands a pipeline
-  needs.
+  open /var/run/docker.sock: no such file or directory from docker buildx on a
+  containerd CI worker: run buildkitd with mTLS and use the remote driver.
 ---
 
 ## The problem

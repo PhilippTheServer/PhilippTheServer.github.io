@@ -5,12 +5,8 @@ subtitle: "iptables-nft re-reads the chain it manages before rewriting it, and i
 date: 2026-09-08 09:00:00 +0200
 tags: [kubernetes, networking, linux, reliability]
 description: >-
-  A WireGuard-based mesh agent restarted on a running cluster node and added two
-  native nftables rules to the forward chain that kube-proxy manages through
-  iptables-nft. From that moment every service sync on the node aborted, and the
-  node's rules went stale for two weeks without a single error in the cluster's
-  usual places. This article reproduces the mechanism and the fix that recovers
-  a node in one sync cycle.
+  kube-proxy iptables-nft sync silently aborts on native nftables rules a mesh
+  agent adds to the FORWARD chain. Fix: nft delete rule by handle, ip and ip6.
 ---
 
 ## The problem

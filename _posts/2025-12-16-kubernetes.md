@@ -5,12 +5,8 @@ subtitle: "It is not a better Docker Compose. It is a different bargain, and the
 date: 2025-12-16 09:00:00 +0200
 tags: [kubernetes, docker, architecture, gitops]
 description: >-
-  Kubernetes is usually sold as the next step up from Docker Compose, which
-  makes it sound like a bigger version of what you already have. It is a
-  trade: you hand over control of where things run in exchange for a system
-  that keeps working when a machine dies. This works through what that trade
-  actually costs, with a runnable example showing the control loop doing its
-  job and a Compose stack that cannot do the same thing.
+  Docker Compose restart: always vs a Kubernetes Deployment: what happens when
+  the host dies, and what the control loop costs in debugging.
 ---
 
 ## The problem

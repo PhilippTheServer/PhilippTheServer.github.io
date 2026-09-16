@@ -5,11 +5,8 @@ subtitle: "How a legitimate search-domain addition quietly reroutes ordinary ext
 date: 2026-05-05 09:00:00 +0200
 tags: [kubernetes, dns, networking]
 description: >-
-  Kubernetes gives every pod a DNS search list and ndots:5 by default, which
-  is usually harmless. Add a custom internal domain to that search list and
-  it stops being harmless: an ordinary external hostname can resolve through
-  the internal domain's own records before it is ever tried as written. Here
-  is why, and three ways to close it off.
+  dnsConfig.searches with ndots:5 lets an internal wildcard answer external
+  names. Why ndots:1 only half fixes it and a trailing dot fully does.
 ---
 
 ## The problem

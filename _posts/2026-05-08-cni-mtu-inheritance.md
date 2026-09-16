@@ -5,11 +5,8 @@ subtitle: "When a lower-MTU hop appears after the CNI has already picked 1500."
 date: 2026-05-08 09:00:00 +0200
 tags: [kubernetes, networking]
 description: >-
-  A CNI that auto-detects MTU from the node's default-route interface bakes
-  in that value once, at start-up, and never revisits it. When a VPN client
-  later puts a lower-MTU hop in the path, the mismatch fails silently rather
-  than with an error, and this article shows how to reproduce, diagnose and
-  fix it.
+  Frag needed and DF set (mtu = 1420): a VPN hop below the CNI's auto-detected
+  1500 MTU stalls large pod transfers. Reproducing it and pinning the MTU.
 ---
 
 ## The problem

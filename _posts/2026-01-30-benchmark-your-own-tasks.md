@@ -5,11 +5,8 @@ subtitle: "Building a small, deterministic, task-specific eval instead of trusti
 date: 2026-01-30 09:00:00 +0200
 tags: [testing, llm]
 description: >-
-  A public leaderboard score describes performance on a broad, general set of
-  tasks that has little in common with a narrow production workload such as
-  calling a fixed set of tools with a strict schema. This walks through
-  building a small task-specific evaluation and running candidate models
-  against it instead.
+  LLM leaderboard scores do not predict a narrow workload. A 20 to 50 case task
+  eval with a deterministic JSON schema scorer instead of an LLM judge.
 ---
 
 ## The problem

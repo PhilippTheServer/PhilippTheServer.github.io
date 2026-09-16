@@ -5,12 +5,9 @@ subtitle: "Docker reads whoever invoked the CLI's config, so logging in as root 
 date: 2025-09-09 09:00:00 +0200
 tags: [docker, ansible, linux]
 description: >-
-  The Docker CLI reads credentials from the config file of whoever runs it,
-  not from a single host-wide location, so a login task that only runs as
-  root leaves any other user pulling private images unauthenticated and
-  failing with a generic denied error. This shows how to provision registry
-  credentials for every user who actually needs them, with a reproducible
-  local registry to test against.
+  "may require 'docker login'" for a deploy user after root logged in:
+  credentials live in each user's ~/.docker/config.json. Per-user login with
+  Ansible.
 ---
 
 ## The problem

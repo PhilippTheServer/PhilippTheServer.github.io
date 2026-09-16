@@ -5,11 +5,8 @@ subtitle: "Replacing a hand-edited targets file with an endpoint that cannot dri
 date: 2026-07-07 09:00:00 +0200
 tags: [observability, automation, networking]
 description: >-
-  A static Prometheus targets file is correct on the day someone last edited
-  it and wrong every day after that infrastructure changes. This walks
-  through Prometheus's HTTP service discovery mechanism, backed by a live
-  inventory rather than a file, with a complete example that runs on a
-  laptop.
+  Prometheus http_sd_configs: the targets and labels JSON an inventory endpoint
+  must return, refresh_interval, and why targets persist when it is down.
 ---
 
 ## The problem

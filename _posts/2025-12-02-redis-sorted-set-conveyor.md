@@ -5,11 +5,8 @@ subtitle: "Answering 'where is everything now' and 'what just left' without a da
 date: 2025-12-02 09:00:00 +0200
 tags: [redis, architecture]
 description: >-
-  Tracking several objects moving along a line at once needs two guarantees
-  at every step: a consistent view of where everything currently is, and a
-  clean way to detect what has left the tracked range. This builds that on a
-  Redis sorted set with a single atomic Lua script, and shows both guarantees
-  holding under a real docker-based Redis instance.
+  ZINCRBY updates one member only: a Lua script via redis-cli --eval advances
+  every sorted set score atomically and returns members past a threshold.
 ---
 
 ## The problem

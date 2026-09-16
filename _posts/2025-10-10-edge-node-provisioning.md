@@ -5,12 +5,8 @@ subtitle: "One role that detects the board revision and applies the right overla
 date: 2025-10-10 09:00:00 +0200
 tags: [linux, embedded, infrastructure-as-code]
 description: >-
-  Turning a bare carrier board into a working edge node is usually a manual
-  sequence someone follows from memory, and it differs subtly between board
-  revisions in ways the checklist never mentions. This builds an Ansible role
-  that detects the board at runtime, loads revision-specific settings, and
-  applies a common baseline, tested against a throwaway container so the
-  logic can be verified without any real hardware.
+  /proc/device-tree/model read by Ansible to load board-revision vars via
+  include_vars with_first_found, with a generic fallback and a container test.
 ---
 
 ## The problem

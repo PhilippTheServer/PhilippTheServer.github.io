@@ -5,12 +5,8 @@ subtitle: "Routing every local tool through one proxy so egress is a single, aud
 date: 2026-08-18 09:00:00 +0200
 tags: [llm, security, python]
 description: >-
-  An IDE assistant, a terminal agent and a background daemon can each be
-  configured to send code to a different endpoint, and nobody can answer
-  where code actually goes without checking every tool individually. This
-  article routes all of them through one local proxy that logs and can
-  refuse requests, with a complete Docker Compose example and an honest
-  account of what it doesn't guarantee.
+  OPENAI_BASE_URL=http://localhost:8080/v1 for every AI tool: one local FastAPI
+  proxy that logs each request and refuses internal-only projects.
 ---
 
 ## The problem

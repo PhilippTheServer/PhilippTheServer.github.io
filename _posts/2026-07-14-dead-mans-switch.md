@@ -5,11 +5,8 @@ subtitle: "Detecting the one outage that never generates an alert through the no
 date: 2026-07-14 09:00:00 +0200
 tags: [alerting, observability, reliability]
 description: >-
-  A monitoring pipeline that is completely down looks identical to one where
-  everything is fine, because both states produce zero alerts. This explains
-  the dead-man's-switch pattern that closes that gap, and gives a complete,
-  self-hosted example that a reader can run and deliberately trip on a
-  laptop.
+  Alertmanager dead man's switch with expr: vector(1) == 1: an always-firing
+  Heartbeat alert and an external receiver that alerts when pings stop.
 ---
 
 ## The problem

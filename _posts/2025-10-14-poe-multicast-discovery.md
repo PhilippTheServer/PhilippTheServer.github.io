@@ -5,13 +5,8 @@ subtitle: "One cable for power and data, and a beacon that removes manual addres
 date: 2025-10-14 09:00:00 +0200
 tags: [networking, embedded]
 description: >-
-  Running separate power cabling to every sensor multiplies installation
-  cost, and without some form of discovery, every new module has to be
-  manually addressed and registered before anything can use it. This covers
-  what Power over Ethernet actually buys you, and builds a small
-  multicast-based announcement protocol so peripherals can be plugged in and
-  found automatically, with a working announcer and collector you can run in
-  two containers.
+  IP_ADD_MEMBERSHIP multicast discovery for PoE sensors in Python: announcer,
+  collector with expiry, and why IGMP snooping without a querier breaks it.
 ---
 
 ## The problem

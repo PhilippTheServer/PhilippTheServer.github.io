@@ -5,11 +5,8 @@ subtitle: "Adding trust for one CA by replacing the trust store breaks every pub
 date: 2026-02-20 09:00:00 +0200
 tags: [tls, security]
 description: >-
-  Pointing a process at an internal certificate authority by overriding its trust store
-  is the fastest way to make it work, and it silently cuts that same process off from
-  every publicly signed endpoint it also needs to reach, such as an external identity
-  provider. This article shows the difference between replacing a trust store and
-  appending to it, with a Dockerfile and a Python client that get it right.
+  curl: (60) SSL certificate problem after SSL_CERT_FILE points at an internal
+  CA: it replaces the trust store. Append with update-ca-certificates instead.
 ---
 
 ## The problem

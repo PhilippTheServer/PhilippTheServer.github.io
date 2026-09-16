@@ -5,11 +5,8 @@ subtitle: "Making a human-applied label the only thing an autonomous worker is a
 date: 2026-07-28 09:00:00 +0200
 tags: [agents, security]
 description: >-
-  An autonomous worker that infers permission or priority from an issue's own
-  text is trusting content anyone can write. This covers designing a label as
-  the sole, explicit consent gate for an agent, a deterministic priority
-  order derived from it, and a claim mechanism that survives two runs racing
-  for the same issue, with a complete, testable example.
+  agent-ready label as the only consent gate for a coding agent: FIFO order by
+  label time and a re-read-then-swap claim so two runs never share an issue.
 ---
 
 ## The problem

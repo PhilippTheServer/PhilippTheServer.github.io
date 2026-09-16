@@ -5,11 +5,8 @@ subtitle: "A locked entrypoint step replaces migration code that N gunicorn work
 date: 2026-03-20 09:00:00 +0200
 tags: [databases, docker]
 description: >-
-  Calling alembic upgrade head from inside application code means every
-  gunicorn worker, and every replica of the container, races to run the same
-  migration concurrently. This shows why that races, and an entrypoint that
-  migrates exactly once, guarded by a Postgres advisory lock, before the
-  server process ever starts.
+  alembic upgrade head in app code runs once per gunicorn worker and races.
+  Running it in the entrypoint under pg_advisory_lock, before exec.
 ---
 
 ## The problem

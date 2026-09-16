@@ -5,10 +5,9 @@ subtitle: "Why a stateful pod's second restart is slower than its first, and wha
 date: 2026-04-28 09:00:00 +0200
 tags: [kubernetes, storage, ceph, performance]
 description: >-
-  Setting fsGroup on a pod makes kubelet walk the entire volume at every
-  mount, not just the first one, and on a volume with millions of files that
-  walk can take hours. Here is why the second mount is the one that hurts,
-  and how to stop paying for it on every restart.
+  fsGroupChangePolicy: OnRootMismatch stops kubelet re-chowning every file on
+  each mount. Why fsGroup pods restart slowly, and when fsGroupPolicy None
+  applies.
 ---
 
 ## The problem

@@ -5,12 +5,8 @@ subtitle: "One lockfile-backed tool for environments, and one binary for every l
 date: 2025-10-03 09:00:00 +0200
 tags: [python, ci-cd, automation]
 description: >-
-  A requirements.txt file records no lockfile, so "pip install -r
-  requirements.txt" can resolve a different dependency tree on two machines
-  run a day apart, and four separate lint tools mean four configuration
-  blocks that drift out of sync. This walks through replacing pip, venv,
-  flake8, black and isort with uv and Ruff, with a project a reader can build
-  and lint in a few minutes.
+  uv sync --locked and ruff check replacing pip install -r requirements.txt,
+  venv, flake8, black and isort: uv.lock plus one pyproject.toml config.
 ---
 
 ## The problem

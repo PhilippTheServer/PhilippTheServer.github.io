@@ -5,12 +5,8 @@ subtitle: "Ordering a sync explicitly, and stopping a removed CRD from deleting 
 date: 2026-04-07 09:00:00 +0200
 tags: [kubernetes, gitops, testing]
 description: >-
-  Applying a CustomResourceDefinition and a custom resource that depends on
-  it in the same Argo CD sync can fail intermittently, and removing the CRD
-  from git can prune it in a way that deletes every instance of that
-  resource cluster-wide, not just the ones this Application owns. This
-  works through sync waves and a prune guard that make both failures
-  impossible, with a reproducible kind cluster test proving it.
+  no matches for kind "Widget" in version: CRD and CR in one Argo CD sync.
+  sync-wave "-1" fixes ordering; Prune=false stops a CRD prune wiping CRs.
 ---
 
 ## The problem

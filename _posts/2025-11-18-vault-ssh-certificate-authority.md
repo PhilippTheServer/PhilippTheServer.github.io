@@ -5,11 +5,8 @@ subtitle: "Signing short-lived SSH certificates on demand instead of distributin
 date: 2025-11-18 09:00:00 +0200
 tags: [vault, security, tls]
 description: >-
-  Copying a public key into every host's authorized_keys file does not scale
-  and leaves no record of who was granted access or when. This walks through
-  standing up Vault's SSH secrets engine as a certificate authority, signing
-  short-lived user certificates on demand, and shows a complete, runnable
-  demonstration against a disposable sshd container.
+  TrustedUserCAKeys with the Vault ssh secrets engine: short-lived SSH user
+  certificates limited by allowed_users and ttl instead of authorized_keys.
 ---
 
 ## The problem

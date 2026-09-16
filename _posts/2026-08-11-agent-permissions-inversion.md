@@ -5,11 +5,8 @@ subtitle: "Containing three blast-radius effects instead of enumerating every sa
 date: 2026-08-11 09:00:00 +0200
 tags: [agents, security, linux]
 description: >-
-  A command allowlist for an autonomous agent never converges, because the
-  set of legitimate commands a real task needs is not enumerable in advance,
-  and a name-based list is also easy to defeat. This article moves the
-  boundary from command names to blast radius using kernel-level sandboxing,
-  with a runnable script and its trade-offs.
+  bwrap --unshare-net --cap-drop ALL instead of a command allowlist: sandboxing
+  a coding agent's shell so rm -rf and curl cannot leave the workspace.
 ---
 
 ## The problem

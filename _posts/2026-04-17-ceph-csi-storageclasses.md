@@ -5,13 +5,8 @@ subtitle: "One Ceph cluster, two provisioners, chosen by whether a volume needs 
 date: 2026-04-17 09:00:00 +0200
 tags: [kubernetes, ceph, storage]
 description: >-
-  A database needs an exclusive block device and a multi-pod workload needs
-  a volume several nodes can write to at once, and a single Ceph cluster
-  can serve both, but only if each workload uses the right CSI provisioner.
-  This works through why RBD and CephFS answer different access patterns
-  and gives a complete, reproducible Rook-Ceph setup on a local kind
-  cluster proving both, including the failure that shows up when they're
-  swapped.
+  Multi-Attach error for volume: Ceph RBD is ReadWriteOnce by design. When to
+  use rook-ceph-block and when rook-cephfs for ReadWriteMany.
 ---
 
 ## The problem

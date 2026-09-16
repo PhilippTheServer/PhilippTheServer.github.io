@@ -5,11 +5,8 @@ subtitle: "An endpoint anyone can POST to will accept a typo'd field and silentl
 date: 2025-09-26 09:00:00 +0200
 tags: [fastapi, api-design]
 description: >-
-  Pydantic ignores fields it does not recognise by default, so a client with
-  a typo'd field name or an out-of-vocabulary value gets a 200 response and
-  never learns their request did not do what they thought. This shows how to
-  close the vocabulary with extra="forbid" and Literal types, and what that
-  choice costs in forward compatibility.
+  Pydantic extra="forbid" and Literal types return 422 for typo'd fields and
+  unknown values that the default extra="ignore" silently drops.
 ---
 
 ## The problem

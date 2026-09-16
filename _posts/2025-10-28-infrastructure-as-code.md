@@ -5,12 +5,8 @@ subtitle: "Why a host that cannot be rebuilt from the repository is not really r
 date: 2025-10-28 09:00:00 +0200
 tags: [infrastructure-as-code, ansible, linux, reliability]
 description: >-
-  Infrastructure as code only works if the repository is the single source of
-  truth for a host's configuration, and that discipline is easy to state and
-  easy to break under pressure. This walks through why partial coverage buys
-  almost none of the benefit, why idempotence is the actual product rather
-  than a nice property, and ends with a complete Ansible role, run against a
-  throwaway container, that a reader can use to watch drift get corrected.
+  ansible-playbook --check --diff and a changed=0 second run as proof a host
+  matches its repository, with a container demo that corrects a hand edit.
 ---
 
 ## The problem

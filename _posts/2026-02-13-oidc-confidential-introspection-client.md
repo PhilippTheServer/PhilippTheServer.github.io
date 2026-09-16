@@ -5,11 +5,9 @@ subtitle: "The client that issued a token is the wrong client to ask if it is st
 date: 2026-02-13 09:00:00 +0200
 tags: [identity, security]
 description: >-
-  An API that validates access tokens by calling the OAuth2 introspection endpoint has
-  to authenticate to that endpoint itself, and a public client such as a single-page
-  application has no secret to do it with. This article sets up a second, confidential
-  client whose only job is introspection, and gives the full provider configuration and
-  the calls that use it.
+  invalid_client "Parameter client_secret is missing" on Keycloak token
+  introspection for a public SPA client: add a confidential introspection-only
+  client.
 ---
 
 ## The problem

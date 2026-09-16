@@ -5,11 +5,8 @@ subtitle: "Fencing untrusted issue text and constraining what a model's output i
 date: 2026-08-14 09:00:00 +0200
 tags: [security, agents, llm]
 description: >-
-  An agent that reads issue bodies is reading text a contributor fully
-  controls, and treating that text as instructions is an injection surface
-  no amount of careful wording closes reliably. This article builds a typed
-  action schema that rejects anything a compromised model output might try,
-  and tests the rejection without ever calling a model.
+  Prompt injection via GitHub issue bodies: fence untrusted text and accept
+  model output only as a fixed JSON action schema, tested without a model.
 ---
 
 ## The problem

@@ -5,11 +5,8 @@ subtitle: "Replacing per-peer NetBird rules with groups, default-deny, and a che
 date: 2026-05-26 09:00:00 +0200
 tags: [networking, identity]
 description: >-
-  Per-peer VPN rules accumulate one exception at a time until nobody can say
-  who is allowed to reach a given service. This article builds a NetBird
-  policy set around groups instead of peer addresses, replaces the default
-  allow-all policy with default-deny, and shows a script that checks the
-  resulting access matrix against what the policy set claims to allow.
+  NetBird Default policy replaced by group-based default-deny: auto_groups on
+  setup keys, role:/tier: group names, and a script diffing live policies.
 ---
 
 ## The problem

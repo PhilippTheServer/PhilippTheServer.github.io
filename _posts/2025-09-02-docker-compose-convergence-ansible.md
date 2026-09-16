@@ -5,11 +5,8 @@ subtitle: "A shell task wrapping docker compose up can never report a real chang
 date: 2025-09-02 09:00:00 +0200
 tags: [ansible, docker, infrastructure-as-code]
 description: >-
-  Wrapping docker compose up in an Ansible command task gets a stack deployed
-  but throws away everything Ansible is for: real change detection, check
-  mode, and a diff you can trust. Here is how to deploy the same stack through
-  a module that actually understands compose state, with a full working
-  example.
+  community.docker.docker_compose_v2 instead of a command task running docker
+  compose up -d: real changed status and --check --diff support.
 ---
 
 ## The problem

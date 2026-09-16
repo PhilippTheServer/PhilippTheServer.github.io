@@ -5,12 +5,8 @@ subtitle: "A stdlib-only generator for the layout, Dockerfile and ignore rules e
 date: 2025-10-07 09:00:00 +0200
 tags: [python, architecture, automation]
 description: >-
-  Starting a new service usually means recreating the same src layout,
-  Dockerfile and ignore rules by hand, or copying them from whichever
-  previous project is open in another tab, drifting a little further from a
-  consistent shape each time. This builds a small, dependency-free scaffolding
-  CLI that generates a project from a fixed template, and a test that checks
-  the result is actually valid.
+  Python scaffolding CLI with only argparse and string.Template: generates src
+  layout, pyproject.toml, Dockerfile and .gitignore, tested with tomllib.
 ---
 
 ## The problem

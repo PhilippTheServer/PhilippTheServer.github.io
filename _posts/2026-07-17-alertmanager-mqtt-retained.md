@@ -5,11 +5,9 @@ subtitle: "Bridging fire-and-forget alert events into current state a late subsc
 date: 2026-07-17 09:00:00 +0200
 tags: [alerting, redis, observability, api-design]
 description: >-
-  Alertmanager's webhook delivers an event to whoever happens to be listening
-  at the moment it fires, which is no help to a system that connects later
-  and wants to know what is currently active. This builds a small bridge that
-  keeps current alert state in Redis and republishes it to MQTT as retained
-  messages, with a complete setup that runs on a laptop.
+  Alertmanager webhook to MQTT retained messages: clear stale state on resolve
+  with an empty retained payload, keeping current alerts in Redis by
+  fingerprint.
 ---
 
 ## The problem

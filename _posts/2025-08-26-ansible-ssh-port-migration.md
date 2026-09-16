@@ -5,10 +5,8 @@ subtitle: "Sequencing a config change, a service restart and a connection change
 date: 2025-08-26 09:00:00 +0200
 tags: [ansible, security, linux, infrastructure-as-code]
 description: >-
-  Changing sshd's port during provisioning severs Ansible's own control
-  connection unless the validation, restart, connection update and firewall
-  change happen in the right order. Here is that order, and the two guards that
-  make it safe to re-run.
+  Ansible meta: reset_connection after changing the sshd Port: validate with
+  sshd -t, flush_handlers, and ping before closing the old port.
 ---
 
 ## The problem

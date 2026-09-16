@@ -5,12 +5,8 @@ subtitle: "Testing a policy layer's allow or deny decisions without a model anyw
 date: 2026-07-31 09:00:00 +0200
 tags: [testing, agents, python]
 description: >-
-  A coding agent's permission decisions are ordinary deterministic code, but
-  testing them by running the model end to end is slow, expensive and
-  non-reproducible. Separating the decision layer from the model and
-  recording real tool-call shapes as fixtures makes the whole thing testable
-  with an ordinary unit-test suite, in milliseconds, with no API key
-  required.
+  Unit testing a coding agent's tool-call permission layer with pytest and
+  recorded fixtures: allow, deny or ask decisions with no model or API key.
 ---
 
 ## The problem

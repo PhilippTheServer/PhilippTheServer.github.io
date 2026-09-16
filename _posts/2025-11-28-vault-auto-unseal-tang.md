@@ -5,13 +5,8 @@ subtitle: "Binding unseal keys to a network presence check instead of typing the
 date: 2025-11-28 09:00:00 +0200
 tags: [vault, security, linux]
 description: >-
-  Manual unsealing does not scale once other services depend on Vault being
-  available at boot, but Vault's built-in auto-unseal options assume a cloud
-  KMS, a TPM, or an HSM, none of which fit every environment. This shows how
-  to bind Shamir unseal key shares to a Tang server with Clevis instead, so a
-  host can unseal itself automatically while it is on the expected network,
-  verified end to end including what happens when the Tang server is
-  unreachable.
+  clevis encrypt sss with Tang pins to auto-unseal Vault without cloud KMS or a
+  TPM: binding Shamir key shares, a systemd unit, and the t threshold.
 ---
 
 ## The problem

@@ -5,11 +5,8 @@ subtitle: "Diffing a live OpenAPI schema against a committed snapshot in CI."
 date: 2026-08-25 09:00:00 +0200
 tags: [documentation, testing, ci-cd]
 description: >-
-  Hand-written API documentation and the code behind it drift apart
-  silently, because nothing runs the docs to notice. This article generates
-  the real OpenAPI schema from a FastAPI app, commits a normalised
-  snapshot, and fails CI the moment the two disagree, with the full app,
-  test and workflow.
+  FastAPI app.openapi() snapshot test in pytest: fail CI when the live OpenAPI
+  schema drifts from the committed openapi.snapshot.json.
 ---
 
 ## The problem

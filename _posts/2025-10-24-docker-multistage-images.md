@@ -5,12 +5,8 @@ subtitle: "Splitting build and runtime stages so a compiler never ships in a con
 date: 2025-10-24 09:00:00 +0200
 tags: [docker, performance]
 description: >-
-  Building an application inside the same image you intend to ship means
-  every runtime container carries a compiler, build cache and source tree it
-  will never use again, inflating image size and attack surface for no
-  benefit. This walks through a multi-stage Dockerfile that separates
-  building from running, with a measured image-size comparison a reader can
-  reproduce on a laptop.
+  COPY --from=build with CGO_ENABLED=0 and distroless/static: a multi-stage
+  Dockerfile taking a Go image from 812MB to 24MB, and the no-shell trade-off.
 ---
 
 ## The problem

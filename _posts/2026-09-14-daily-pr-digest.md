@@ -5,12 +5,8 @@ subtitle: "A pipeline that listens to a CI event feed, stores the day's merged p
 date: 2026-09-14 09:00:00 +0200
 tags: [ci-cd, observability, python, architecture]
 description: >-
-  A daily email that listed the day's merged pull requests as titles and check
-  counts was not useful, because it said what happened in CI, not what changed
-  in the code. The fix is a small pipeline: an MQTT subscriber that records
-  merge events to SQLite, a nightly job that groups them by repository, and a
-  local LLM that writes a two-sentence summary of each merge from its diff
-  stat. No cloud API, no new service, one cron entry.
+  paho-mqtt subscriber to SQLite plus a local LLM: a daily digest that
+  summarises merged pull requests per repository from diff stats, no cloud API.
 ---
 
 ## The problem

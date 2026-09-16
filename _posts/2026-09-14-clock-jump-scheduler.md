@@ -5,11 +5,8 @@ subtitle: "A periodic task that compares wall-clock timestamps to decide whether
 date: 2026-09-14 09:00:00 +0200
 tags: [embedded, reliability, python, linux]
 description: >-
-  A periodic measurement task on an embedded Linux box stopped running after
-  an NTP step correction. The scheduler compared wall-clock timestamps, and a
-  backwards jump made it believe the next run was weeks away. The fix is a
-  monotonic-clock guard that treats a backwards step as 'not yet', plus a test
-  that injects the jump and asserts the task still fires.
+  time.time() vs time.monotonic() in a Python scheduler: a backwards NTP step
+  delayed runs by nine days. Monotonic durations and a jump-injecting test.
 ---
 
 ## The problem

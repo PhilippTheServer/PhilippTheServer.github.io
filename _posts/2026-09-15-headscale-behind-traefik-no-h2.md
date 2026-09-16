@@ -5,15 +5,8 @@ subtitle: "Headscale's documentation says not to put it behind a reverse proxy. 
 date: 2026-09-15 09:00:00 +0200
 tags: [networking, dns, security, docker]
 description: >-
-  Headscale is a self-hosted replacement for Tailscale's control server, and its
-  documentation discourages running it behind a reverse proxy or in a container.
-  The homelab does both, because the control server needs a public hostname and
-  everything else already routes through a single Traefik instance. The reason
-  that works is a single TLS option on the router: the noise protocol the clients
-  speak over the control connection is not HTTP/2-compatible, so the proxy has to
-  offer only HTTP/1.1 on that host. This walks through the setup, that one
-  setting, and why the rest of the mesh (a subnet router, split DNS, and a public
-  DERP relay) is what turns a VPN into a network you actually use.
+  Headscale behind Traefik: tls.options=no-h2@file with alpnProtocols http/1.1,
+  because the Tailscale noise handshake breaks when ALPN negotiates h2.
 ---
 
 ## The problem

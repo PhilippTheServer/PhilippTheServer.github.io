@@ -5,11 +5,8 @@ subtitle: "The Docker daemon rewrites several net.ipv4 sysctls with no log line 
 date: 2025-09-05 09:00:00 +0200
 tags: [linux, docker, security]
 description: >-
-  Docker sets several networking sysctls itself whenever it starts or creates
-  a bridge network, and it does so after boot-time hardening has already run,
-  overwriting values you set on purpose. This walks through which values move,
-  why systemd-sysctl cannot protect you, and a small systemd unit that
-  reasserts the values after Docker has finished starting.
+  net.ipv4.ip_forward = 1 although sysctl.d says 0: dockerd rewrites it at
+  start. A oneshot unit After=docker.service reruns sysctl --system.
 ---
 
 ## The problem

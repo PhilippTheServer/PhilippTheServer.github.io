@@ -5,12 +5,9 @@ subtitle: "A floating tag never changes as text, so a GitOps controller never se
 date: 2026-04-10 09:00:00 +0200
 tags: [gitops, ci-cd, docker]
 description: >-
-  A Deployment manifest that references an image by a floating tag such as
-  latest never changes as text, so a GitOps controller comparing git to the
-  cluster sees no diff and triggers no rollout even after CI pushes a new
-  image. This shows why, and how baking the git SHA into the tag at build
-  time, with a reproducible local-registry demo proving both the failure
-  and the fix.
+  image :latest never triggers an Argo CD rollout because GitOps diffs
+  manifest text. Tagging with git rev-parse --short HEAD and committing it
+  back.
 ---
 
 ## The problem

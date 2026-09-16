@@ -5,11 +5,8 @@ subtitle: "Why an OIDC realm role must be checked against the client that reques
 date: 2026-06-12 09:00:00 +0200
 tags: [identity, security, fastapi]
 description: >-
-  A Keycloak realm role lives on the user, not on the client, so a token minted
-  for a low-trust public application can carry the same role claim as one
-  minted for a trusted backend. This shows how to close that gap in a FastAPI
-  dependency by checking the azp claim against an allow-list alongside the
-  usual signature, issuer and role checks, with a self-contained pytest suite.
+  Keycloak azp claim: a realm role does not show which client the token was
+  issued to. Enforcing azp next to role checks in a FastAPI dependency.
 ---
 
 ## The problem

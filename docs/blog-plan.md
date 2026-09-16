@@ -15,7 +15,7 @@ swap from the backlog costs nothing.
 | Problem → approach → solution → conclusion | Every article carries all four sections. The problem is stated in the table below. |
 | Code examples | Each article has at least one complete, runnable example with pinned versions — Dockerfiles, manifests, playbooks, scripts. |
 | Reconstructable by anyone | Examples are self-contained and use no internal address, hostname, credential or topology. A reader reproduces them with public software only. |
-| Indexable | Descriptive titles, per-article meta description, BlogPosting structured data, controlled labels, internal links between related articles. |
+| Indexable | Descriptive titles, per-article meta description (70–160 characters, starting with the literal error message, command, flag or config key a reader would search for), BlogPosting structured data, controlled labels, internal links between related articles. |
 | Sensible labels | A closed 35-tag vocabulary, below. No tag is used only once. |
 | Weekly cadence | Two per week, Tuesdays and Fridays, from 2025-08-26 to 2026-09-04. |
 

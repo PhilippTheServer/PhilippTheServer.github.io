@@ -5,12 +5,9 @@ subtitle: "Keeping a client session and its last-known values alive across a dis
 date: 2025-12-30 09:00:00 +0200
 tags: [redis, reliability, embedded]
 description: >-
-  A subscriber that drops off the network for a minute can miss every message
-  published in that window, and a newly-connecting client sees nothing at all
-  until the next publish. Persistent sessions and retained messages fix both,
-  and this walks through the broker configuration and the client flags that
-  make it work, plus a small Redis-backed cache for consumers that never speak
-  MQTT at all.
+  MQTT clean_session=False only persists with a stable client ID, QoS 1 and
+  Mosquitto persistence true. Retained messages give new subscribers the last
+  value.
 ---
 
 ## The problem

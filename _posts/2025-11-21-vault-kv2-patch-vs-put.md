@@ -5,11 +5,8 @@ subtitle: "put replaces the whole secret; patch merges, but even patch cannot re
 date: 2025-11-21 09:00:00 +0200
 tags: [vault, secrets-management, security]
 description: >-
-  vault kv put writes a full new version of a KV-v2 secret, so adding one
-  field with put silently deletes every other field that secret held. This
-  works through why put behaves that way, what patch actually does instead,
-  and gives a verified, runnable sequence — including the one safe way to
-  remove a single field without racing another writer.
+  vault kv put wipes sibling fields and -cas fails with "check-and-set parameter
+  did not match the current version": why, and how patch avoids it.
 ---
 
 ## The problem

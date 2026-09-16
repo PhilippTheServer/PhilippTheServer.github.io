@@ -5,14 +5,9 @@ subtitle: "Scoping declarative Keycloak reconciliation to structure, never to us
 date: 2026-06-05 09:00:00 +0200
 tags: [identity, gitops, security]
 description: >-
-  Reconciling a Keycloak realm from a file is safe for clients, roles and role
-  mappings, but the same "make live state match this JSON" instinct applied to
-  users or signing keys deletes real accounts and invalidates every
-  outstanding token. This article draws that boundary precisely, and works
-  through a Python script against the Admin REST API that reconciles clients
-  and realm roles idempotently against a local Keycloak container, while
-  proving a second run changes nothing and a user created out-of-band
-  survives every run.
+  kc.sh import with --override=true recreates the realm, dropping users and
+  signing keys. Reconciling only clients and roles via the Keycloak Admin REST
+  API.
 ---
 
 ## The problem

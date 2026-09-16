@@ -8,6 +8,7 @@
 # rendered output. Those checks live next to the rendered-HTML checks they
 # complement, and they run in the same pass.
 
+require "cgi"
 require "json"
 
 SITE   = ARGV[0] || "_site"
@@ -305,6 +306,14 @@ ARTICLES.each do |slug|
     fail!("posts/#{slug}/: BlogPosting author must reference the Person node by @id, not inline it")
   end
   fail!("posts/#{slug}/: BlogPosting author must not inline a name") if posting.dig("author", "name")
+
+  # Google cuts the snippet at about 160 characters. A longer description hides whatever
+  # the searcher typed past the cut, which is how an article ranks for an error message
+  # and still collects no clicks.
+  meta = CGI.unescapeHTML(html[/<meta name="description" content="([^"]*)"/, 1].to_s)
+  unless (70..160).cover?(meta.length)
+    fail!("posts/#{slug}/: meta description is #{meta.length} characters, must be 70–160")
+  end
 
   words = posting["wordCount"].to_i
   fail!("posts/#{slug}/: wordCount is #{words}, which cannot be right") if words < 200

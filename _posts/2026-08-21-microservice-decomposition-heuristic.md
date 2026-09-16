@@ -5,12 +5,8 @@ subtitle: "Counting the coordination cost of a network boundary before drawing o
 date: 2026-08-21 09:00:00 +0200
 tags: [architecture, docker]
 description: >-
-  Splitting a system into microservices before there is an actual scaling,
-  ownership or isolation reason costs real coordination: versioned
-  contracts, retries, and version-skew windows that a single process never
-  has. This article builds the same three responsibilities as a modular
-  monolith with an enforced internal boundary, so a later real split is
-  mechanical rather than a rewrite.
+  import-linter forbidden contract as a module boundary: a FastAPI modular
+  monolith instead of early microservices, and when a network split pays off.
 ---
 
 ## The problem

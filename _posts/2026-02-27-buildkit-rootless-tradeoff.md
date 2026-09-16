@@ -5,11 +5,9 @@ subtitle: "Avoiding a privileged builder trades container capability for filesys
 date: 2026-02-27 09:00:00 +0200
 tags: [docker, security, performance]
 description: >-
-  The standard BuildKit container image needs privileged mode to use the kernel's
-  overlayfs snapshotter, which is unwelcome on a cluster that flags privileged
-  workloads. Rootless BuildKit avoids that by running its snapshotter in userspace via
-  fuse-overlayfs instead, and this article measures, reproducibly, what that substitution
-  costs on a build with a cold cache.
+  Rootless BuildKit with --oci-worker-snapshotter=fuse-overlayfs needs no
+  --privileged, but cold-cache builds pay a FUSE round-trip per file. Measuring
+  it.
 ---
 
 ## The problem

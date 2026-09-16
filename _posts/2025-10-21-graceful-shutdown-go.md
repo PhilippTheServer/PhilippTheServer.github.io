@@ -5,12 +5,8 @@ subtitle: "Draining in-flight requests on SIGTERM instead of dropping them mid-r
 date: 2025-10-21 09:00:00 +0200
 tags: [go, reliability]
 description: >-
-  http.ListenAndServe has no default timeouts and no way to drain in-flight
-  requests on SIGTERM, so a rolling deploy or a container orchestrator's stop
-  signal cuts connections mid-response. This builds a small chi-based service
-  with explicit server timeouts and a shutdown sequence that waits for
-  in-flight work to finish, with a test that proves a slow request survives a
-  shutdown signal instead of being killed by it.
+  Go http.Server ReadHeaderTimeout and srv.Shutdown with signal.NotifyContext:
+  draining in-flight requests on SIGTERM in a chi service, with a test.
 ---
 
 ## The problem

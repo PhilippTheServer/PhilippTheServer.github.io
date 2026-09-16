@@ -5,12 +5,8 @@ subtitle: "Monitoring that tells you a user is unhappy, instead of that a number
 date: 2026-03-31 09:00:00 +0200
 tags: [observability, alerting, reliability, testing]
 description: >-
-  Most monitoring failures are not missing data, they are the wrong alert on
-  good data, and the class of outage nobody catches is the one where every
-  metric stays green. This works through the difference between alerting on a
-  resource number and alerting on what a user experiences, and includes a
-  runnable Prometheus and blackbox_exporter stack plus a tested DNS check
-  that catches a failure no metric-based alert can see.
+  probe_success == 0 via blackbox_exporter instead of CPU alerts, plus a
+  dnspython check that treats NOERROR with an empty answer as down.
 ---
 
 ## The problem

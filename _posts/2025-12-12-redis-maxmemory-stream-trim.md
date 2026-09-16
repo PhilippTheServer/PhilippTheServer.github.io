@@ -5,12 +5,8 @@ subtitle: "Trimming happens on write, so a stream that hits maxmemory first can 
 date: 2025-12-12 09:00:00 +0200
 tags: [redis, performance, databases, reliability]
 description: >-
-  Redis Streams trim themselves as a side effect of XADD, and XADD is refused
-  once maxmemory is reached under the default eviction policy. That leaves a
-  gap where a stream can hit the memory ceiling before it ever gets trimmed
-  down, and stay stuck there. Here is how to reproduce that state, why
-  maxmemory-policy will not save you, and how to size and sequence trimming
-  so it cannot happen.
+  OOM command not allowed when used memory exceeds maxmemory on XADD MAXLEN: why
+  the stream never trims itself, and why a standalone XTRIM still works.
 ---
 
 ## The problem

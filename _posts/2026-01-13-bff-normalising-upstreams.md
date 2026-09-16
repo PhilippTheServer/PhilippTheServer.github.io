@@ -5,11 +5,8 @@ subtitle: "Why a BFF is a translation layer, not a proxy, and how to make its fa
 date: 2026-01-13 09:00:00 +0200
 tags: [fastapi, architecture, api-design, frontend]
 description: >-
-  A dashboard that calls a ticketing system and a CI system directly inherits
-  their different pagination styles, error shapes and auth schemes. This
-  article builds a FastAPI backend-for-frontend that normalises both into one
-  schema, degrades gracefully when an upstream is down, and shows how to test
-  each adapter without touching a real upstream.
+  asyncio.gather with return_exceptions=True in a FastAPI BFF: map two upstream
+  APIs onto one schema and return partial data with health when one is down.
 ---
 
 ## The problem

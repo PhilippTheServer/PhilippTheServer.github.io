@@ -5,10 +5,8 @@ subtitle: "A config-driven proxy that starts, health-checks and idles out model 
 date: 2026-01-20 09:00:00 +0200
 tags: [llm, performance, architecture]
 description: >-
-  One GPU can hold one large model at a time, but different tasks want
-  different models and restarting a server by hand does not scale past a
-  handful of requests. This describes a proxy that loads a model on first
-  request, keeps it warm, and swaps it out for the next one automatically.
+  llama-swap config.yaml with cmd, ttl and healthCheckTimeout: loading
+  llama-server models on demand and unloading idle ones on a single GPU.
 ---
 
 ## The problem

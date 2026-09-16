@@ -5,11 +5,8 @@ subtitle: "Placing one replica on flash and the rest on spinning disk with a two
 date: 2025-11-07 09:00:00 +0200
 tags: [ceph, storage, performance]
 description: >-
-  Metadata-heavy pools suffer when their primary replica sits on a spinning
-  disk, but re-pointing the whole pool at SSD means paying for all-flash
-  capacity and triggering a full rebalance. This shows how to write a CRUSH
-  rule that places only the primary on SSD and the remaining replicas on HDD,
-  and how to test it with crushtool before touching a live map.
+  step take default class ssd, chooseleaf firstn 1, then class hdd firstn 0: a
+  CRUSH rule with an SSD primary and HDD replicas, tested with crushtool.
 ---
 
 ## The problem
