@@ -5,12 +5,9 @@ subtitle: "Splitting a do-everything consumer into single-purpose stages linked 
 date: 2025-12-05 09:00:00 +0200
 tags: [redis, architecture, python]
 description: >-
-  A single service that detects, tracks, calibrates and computes statistics
-  over the same data becomes impossible to test or scale in isolation. This
-  splits that service into four single-purpose consumers chained through
-  Redis Streams, using consumer groups for at-least-once delivery and
-  XAUTOCLAIM for crash recovery, in a complete example a reader can run
-  against a local Redis container.
+  XREADGROUP, XACK and XAUTOCLAIM: splitting one Python consumer into
+  single-purpose Redis Streams stages with at-least-once delivery and crash
+  recovery.
 ---
 
 ## The problem

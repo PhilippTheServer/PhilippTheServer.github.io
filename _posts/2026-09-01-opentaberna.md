@@ -5,13 +5,8 @@ subtitle: "Docs that are not under version control are docs that will be wrong; 
 date: 2026-09-01 09:00:00 +0200
 tags: [documentation, testing, ci-cd, architecture]
 description: >-
-  Documentation kept in a hosted wiki drifts silently, because nothing forces
-  a reviewer to look at it when the code it describes changes. Treating docs
-  as a repository, reviewed through the same pull requests as code, turns
-  that silence into a diff someone has to look at. This covers what changes
-  when documentation moves into git — as it does in the open-source OpenTaberna
-  project — with a runnable Wiki.js setup and a CI check that fails a pull
-  request when source changes without its docs.
+  Wiki.js Git storage for docs as code: publish reviewed Markdown and fail a
+  pull request when src/ changes without docs/, checked with git diff.
 ---
 
 ## The problem

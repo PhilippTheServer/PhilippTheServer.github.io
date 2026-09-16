@@ -5,11 +5,9 @@ subtitle: "Bare HTTPExceptions scattered across a codebase produce inconsistent 
 date: 2025-09-23 09:00:00 +0200
 tags: [fastapi, python, api-design]
 description: >-
-  Raising HTTPException directly from inside route and service code gives
-  every error path its own idea of what the response body should contain,
-  and throws away the specific context that would make the error debuggable.
-  This builds a small domain exception hierarchy and a single handler that
-  turns any of them into a consistent, informative response.
+  FastAPI add_exception_handler on a base AppError instead of raising
+  HTTPException in services: one status-code mapping and a consistent error
+  body.
 ---
 
 ## The problem

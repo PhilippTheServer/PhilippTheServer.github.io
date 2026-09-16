@@ -5,12 +5,8 @@ subtitle: "Ad-hoc return values leave every client guessing whether a payload is
 date: 2025-09-19 09:00:00 +0200
 tags: [fastapi, api-design, python]
 description: >-
-  When some endpoints return a bare object, others a list, and others a
-  hand-rolled dict with a status field, every client has to special-case each
-  one. This works through a generic response envelope built on Pydantic
-  generics, a custom route class that applies it without repeating
-  boilerplate in every endpoint, and the trade-offs that come with wrapping
-  everything uniformly.
+  FastAPI response envelope with Pydantic Generic[T] and a custom APIRoute
+  get_route_handler that wraps every response in success, data and error.
 ---
 
 ## The problem

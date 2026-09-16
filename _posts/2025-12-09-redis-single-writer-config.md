@@ -5,10 +5,8 @@ subtitle: "Giving shared configuration in Redis exactly one owner, a version, an
 date: 2025-12-09 09:00:00 +0200
 tags: [redis, infrastructure-as-code, architecture, reliability]
 description: >-
-  When several services can write the same Redis key, a read after a write
-  can return someone else's value and nobody owns the truth. This walks
-  through a lease-and-version pattern that makes one process the only
-  writer, with a complete Python example a reader can run on a laptop.
+  SET NX PX lease plus a Lua script that checks the fencing token, bumps a
+  version and publishes, so exactly one process writes a Redis config key.
 ---
 
 ## The problem

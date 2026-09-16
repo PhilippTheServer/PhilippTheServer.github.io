@@ -5,10 +5,8 @@ subtitle: "Why a DOM assertion cannot tell a working chart from a blank one."
 date: 2026-07-21 09:00:00 +0200
 tags: [testing, frontend]
 description: >-
-  A canvas element can exist, have the right size, and show a completely
-  blank drawing surface, and a DOM-based test suite will pass every one of
-  those assertions. This covers why canvas content needs a real browser and a
-  pixel-level assertion to test properly, with a complete Playwright example.
+  getImageData in Playwright to assert a canvas actually drew pixels, since
+  jsdom has no canvas renderer and DOM assertions pass on a blank canvas.
 ---
 
 ## The problem

@@ -5,11 +5,8 @@ subtitle: "A build takes minutes and produces output while it runs, so the API h
 date: 2026-03-06 09:00:00 +0200
 tags: [go, docker, api-design]
 description: >-
-  An HTTP endpoint that triggers a Docker image build cannot behave like a normal
-  request/response call, because the build takes an unpredictable amount of time and a
-  client needs to watch its output as it happens rather than poll for a final result.
-  This article designs the job and streaming model for that, with a complete Go service
-  built on the Docker SDK.
+  Docker SDK ImageBuild returns a nil error when RUN fails: read the error field
+  in the JSON build stream. A Go job model with POST /builds and live logs.
 ---
 
 ## The problem

@@ -5,10 +5,8 @@ subtitle: "Comparing the canonicalised call, not the raw text, so equivalent arg
 date: 2026-02-03 09:00:00 +0200
 tags: [llm, testing]
 description: >-
-  Comparing a model's tool call against an expected one by exact string match
-  fails on harmless formatting differences and a substring check lets wrong
-  calls through by accident. This shows how to parse both sides into a
-  structure first, canonicalise it, and compare field by field.
+  Scoring LLM tool calls: parse the arguments JSON first so key order and 5 vs
+  5.0 pass, wrong tools fail, and extra fields follow per-case rules.
 ---
 
 ## The problem

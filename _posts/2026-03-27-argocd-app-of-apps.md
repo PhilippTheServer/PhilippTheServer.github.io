@@ -5,12 +5,8 @@ subtitle: "Applying a single Application manifest is the whole bootstrap, and th
 date: 2026-03-27 09:00:00 +0200
 tags: [kubernetes, gitops, automation]
 description: >-
-  A fresh Kubernetes cluster has nothing on it, and a runbook of kubectl
-  apply commands run in the right order does not survive being handed to
-  someone else or run against a rebuilt cluster months later. This works
-  through the app-of-apps pattern, where one root Argo CD Application
-  manages every other Application, and gives a complete, reproducible setup
-  on a local kind cluster.
+  Argo CD app-of-apps: a root Application with directory recurse over apps/
+  bootstraps a bare cluster from one kubectl apply, with pruning.
 ---
 
 ## The problem

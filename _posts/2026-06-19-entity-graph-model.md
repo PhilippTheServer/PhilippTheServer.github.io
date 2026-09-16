@@ -5,11 +5,8 @@ subtitle: "One node shape and three edge types instead of a struct and a join pe
 date: 2026-06-19 09:00:00 +0200
 tags: [observability, architecture, go]
 description: >-
-  Hosts, volumes, links and alerts have genuinely different shapes, but an
-  observability console still needs one model that can answer "what does
-  this depend on" and "what is this node's health" without a type-specific
-  code path for every kind of thing. This walks through an entity-graph
-  model in Go that gets there, with a complete runnable implementation.
+  Go entity graph data model: one Entity struct with Kind and Attrs, typed
+  contains, dependsOn and runsOn edges, health rollup and cycle detection.
 ---
 
 ## The problem

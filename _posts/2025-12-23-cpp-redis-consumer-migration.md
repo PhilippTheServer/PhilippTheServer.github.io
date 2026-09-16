@@ -5,10 +5,8 @@ subtitle: "What a dozen idle interpreters cost you, and what replacing the hot p
 date: 2025-12-23 09:00:00 +0200
 tags: [cpp, python, redis, performance]
 description: >-
-  A dozen Python processes each blocked on a Redis stream look harmless until
-  you add up their idle cost on a small device. Here is how to replace just
-  that consume loop with a C++ equivalent, built and run through Docker so
-  you can measure the trade-off yourself instead of taking anyone's word for it.
+  redis-plus-plus xreadgroup times out before its block timeout: set
+  socket_timeout to 0. Replacing idle Python Redis stream consumers with C++.
 ---
 
 ## The problem

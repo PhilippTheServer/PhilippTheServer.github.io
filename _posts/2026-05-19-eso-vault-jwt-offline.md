@@ -5,11 +5,8 @@ subtitle: "Verifying a service-account token's signature instead of asking the A
 date: 2026-05-19 09:00:00 +0200
 tags: [kubernetes, vault, secrets-management, security]
 description: >-
-  Vault's default Kubernetes auth method needs to call back into the cluster's
-  API server on every login, which cannot work once Vault and the cluster sit
-  in deliberately isolated networks. Here is how to configure Vault's JWT auth
-  method to validate service-account tokens offline, against a static public
-  key, and wire External Secrets Operator to use it.
+  Vault kubernetes auth "failed to validate token" tokenreviews i/o timeout:
+  jwt auth with jwt_validation_pubkeys from sa.pub for External Secrets.
 ---
 
 ## The problem

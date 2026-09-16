@@ -5,13 +5,8 @@ subtitle: "The controller that is supposed to deliver secrets cannot also delive
 date: 2026-04-14 09:00:00 +0200
 tags: [kubernetes, gitops, secrets-management]
 description: >-
-  A secrets operator deployed through GitOps is the natural way to get
-  credentials onto a cluster without committing them to git, but that
-  operator needs its own credential to reach the secret store, and nothing
-  has delivered that one yet. This works through where the circularity
-  actually breaks, and gives a complete, reproducible bootstrap using a
-  Vault dev server and the External Secrets Operator on a local kind
-  cluster.
+  External Secrets SecretStore tokenSecretRef needs a Vault token before
+  GitOps can deliver one. Breaking the loop with one out-of-band secret.
 ---
 
 ## The problem

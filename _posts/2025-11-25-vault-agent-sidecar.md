@@ -5,12 +5,9 @@ subtitle: "Rendering secrets into a shared volume at runtime instead of baking t
 date: 2025-11-25 09:00:00 +0200
 tags: [vault, secrets-management, security, docker]
 description: >-
-  Rendering secrets into config files during a deploy leaves plaintext
-  sitting on disk indefinitely and turns every rotation into a redeploy.
-  This sets up a Vault Agent sidecar that authenticates with a single-use,
-  response-wrapped AppRole secret and renders a live secret into a file an
-  application container reads, verified end to end with a complete
-  docker-compose stack.
+  secret_id_response_wrapping_path in Vault Agent approle auto_auth: a sidecar
+  that bootstraps from a single-use wrapped secret_id and renders secrets to a
+  file.
 ---
 
 ## The problem

@@ -5,13 +5,8 @@ subtitle: "A row lock and a CHECK constraint are enough to stop two buyers takin
 date: 2026-01-09 09:00:00 +0200
 tags: [databases, performance]
 description: >-
-  Code that reads the remaining stock, decides there is enough, and then
-  writes the new total is a race that two concurrent customers can both win,
-  each believing they got the last unit. This article works through why
-  check-then-decrement logic fails under a database's default isolation
-  level, and builds a schema where a single atomic UPDATE together with a
-  CHECK constraint makes overselling structurally impossible rather than
-  merely unlikely, with a concurrency test to prove it.
+  violates check constraint "stock_not_negative": why check-then-decrement
+  oversells under READ COMMITTED, and a single conditional UPDATE that cannot.
 ---
 
 ## The problem

@@ -5,11 +5,9 @@ subtitle: "Healthchecks, a seeded realm and one smoke test replace sleep-and-hop
 date: 2026-03-17 09:00:00 +0200
 tags: [docker, identity, testing]
 description: >-
-  A backend that needs an identity provider, a database, a cache and a
-  time-series store fails unpredictably under a naive docker-compose file
-  because none of it waits for the others to actually be ready. This shows
-  the healthcheck, seeding and end-to-end test that make `docker compose up`
-  a reliable one-command environment.
+  depends_on condition: service_healthy: why a plain depends_on list races,
+  with Postgres, Redis and Keycloak healthchecks, --import-realm and a smoke
+  test.
 ---
 
 ## The problem

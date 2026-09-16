@@ -5,11 +5,9 @@ subtitle: "Getting a one-off measurement into Prometheus without writing an expo
 date: 2026-07-03 09:00:00 +0200
 tags: [observability, linux]
 description: >-
-  A single custom host measurement does not justify a dedicated exporter
-  process, but it still needs to reach the same scrape pipeline as everything
-  else. The textfile collector is node_exporter's answer, and it has two
-  failure modes that only show up under load. This covers both, with a
-  complete, runnable example.
+  node_exporter --collector.textfile.directory: torn .prom writes fixed by
+  write-temp-then-rename, and stale files caught with a last-run timestamp
+  alert.
 ---
 
 ## The problem

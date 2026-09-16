@@ -5,13 +5,8 @@ subtitle: "Four numbers instead of one, so the bottleneck is a layer, not a gues
 date: 2025-10-31 09:00:00 +0200
 tags: [ceph, storage, testing, performance]
 description: >-
-  A single throughput number from an RBD volume or a CephFS mount hides
-  whether the limit is a slow disk, a saturated replication network, or
-  overhead in Ceph's own protocol path, and each of those has a completely
-  different fix. This builds a benchmark methodology that measures the
-  device, the network and the protocol separately before measuring the full
-  stack, using fio, iperf3 and rados bench against a single-node Ceph
-  container a reader can run without a real cluster.
+  fio, iperf3, rados bench, then fio on RBD: benchmarking device, network, Ceph
+  protocol and full stack separately to find which layer caps throughput.
 ---
 
 ## The problem

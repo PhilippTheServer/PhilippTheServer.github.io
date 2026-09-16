@@ -5,12 +5,8 @@ subtitle: "A recursive chmod that looks correct can silently strip the bit that 
 date: 2025-09-12 09:00:00 +0200
 tags: [linux, docker, testing]
 description: >-
-  Fixing shared-volume permissions with chmod -R 775 looks like a correct fix
-  and passes an immediate check, but it clears the setgid bit that made new
-  files inherit the directory's group, so the fix quietly regresses days
-  later. This covers how the octal digits actually work, why the fix has to
-  treat files and directories differently, and a way to test it that a
-  one-off manual check will not catch.
+  chmod -R 775 clears the setgid bit of 2775 directories, so new files lose the
+  shared group. Separate find -type d and -type f, and assert with stat -c %a.
 ---
 
 ## The problem

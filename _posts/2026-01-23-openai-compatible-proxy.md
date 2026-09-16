@@ -5,10 +5,8 @@ subtitle: "Adding auth and a health check that never wakes the model, without br
 date: 2026-01-23 09:00:00 +0200
 tags: [llm, fastapi, api-design, identity]
 description: >-
-  Local model servers speak a shape close enough to the OpenAI API that
-  existing SDKs and tools can point at them unmodified, but close enough is
-  not the same as safe to expose. This builds a small FastAPI proxy that adds
-  authentication and a health check that cannot itself trigger a model load.
+  /v1/chat/completions behind a FastAPI proxy: bearer API-key auth, unbuffered
+  SSE streaming, and a /healthz that cannot trigger a model load.
 ---
 
 ## The problem

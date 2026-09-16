@@ -5,10 +5,8 @@ subtitle: "Working out whether weights, context and KV cache actually fit before
 date: 2026-01-16 09:00:00 +0200
 tags: [llm, performance]
 description: >-
-  Fitting a local language model onto one GPU means budgeting three separate
-  pools of VRAM — weights, activations and a KV cache that grows with context
-  length — and the wrong cache format can silently multiply latency without
-  raising an error. This walks through the arithmetic and a way to measure it.
+  llama-bench -ctk q8_0 -ctv q8_0 vs f16: estimating VRAM for GGUF weights plus
+  a KV cache that grows with context, and catching slow KV cache types.
 ---
 
 ## The problem

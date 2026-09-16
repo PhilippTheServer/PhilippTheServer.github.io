@@ -5,11 +5,9 @@ subtitle: "A verifier that inspects the repository state instead of trusting the
 date: 2026-08-04 09:00:00 +0200
 tags: [agents, testing, ci-cd]
 description: >-
-  An agent process can exit cleanly and report success while having changed
-  nothing, or while its tests silently didn't run. This article builds a
-  separate verification step that checks git state and re-runs the real
-  test command, and wires it into CI as an independent job the agent cannot
-  influence.
+  git diff --quiet HEAD and a re-run test command in a separate CI job:
+  verifying a coding agent's work from repository state instead of its own
+  report.
 ---
 
 ## The problem

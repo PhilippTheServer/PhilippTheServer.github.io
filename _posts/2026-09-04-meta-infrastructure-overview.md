@@ -5,11 +5,8 @@ subtitle: "The dependency order behind a complete self-hosted platform, layer by
 date: 2026-09-04 09:00:00 +0200
 tags: [infrastructure-as-code, kubernetes, ceph, observability, architecture]
 description: >-
-  Each layer of a self-hosted platform is well documented in isolation, but
-  nothing describes the order they have to arrive in or why getting that
-  order wrong fails weeks later rather than immediately. This article walks
-  the full dependency chain from bare metal to self-hosted model serving,
-  and demonstrates the ordering discipline with a runnable Compose file.
+  Self-hosted platform build order: why mesh, cluster, Ceph storage, identity
+  and observability must precede model serving, shown with Compose depends_on.
 ---
 
 ## The problem

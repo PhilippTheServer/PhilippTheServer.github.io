@@ -5,10 +5,8 @@ subtitle: "Separating planning from execution so a dry run cannot drift out of s
 date: 2026-02-10 09:00:00 +0200
 tags: [testing, python, automation, infrastructure-as-code]
 description: >-
-  A dry-run flag added after the real logic is written tends to fall out of
-  sync as the real path grows new side effects nobody remembers to gate. This
-  describes structuring a tool so planning and execution are separate from the
-  start, and writing a test that proves dry-run mode sends nothing.
+  if dry_run: return guards drift as side effects are added. Split the tool into
+  a pure plan() and apply(), and test that dry run never calls the client.
 ---
 
 ## The problem

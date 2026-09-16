@@ -5,11 +5,8 @@ subtitle: "One process and one version number instead of a static server paired 
 date: 2026-03-03 09:00:00 +0200
 tags: [go, frontend, architecture]
 description: >-
-  Serving a single-page application from a separate static file server next to its API
-  is two processes that have to be deployed and versioned together but usually are not.
-  This article embeds a built frontend directly into the Go binary that also serves the
-  API, with a complete example including the single-page-application routing fallback
-  that this approach needs to get right.
+  //go:embed dist with http.FileServer returns 404 on SPA client routes after a
+  refresh: an index.html fallback, serving the API from the same Go binary.
 ---
 
 ## The problem

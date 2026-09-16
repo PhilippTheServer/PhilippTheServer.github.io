@@ -5,11 +5,8 @@ subtitle: "The introspection endpoint has three different response shapes, and o
 date: 2026-02-17 09:00:00 +0200
 tags: [identity, api-design, testing]
 description: >-
-  Code that assumes an OAuth2 introspection response always carries an active field
-  works right up until the resource server's own client credentials are wrong, at which
-  point every request that reaches it throws instead of returning a clean 401. This
-  article separates the response shapes introspection can actually return and gives a
-  tested client that handles all of them.
+  resp.json()["active"] raises KeyError when token introspection returns 401
+  invalid_client. Check the status code first and report a client config error.
 ---
 
 ## The problem

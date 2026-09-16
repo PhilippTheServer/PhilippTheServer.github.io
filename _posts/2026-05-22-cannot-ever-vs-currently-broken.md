@@ -5,11 +5,9 @@ subtitle: "Why one error code can mean two opposite things, and only one of them
 date: 2026-05-22 09:00:00 +0200
 tags: [automation, testing, api-design, observability]
 description: >-
-  A sweep that checks a list of targets for a feature has to decide what a
-  failure means, and a response code alone cannot tell it whether that
-  failure was expected or is a regression. Here is how to make that decision
-  explicit, keep it loud when it should be, and test it so the escape hatch
-  does not become a second way to hide problems.
+  Sweep automation: a 404 cannot tell "never supported" from "currently
+  broken". An explicit cannot-ever allowlist with required reasons, and its
+  tests.
 ---
 
 ## The problem

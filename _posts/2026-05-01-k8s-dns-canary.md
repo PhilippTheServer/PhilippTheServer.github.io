@@ -5,12 +5,8 @@ subtitle: "Catching a reintroduced DNS blackhole before a workload times out on 
 date: 2026-05-01 09:00:00 +0200
 tags: [kubernetes, dns, observability, testing]
 description: >-
-  A pod's search domain or CoreDNS configuration can resolve a public name to
-  an internal blackhole, and once that bug is fixed it tends to come back the
-  next time someone touches the Corefile for an unrelated reason. This walks
-  through a CronJob that resolves a small, deliberate set of names on the
-  exact path real pods use, so the regression fails a Job instead of a
-  customer's request.
+  CoreDNS Corefile rewrite regressions caught by a busybox nslookup CronJob
+  that checks internal, external and NXDOMAIN names and fails the Job.
 ---
 
 ## The problem

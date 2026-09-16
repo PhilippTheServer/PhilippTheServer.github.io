@@ -5,11 +5,8 @@ subtitle: "Why an internal healthz endpoint cannot see the failures that actuall
 date: 2026-07-10 09:00:00 +0200
 tags: [observability, dns]
 description: >-
-  A service that checks only its own process health can report perfectly
-  healthy while nobody outside it can reach it at all. This covers why
-  external, black-box probing against the published name catches an entire
-  class of failure that internal health checks structurally cannot, with a
-  complete blackbox_exporter setup that runs on a laptop.
+  blackbox_exporter __param_target relabel_configs: probe the published hostname
+  to catch DNS, TLS expiry and proxy errors that /healthz cannot see.
 ---
 
 ## The problem

@@ -5,11 +5,8 @@ subtitle: "Moving thresholds out of code and into a file that fails at startup, 
 date: 2026-06-26 09:00:00 +0200
 tags: [observability, go]
 description: >-
-  Hardcoding a threshold per metric works until you have more than a handful of
-  them, and a hand-edited rules file that is only checked when a rule fires
-  will eventually ship a typo straight into production. Here is a small Go
-  health-evaluation engine that validates its entire rules file before it
-  evaluates a single metric.
+  Go rules file with gopkg.in/yaml.v3: yaml.Unmarshal accepts operator: greter.
+  Validate operators and metric names at load time so startup fails.
 ---
 
 ## The problem

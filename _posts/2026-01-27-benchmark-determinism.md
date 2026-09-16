@@ -5,10 +5,8 @@ subtitle: "Pinning decoding parameters and treating the result as a distribution
 date: 2026-01-27 09:00:00 +0200
 tags: [testing, llm]
 description: >-
-  A model server tuned for a pleasant chat experience samples its output, so
-  the same prompt run twice gives two different answers and a benchmark score
-  moves for reasons that have nothing to do with a regression. This shows how
-  to pin what can be pinned and measure variance for what cannot.
+  LLM output still varies at temperature 0 with a fixed seed because batching
+  changes float order. Repeat each prompt and compare mean and stdev.
 ---
 
 ## The problem

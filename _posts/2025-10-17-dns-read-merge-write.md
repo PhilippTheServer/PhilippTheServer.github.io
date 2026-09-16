@@ -5,13 +5,8 @@ subtitle: "A read-merge-write client with an ownership marker, so automation nev
 date: 2025-10-17 09:00:00 +0200
 tags: [dns, automation, infrastructure-as-code, api-design]
 description: >-
-  Many registrar and DNS provider APIs expose only "replace the whole zone",
-  with no way to add or remove a single record, so naive automation that
-  computes its desired records and pushes them deletes every record it does
-  not know about. This builds a read-merge-write client with an ownership
-  marker that tells apart managed and unmanaged records, backed by a small
-  local test server so the whole pattern can be run and verified without any
-  real registrar.
+  PUT /zone replaces the whole DNS zone: a read-merge-write client with owner
+  TXT records that keeps unmanaged records and removes stale managed ones.
 ---
 
 ## The problem

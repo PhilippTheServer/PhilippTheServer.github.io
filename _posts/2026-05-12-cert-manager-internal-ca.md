@@ -5,12 +5,8 @@ subtitle: "Why a private CA, not ACME, is the right Issuer for names nothing pub
 date: 2026-05-12 09:00:00 +0200
 tags: [kubernetes, tls]
 description: >-
-  ACME's HTTP-01 and DNS-01 challenges both assume the certificate authority
-  can reach or resolve something public, which is exactly what a mesh-only
-  hostname does not have. This article shows why a cert-manager CA Issuer is
-  the correct tool for that case, what it costs in trust distribution, and a
-  complete kind-based example that issues and verifies a certificate for a
-  private name.
+  Waiting for HTTP-01 challenge propagation, no such host: ACME cannot issue
+  for private names. A cert-manager CA ClusterIssuer and trust distribution.
 ---
 
 ## The problem

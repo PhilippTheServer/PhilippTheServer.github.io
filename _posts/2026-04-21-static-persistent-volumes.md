@@ -5,10 +5,8 @@ subtitle: "Making Kubernetes mount data it did not create, without letting it de
 date: 2026-04-21 09:00:00 +0200
 tags: [kubernetes, storage, ceph, reliability]
 description: >-
-  Dynamic provisioning assumes every PersistentVolume starts empty, which is
-  the wrong assumption the moment you need to mount storage that already
-  holds data. Here is how to bind a PVC to that data explicitly, and how to
-  make sure deleting the PVC does not take the data with it.
+  persistentVolumeReclaimPolicy: Retain with volumeName and claimRef binds a
+  PVC to existing data. What Released means and how to rebind safely.
 ---
 
 ## The problem

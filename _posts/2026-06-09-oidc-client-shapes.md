@@ -5,11 +5,8 @@ subtitle: "Why a token-checking API needs a different client shape than a login 
 date: 2026-06-09 09:00:00 +0200
 tags: [identity, security, api-design]
 description: >-
-  Configuring every OIDC client the same way conflates "users log in here"
-  with "this service validates a token", and the wrong shape accepts flows
-  nobody intended. This article covers the three client shapes and gives
-  working Keycloak configuration plus a Python JWT validator that checks
-  issuer, audience and signature.
+  Keycloak directAccessGrantsEnabled on a token-validating API lets it mint
+  tokens. bearerOnly client, oidc-audience-mapper and a PyJWT aud check.
 ---
 
 ## The problem

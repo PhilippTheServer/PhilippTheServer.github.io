@@ -5,11 +5,9 @@ subtitle: "Why a cluster at 70% average can still halt every write in the pool."
 date: 2025-11-11 09:00:00 +0200
 tags: [ceph, storage, performance, reliability]
 description: >-
-  Ceph's full_ratio applies per OSD, so placement variance means the fullest
-  disk in a cluster can be far ahead of the cluster-wide average, and one OSD
-  crossing that threshold stops writes cluster-wide. This works through why
-  the variance exists, how to see it before it becomes an incident, and gives
-  a script that alerts on the tail of the distribution instead of the mean.
+  Ceph full_ratio applies per OSD: one OSD at 95% stops writes while ceph df
+  shows 70%. Alerting on the fullest OSD in ceph osd df, plus the upmap
+  balancer.
 ---
 
 ## The problem

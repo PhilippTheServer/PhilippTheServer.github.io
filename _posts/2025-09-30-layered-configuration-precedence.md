@@ -5,11 +5,8 @@ subtitle: "One resolution order for five ways a value can reach a service, and w
 date: 2025-09-30 09:00:00 +0200
 tags: [python, infrastructure-as-code, docker, kubernetes]
 description: >-
-  A service that reads configuration only from environment variables forces
-  every deployment target to shoehorn secrets into that one mechanism, and
-  nothing in the code says which value wins when two sources disagree. Here is
-  a small, tested resolver with a fixed precedence order, and the tests that
-  prove it behaves the same in Compose, in Kubernetes and on a laptop.
+  Docker secrets in /run/secrets, Kubernetes secret mounts, env vars and .env: a
+  Python resolver with fixed precedence that reports which source won.
 ---
 
 ## The problem

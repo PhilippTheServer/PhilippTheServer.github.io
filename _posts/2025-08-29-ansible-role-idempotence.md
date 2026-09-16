@@ -5,10 +5,8 @@ subtitle: "A playbook that reports changes every run has quietly stopped being a
 date: 2025-08-29 09:00:00 +0200
 tags: [ansible, infrastructure-as-code, testing]
 description: >-
-  A role that reports changed on every run has stopped detecting drift, and
-  nothing in Ansible's exit code tells you so. Here is how that happens module
-  by module, and how to make the second run's changed=0 an automated check
-  rather than something you eyeball.
+  Molecule "Idempotence test failed because of the following tasks": why
+  command, shell and timestamped templates report changed, and how to fix it.
 ---
 
 ## The problem

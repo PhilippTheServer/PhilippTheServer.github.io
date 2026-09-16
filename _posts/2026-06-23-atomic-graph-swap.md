@@ -5,11 +5,8 @@ subtitle: "Fan out to independent backends, then publish the merge with one atom
 date: 2026-06-23 09:00:00 +0200
 tags: [go, performance, observability, reliability]
 description: >-
-  A console that polls host inventory, storage, network and alerting concurrently
-  must never show a reader a graph where some sources landed and others did not.
-  This walks through why updating shared state field by field under a mutex fails
-  silently, and how to publish a fully-built snapshot with a single atomic swap
-  instead, with a runnable Go program and a race-tested invariant to prove it.
+  atomic.Pointer swap of a fully merged snapshot so concurrent polls never
+  serve a torn read, a bug go test -race cannot see. errgroup with timeouts.
 ---
 
 ## The problem

@@ -5,11 +5,9 @@ subtitle: "Replacing scattered status assignments with a transition table that c
 date: 2026-01-02 09:00:00 +0200
 tags: [python, architecture, api-design]
 description: >-
-  When any code path can set order.status to any value, an invalid transition
-  is caught only by whoever remembers to check for it, and eventually nobody
-  does. This walks through modelling the lifecycle as an explicit state
-  machine that rejects illegal transitions by construction, with a complete,
-  tested implementation.
+  Python order status as a state machine: a transition table and one
+  transition_to method that raises InvalidTransition on moves like shipping a
+  cancelled order.
 ---
 
 ## The problem

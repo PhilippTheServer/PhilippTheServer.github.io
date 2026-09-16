@@ -5,11 +5,9 @@ subtitle: "Compiling the JSON library and HTTP framework once, in a base image, 
 date: 2025-12-26 09:00:00 +0200
 tags: [cpp, docker, performance]
 description: >-
-  A dozen C++ services that each install and build the same HTTP framework
-  and JSON library from source turn every Docker build into a multi-minute
-  wait, for a change that touched one function. Here is a shared, versioned
-  base image that compiles those dependencies once, and per-service
-  Dockerfiles that only ever rebuild the service's own code against it.
+  vcpkg install pistache rebuilt in every service Dockerfile: a shared,
+  versioned multi-stage base image that compiles C++ dependencies once for the
+  fleet.
 ---
 
 ## The problem

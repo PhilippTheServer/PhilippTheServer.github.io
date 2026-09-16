@@ -5,12 +5,8 @@ subtitle: "Every machine gets a stable address, and your internal names get a wa
 date: 2026-05-15 09:00:00 +0200
 tags: [networking, dns, security, linux]
 description: >-
-  An overlay mesh gives every machine a stable address and a direct encrypted
-  path to every other one, replacing a hub-and-spoke VPN. It also gives
-  internal hostnames a silent way to resolve to the wrong place the moment the
-  mesh resolver is not in the loop. This walks through why, and includes a
-  runnable DNS setup that reproduces the fallthrough and the one-line fix that
-  closes it.
+  NetBird mesh hostnames resolve to the public host via a zone wildcard when
+  the mesh resolver is down. Fix: a *.mesh blackhole record and accept-new.
 ---
 
 ## The problem

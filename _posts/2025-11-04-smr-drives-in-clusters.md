@@ -5,12 +5,9 @@ subtitle: "Why inventory and SMART data cannot tell you which drive will collaps
 date: 2025-11-04 09:00:00 +0200
 tags: [ceph, storage, embedded, linux]
 description: >-
-  Drive-managed SMR disks report the same capacity, connector and SMART
-  attributes as conventional drives, then fall off a latency cliff once their
-  persistent cache is exhausted by sustained random writes. This walks through
-  why that pattern matches exactly what a Ceph OSD does to its backing disk,
-  and gives a reproducible benchmark that catches the problem before the disk
-  is holding data.
+  lsblk ZONED=none does not rule out drive-managed SMR. A 30-minute fio
+  randwrite probe and p99 latency ratio catch the cliff before it hits a Ceph
+  OSD.
 ---
 
 ## The problem

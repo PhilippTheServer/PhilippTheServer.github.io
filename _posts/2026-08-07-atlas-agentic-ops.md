@@ -5,13 +5,8 @@ subtitle: "Sending every prompt to someone else's GPU is a decision, not a defau
 date: 2026-08-07 09:00:00 +0200
 tags: [llm, agents, testing, security]
 description: >-
-  Running models on hardware you own removes a category of decision about
-  where debugging context goes, at the cost of a real gap on the hardest
-  reasoning tasks, and neither fact is worth much without a way to measure it.
-  This covers serving, a repeatable benchmark harness that replaces "it feels
-  smarter" with a number, and the guardrails that have to exist before an
-  agent is allowed near anything that changes state, with runnable code for
-  all three.
+  Ollama OpenAI-compatible /v1/chat/completions: a repeatable benchmark on your
+  own tasks and a dry-run plus --approve guardrail for infrastructure agents.
 ---
 
 ## The problem

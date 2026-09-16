@@ -5,11 +5,9 @@ subtitle: "A folder convention nobody enforces is a convention nobody actually f
 date: 2026-03-10 09:00:00 +0200
 tags: [frontend, architecture]
 description: >-
-  Splitting an Angular application into core, shared and feature folders is common
-  advice, but without something enforcing the dependency direction between them an API
-  call ends up inside a presentational component the first time someone is in a hurry.
-  This article states the one rule that actually needs to hold, and enforces it with a
-  lint check a reader can run and watch fail.
+  eslint-plugin-boundaries element-types: enforcing one dependency direction
+  between Angular core, shared and features folders, with a failing lint
+  example.
 ---
 
 ## The problem

@@ -5,12 +5,8 @@ subtitle: "How one leftover ACME TXT record turns a working wildcard into silent
 date: 2026-06-02 09:00:00 +0200
 tags: [dns, tls, testing]
 description: >-
-  A stale ACME DNS-01 TXT record can turn part of a domain into an empty
-  non-terminal, and RFC 1034's wildcard rule then refuses to cover it — not
-  as a bug, but as specified behaviour. This walks through the
-  closest-encloser algorithm behind that refusal, reproduces it with a BIND
-  container and a small zone file, and gives a script and a record-lifecycle
-  pattern that catch the problem before it reaches production.
+  A stale _acme-challenge TXT record makes a DNS wildcard return NODATA or
+  NXDOMAIN: RFC 4592 closest encloser, empty non-terminals and a zone check.
 ---
 
 ## The problem

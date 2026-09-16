@@ -5,11 +5,8 @@ subtitle: "Writing the intent to enqueue in the same transaction as the state ch
 date: 2026-03-24 09:00:00 +0200
 tags: [python, architecture, reliability, databases]
 description: >-
-  Committing a database change and then enqueueing a job as two separate
-  steps leaves a gap in which the change is permanent but nothing ever runs
-  the job and nothing notices. This works through the transactional outbox
-  pattern and gives a complete, runnable Postgres, Redis Streams and Python
-  implementation that survives a crash at any point in that gap.
+  Transactional outbox in Postgres: commit-then-enqueue loses jobs on a crash.
+  A SKIP LOCKED relay to Redis Streams and an idempotent consumer.
 ---
 
 ## The problem

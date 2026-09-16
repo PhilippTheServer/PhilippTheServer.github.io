@@ -5,11 +5,8 @@ subtitle: "Moving image blobs off a PVC so a reclaim policy or a bad prune can't
 date: 2026-04-24 09:00:00 +0200
 tags: [kubernetes, storage, docker]
 description: >-
-  A self-hosted registry backed by a single PersistentVolumeClaim keeps exactly
-  one copy of every image layer, and routine maintenance is enough to delete
-  it. This walks through why the fix is moving the durability guarantee to
-  object storage rather than the volume, and gives a complete, runnable
-  example that proves the registry container itself has become disposable.
+  MANIFEST_UNKNOWN after losing a registry PVC: REGISTRY_STORAGE s3 on MinIO
+  keeps blobs through helm uninstall. What it does not fix: garbage-collect.
 ---
 
 ## The problem

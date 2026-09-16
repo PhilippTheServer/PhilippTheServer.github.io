@@ -5,11 +5,9 @@ subtitle: "A pod-level fsGroup makes kubelet recursively chown the entire volume
 date: 2026-09-11 09:00:00 +0200
 tags: [kubernetes, storage, performance, reliability]
 description: >-
-  A BuildKit pod with a persistent build cache sat in ContainerCreating for
-  over fifteen minutes on every restart, because a pod-level fsGroup made
-  kubelet re-chown 1.4 million cache files on every start. The fix is a single
-  field — fsGroupChangePolicy: OnRootMismatch — and the reason it works is a
-  detail about setgid directories that most write-ups of fsGroup omit.
+  Pod stuck in ContainerCreating from fsGroup recursive chown:
+  fsGroupChangePolicy: OnRootMismatch, and why the setgid bit on the volume root
+  makes it safe.
 ---
 
 ## The problem

@@ -5,11 +5,8 @@ subtitle: "One giant routers.py means nobody can add a feature without touching 
 date: 2025-09-16 09:00:00 +0200
 tags: [fastapi, python, architecture]
 description: >-
-  A FastAPI project that starts as one main.py and one routers.py works fine
-  for the first few endpoints, then becomes a file everyone edits and nobody
-  owns. This lays out a feature-module structure where each feature carries
-  its own router, schemas and service code, with a complete runnable example
-  and a test proving a new feature needs no change to existing files.
+  FastAPI APIRouter per feature directory with its own router.py, schemas.py and
+  service.py, replacing a shared routers.py, schemas.py and crud.py.
 ---
 
 ## The problem

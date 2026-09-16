@@ -5,12 +5,9 @@ subtitle: "Delegating the auth decision to an external service on every proxied 
 date: 2026-06-16 09:00:00 +0200
 tags: [identity, networking, security]
 description: >-
-  Legacy admin panels, monitoring dashboards and device UIs frequently have no
-  login of their own, yet they are exactly the systems you least want exposed.
-  Forward auth lets a reverse proxy ask an external service, on every request,
-  whether the caller may proceed, without changing a line of the backend. Here
-  is the subrequest protocol, the header-spoofing mistake that undermines it,
-  and a complete Traefik plus Keycloak stack that enforces it.
+  Traefik forwardAuth with X-Auth-Request-User: strip the header first or
+  clients can spoof it. oauth2-proxy and Keycloak in front of apps with no
+  login.
 ---
 
 ## The problem

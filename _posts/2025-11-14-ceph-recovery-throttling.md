@@ -5,12 +5,9 @@ subtitle: "Choosing an mClock profile deliberately instead of inheriting whateve
 date: 2025-11-14 09:00:00 +0200
 tags: [ceph, storage, performance, reliability]
 description: >-
-  Recovery I/O competes with client I/O on the same disks exactly when
-  hardware is already reduced, and the wrong balance either starves
-  applications or leaves the cluster degraded for longer than the next
-  failure can wait. This explains how the mClock scheduler's profiles
-  replace the old manual throttles, and gives a reproducible cephadm setup
-  for measuring the trade-off directly.
+  osd_max_backfills does nothing under mClock unless
+  osd_mclock_override_recovery_settings is set. Choosing and measuring
+  osd_mclock_profile for recovery.
 ---
 
 ## The problem

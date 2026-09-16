@@ -5,11 +5,8 @@ subtitle: "Why a subnet route to a NAT gateway breaks when some of its hosts are
 date: 2026-05-29 09:00:00 +0200
 tags: [networking, linux]
 description: >-
-  WireGuard's AllowedIPs sets both which packets a peer may send and which
-  route the kernel installs for it, and overlapping AllowedIPs resolve by
-  longest-prefix-match rather than by which peer you meant. This walks
-  through a reproducible case where that silently breaks the return path,
-  and how to make the route explicit on both ends.
+  WireGuard AllowedIPs overlap: a /24 on a gateway peer and a /32 on a direct
+  peer break the return path. Longest-prefix-match and a /32 on both ends.
 ---
 
 ## The problem

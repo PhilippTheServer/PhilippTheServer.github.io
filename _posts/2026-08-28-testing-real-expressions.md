@@ -5,12 +5,8 @@ subtitle: "Rendering a role's actual expression through Ansible's engine instead
 date: 2026-08-28 09:00:00 +0200
 tags: [testing, ansible, ci-cd, infrastructure-as-code]
 description: >-
-  A test that reimplements an Ansible expression's logic in Python proves
-  two independent implementations agree today, not that the shipped
-  expression is correct, and the two can drift apart while both keep
-  passing. This article renders the actual expression through Ansible's own
-  Templar and filters, using a recursive dict merge as a concrete case
-  where a hand-written paraphrase gets it wrong.
+  Ansible Templar in pytest: render the shipped combine(recursive=True)
+  expression from defaults/main.yml instead of a shallow Python paraphrase.
 ---
 
 ## The problem

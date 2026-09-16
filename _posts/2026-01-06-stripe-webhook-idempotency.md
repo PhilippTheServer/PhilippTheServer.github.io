@@ -5,12 +5,8 @@ subtitle: "Making redelivery safe instead of trying to prevent it."
 date: 2026-01-06 09:00:00 +0200
 tags: [python, reliability, api-design]
 description: >-
-  Payment providers deliver webhooks at least once and retry on anything but a
-  2xx response, so a handler that is not explicitly idempotent will eventually
-  process the same payment twice. This covers signature verification, a
-  deduplication table with a unique constraint, and a transactional handler
-  that makes redelivery a no-op, with a complete example and a test that
-  proves it.
+  Payment webhook processed twice on retry: dedupe on the provider event ID with
+  a primary key, committed in the same transaction as the side effect.
 ---
 
 ## The problem

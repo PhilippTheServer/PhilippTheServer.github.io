@@ -5,11 +5,8 @@ subtitle: "Keeping every commit and push in code you can read, with the model pr
 date: 2026-07-24 09:00:00 +0200
 tags: [agents, python, ci-cd]
 description: >-
-  Letting a model call git directly makes every commit and push as
-  unpredictable as the model's own reasoning, which is hard to audit and
-  harder to trust. This walks through splitting an issue-to-PR pipeline so
-  the model only ever produces a patch, while a small deterministic daemon
-  performs every side effect, with a complete runnable example.
+  git apply --check before git commit: an issue-to-PR daemon where the model
+  only returns a patch and plain Python commits, pushes and opens the PR.
 ---
 
 ## The problem

@@ -5,11 +5,8 @@ subtitle: "A location regex plus a proxy_pass with a URI is a configuration erro
 date: 2026-09-14 09:00:00 +0200
 tags: [docker, networking, observability, ci-cd]
 description: >-
-  A Docker image build failed at the nginx reload step with
-  "invalid URI prefix in proxy_pass", because the configuration combined a
-  regex location with a proxy_pass that carried a URI. The fix is a map on $uri
-  that produces the cache policy, and the reason it works is that a variable in
-  proxy_pass changes how nginx forwards the request path.
+  nginx: [emerg] invalid URI prefix in proxy_pass: a regex location needs a bare
+  upstream, and a map on $uri keeps a path-specific Cache-Control header.
 ---
 
 ## The problem

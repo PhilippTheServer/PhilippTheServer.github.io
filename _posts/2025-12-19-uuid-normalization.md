@@ -5,11 +5,8 @@ subtitle: "One identifier, cased two different ways by two services, silently be
 date: 2025-12-19 09:00:00 +0200
 tags: [reliability, architecture, python, testing]
 description: >-
-  An uppercase UUID from one service and a lowercase one from another look
-  identical to a person and different to a dict, a cache, or a database
-  index, which turns one entity into two without raising an error. Here is
-  a minimal reproduction of the bug and a boundary-normalisation fix with a
-  test that keeps it fixed.
+  Uppercase vs lowercase UUID keys cause silent cache and database lookup misses
+  between services. Normalise once at the boundary with str(uuid.UUID(value)).
 ---
 
 ## The problem

@@ -5,11 +5,9 @@ subtitle: "Generating one Application per service directory instead of hand-writ
 date: 2026-04-03 09:00:00 +0200
 tags: [kubernetes, gitops, automation]
 description: >-
-  Hand-writing a new Argo CD Application object for every microservice is
-  repetitive, and the step is easy to forget entirely when a new service is
-  added. This shows how an ApplicationSet's git directory generator turns
-  onboarding a workload into adding a directory and merging a pull request,
-  with a complete, reproducible setup on a local kind cluster.
+  ApplicationSet git directory generator on services/*: one Argo CD
+  Application per directory, requeueAfterSeconds, and where sync errors show
+  up.
 ---
 
 ## The problem
