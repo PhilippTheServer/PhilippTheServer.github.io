@@ -18,6 +18,12 @@
 
   <main id="content" class="content">
     {%- comment -%}
+      A page that wants the subscribe box above its own heading sets
+      `subscribe_box: top`. The heading is rendered here, not in the page
+      source, so the page cannot put anything in front of it by itself.
+    {%- endcomment -%}
+    {%- if page.subscribe_box == 'top' -%}{% include subscribe.html %}{%- endif -%}
+    {%- comment -%}
       A post renders its own heading in _layouts/post.html, because the date and tags
       belong directly under the title. Rendering it here too would duplicate both lines.
     {%- endcomment -%}
