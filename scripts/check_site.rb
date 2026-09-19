@@ -362,6 +362,27 @@ else
   end
 end
 
+# A feed nobody can find is a feed nobody reads. The link elements and the footer
+# entry are for software; a reader who does not already know what feed.xml is needs
+# the URL and the steps in front of them (issues #33, #35). Both pages render the
+# same include, so this checks the rendered output rather than either source: an
+# include that stops being included is invisible in the source of the page.
+subscribe_pages = {
+  "index.html"       => "the landing page",
+  "posts/index.html" => "the Writing index",
+}
+subscribe_pages.each do |page, what|
+  html = read(page) or next
+  box = html[%r{<div class="callout"[^>]*>.*?</div>}m]
+  if box.nil?
+    fail!("#{page}: #{what} has no subscribe callout")
+    next
+  end
+  fail!("#{page}: the subscribe callout has no title row") unless box.include?(%(class="callout-title"))
+  fail!("#{page}: the subscribe callout does not give the feed URL to copy") unless box.include?("https://#{DOMAIN}/feed.xml")
+  fail!("#{page}: the subscribe callout lists no steps") if box.scan("<li>").length < 3
+end
+
 # The tag index must exist and list every tag actually in use.
 tag_index = read("tags/index.html")
 if tag_index.nil?
@@ -529,17 +550,6 @@ projects = landing.scan(%r{<ul class="projects">(.*?)</ul>}m).flatten
 fail!("index.md: the selected articles are not in a projects list") if projects.empty?
 cards = projects.first.to_s.scan(%r{<li class="project">}).length
 fail!("index.md: the selected articles are not cards (#{cards} found, expected at least 3)") if cards < 3
-
-# Subscribing must stay actionable. The feed has existed since the site did, but a
-# reader who does not already know what feed.xml is cannot act on a bare link in the
-# footer (issue #33). The landing page therefore carries the URL verbatim and the
-# steps to paste it into a reader, directly under Writing.
-unless landing =~ /^## Writing$.*^### Subscribe$.*^## Community$/m
-  fail!("index.md: no '### Subscribe' block between the Writing and Community sections")
-end
-unless landing.scan("https://#{DOMAIN}/feed.xml").length >= 2
-  fail!("index.md: the Subscribe block does not give the feed URL to copy")
-end
 
 # The contact block is a fact list, the component site.css styles for key/value
 # pairs. Inline links in a paragraph are the shape the page had before.

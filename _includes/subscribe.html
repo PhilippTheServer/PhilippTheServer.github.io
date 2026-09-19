@@ -1,0 +1,27 @@
+{%- comment -%}
+  The subscribe box, rendered on the landing page and at the top of /posts/.
+  One include rather than two copies: the feed URL and the reader instructions
+  are the kind of thing that gets updated in one place and forgotten in the
+  other. It uses .callout and .stack, both already in site.css.
+{%- endcomment -%}
+<div class="callout" role="note">
+  <p class="callout-title">
+    <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true">
+      <circle cx="3" cy="13" r="2"/>
+      <path d="M1 10 A5 5 0 0 1 6 15 L8.5 15 A7.5 7.5 0 0 0 1 7.5 Z"/>
+      <path d="M1 5 A10 10 0 0 1 11 15 L13.5 15 A12.5 12.5 0 0 0 1 2.5 Z"/>
+    </svg>
+    Subscribe by RSS
+  </p>
+  <p>Every article lands in the Atom feed at <code>{{ '/feed.xml' | absolute_url }}</code>.</p>
+  <ul class="stack">
+    <li>Copy <code>{{ '/feed.xml' | absolute_url }}</code>.</li>
+    <li>Open your reader's add-feed field: <b>+</b> in Feedly and Inoreader,
+      <b>File → New Subscription</b> in NetNewsWire, <b>Subscriptions → Add</b> in
+      Miniflux, <b>Subscription management</b> in FreshRSS.</li>
+    <li>Paste the URL and confirm. The 20 newest articles arrive as full text, no
+      visit needed.</li>
+  </ul>
+  <p>Most readers also accept just <code>{{ site.url | remove: 'https://' }}</code> and
+  find the feed themselves.</p>
+</div>

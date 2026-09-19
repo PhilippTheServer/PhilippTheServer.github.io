@@ -9,6 +9,8 @@ description: >-
   models on your own hardware.
 ---
 
+{% include subscribe.html %}
+
 Most of these started as something that broke, or as an argument I kept having. I write
 them down because the second time I hit the same problem I would rather read than
 re-derive.
@@ -31,6 +33,5 @@ re-derive.
 Everything is also grouped [by topic]({{ '/tags/' | relative_url }}) if you are looking for
 one subject rather than the newest thing.
 
-There is an [Atom feed]({{ '/feed.xml' | relative_url }}) if you would rather not check
-back, and the full text of everything here is in one file at
+The full text of everything here is in one file at
 [/llms-full.txt]({{ '/llms-full.txt' | relative_url }}).
