@@ -216,6 +216,20 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -0.015em; }
   font-size: 0.95rem;
 }
 .callout p:last-child { margin-bottom: 0; }
+.callout .stack { margin-bottom: 1rem; }
+
+/* The heading row, in the shape of a GitHub alert: icon, then a label in the
+ * accent colour. The icon inherits currentColor, so it follows the label into
+ * dark mode without a second rule. */
+.callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.6rem;
+  font-weight: 650;
+  color: var(--accent);
+}
+.callout-title svg { flex: none; }
 
 /* ---------- footer ---------- */
 
