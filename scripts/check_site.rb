@@ -383,6 +383,18 @@ subscribe_pages.each do |page, what|
   fail!("#{page}: the subscribe callout lists no steps") if box.scan("<li>").length < 3
 end
 
+# On /posts/ the box comes before the page heading, so it is the first thing a reader
+# who came to follow the blog sees (issue #37). The heading is rendered by the layout,
+# so this only holds while posts.md keeps `subscribe_box: top`.
+writing = read("posts/index.html")
+if writing
+  box_at = writing.index(%(<div class="callout"))
+  h1_at  = writing.index(%(<h1 class="page-title">))
+  if box_at.nil? || h1_at.nil? || box_at > h1_at
+    fail!("posts/index.html: the subscribe callout does not sit above the Writing heading")
+  end
+end
+
 # The tag index must exist and list every tag actually in use.
 tag_index = read("tags/index.html")
 if tag_index.nil?

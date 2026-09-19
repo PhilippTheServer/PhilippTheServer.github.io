@@ -3,13 +3,12 @@ layout: default
 title: Writing
 subtitle: What I have learned running this, written down before I forget it.
 permalink: /posts/
+subscribe_box: top
 description: >-
   Articles by Philipp Lehmann on infrastructure as code, Kubernetes, Ceph
   storage, monitoring, overlay VPNs, identity management, and running language
   models on your own hardware.
 ---
-
-{% include subscribe.html %}
 
 Most of these started as something that broke, or as an argument I kept having. I write
 them down because the second time I hit the same problem I would rather read than
