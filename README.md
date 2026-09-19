@@ -24,7 +24,8 @@ build breaks, if an internal link or image is dead, if `profile.json` or
 `resume.json` stop being valid JSON, if the embedded JSON-LD drifts away from
 `profile.json`, if the ORCID iD disappears from any file that must carry it,
 if the landing page loses the structure that makes it readable (hero, named
-sections, carded articles, fact list — see `check_site.rb`), if an article's
+sections, carded articles, fact list, the Subscribe block under Writing that tells
+readers how to put `/feed.xml` into a reader — see `check_site.rb`), if an article's
 meta description falls outside 70–160 characters (Google cuts the snippet
 there), or if `CNAME` stops naming the canonical domain.
 

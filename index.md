@@ -74,6 +74,18 @@ I write things down after I have learned them the expensive way. The full set is
 
 [Everything I have written →](/posts/)
 
+### Subscribe
+
+Every article lands in the Atom feed at `https://philipptheserver.com/feed.xml`.
+
+<ul class="stack">
+  <li>Copy <code>https://philipptheserver.com/feed.xml</code>.</li>
+  <li>Open your reader's add-feed field: <b>+</b> in Feedly and Inoreader, <b>File → New Subscription</b> in NetNewsWire, <b>Subscriptions → Add</b> in Miniflux, <b>Subscription management</b> in FreshRSS.</li>
+  <li>Paste the URL and confirm. The 20 newest articles arrive as full text, no visit needed.</li>
+</ul>
+
+Most readers also accept just <code>philipptheserver.com</code> and find the feed themselves.
+
 ## Community
 
 I hold the Executive Office at **open Skunkforce e.V.**, where I lead a small developer
