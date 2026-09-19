@@ -530,6 +530,17 @@ fail!("index.md: the selected articles are not in a projects list") if projects.
 cards = projects.first.to_s.scan(%r{<li class="project">}).length
 fail!("index.md: the selected articles are not cards (#{cards} found, expected at least 3)") if cards < 3
 
+# Subscribing must stay actionable. The feed has existed since the site did, but a
+# reader who does not already know what feed.xml is cannot act on a bare link in the
+# footer (issue #33). The landing page therefore carries the URL verbatim and the
+# steps to paste it into a reader, directly under Writing.
+unless landing =~ /^## Writing$.*^### Subscribe$.*^## Community$/m
+  fail!("index.md: no '### Subscribe' block between the Writing and Community sections")
+end
+unless landing.scan("https://#{DOMAIN}/feed.xml").length >= 2
+  fail!("index.md: the Subscribe block does not give the feed URL to copy")
+end
+
 # The contact block is a fact list, the component site.css styles for key/value
 # pairs. Inline links in a paragraph are the shape the page had before.
 fail!("index.md: the contact links are not in a facts list") unless landing.include?(%(<ul class="facts">))
