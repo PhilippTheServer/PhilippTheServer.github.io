@@ -1496,6 +1496,35 @@
    ],
    "source": "homelab",
    "problem": "Headscale's docs say don't run it behind a reverse proxy, but its control connection speaks a noise protocol that is not HTTP/2-compatible — so the proxy has to offer only HTTP/1.1 on that one host, which is a single Traefik TLS option that is easy to get wrong and nearly impossible to diagnose when you do."
+  },
+  {
+   "n": 115,
+   "date": "2026-09-22",
+   "slug": "multicast-discovery-wireguard-enokey",
+   "title": "Multicast Service Discovery on a Host With a WireGuard Interface",
+   "labels": [
+    "networking",
+    "linux",
+    "cpp",
+    "embedded",
+    "testing"
+   ],
+   "source": "horus",
+   "problem": "A multicast discovery library started one server per IPv4 address, including NetBird's kernel WireGuard wt0, which rejects every multicast send with ENOKEY — so the server restarted once a second, 68,805 times, until interfaces were filtered on IFF_MULTICAST and IFF_POINTOPOINT."
+  },
+  {
+   "n": 116,
+   "date": "2026-09-23",
+   "slug": "traefik-readtimeout-request-body",
+   "title": "Traefik's 60-Second readTimeout Covers the Whole Request Body",
+   "labels": [
+    "kubernetes",
+    "networking",
+    "reliability",
+    "testing"
+   ],
+   "source": "k8s",
+   "problem": "Since v2.11.2 Traefik's respondingTimeouts.readTimeout defaults to 60s and bounds reading the entire request including the body, so every slow Nextcloud chunk upload was truncated mid-body — the fix is readTimeout: 0 on internal entrypoints, with slowloris defence left to the public edge."
   }
  ],
  "backlog": [
