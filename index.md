@@ -47,8 +47,8 @@ not count as running. There is no configuration living only in someone's shell h
 
 ## OpenTaberna
 
-I co-founded [OpenTaberna](https://opentaberna.de) with
-[Malte Kottmann](https://github.com/maltonoloco). It is a headless, open-source web shop
+[Malte Kottmann](https://github.com/maltonoloco) and I founded
+[OpenTaberna](https://opentaberna.de). It is a headless, open-source web shop
 you run on your own server: the shop is an API, and the storefront and the back office are
 just two of its clients. It is licensed under Apache 2.0 with no paid edition hiding the
 useful parts. The code is at [github.com/OpenTaberna](https://github.com/OpenTaberna).

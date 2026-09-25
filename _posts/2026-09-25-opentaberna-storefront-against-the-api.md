@@ -1,12 +1,16 @@
 ---
 layout: post
-title: "Building a Storefront Against a Finished Shop API"
+title: "Building a Headless Storefront Against the OpenTaberna API"
 subtitle: "When the shop is an API with an OpenAPI document, the frontend is an ordinary web project: a typed client, a few pages, and no theme engine."
 date: 2026-09-25 00:30:00 +0200
 tags: [frontend, api-design, testing]
 description: >-
-  Adapting an OpenTaberna storefront: a 37-line API client, TypeScript types
-  generated from OpenAPI, and a compiler that catches the typo before users do.
+  A headless storefront for OpenTaberna: a 37-line API client, TypeScript types
+  generated from OpenAPI, and a compiler that catches field typos.
+mentions:
+  - name: "OpenTaberna"
+    url: "https://opentaberna.de"
+    sameAs: "https://github.com/OpenTaberna"
 ---
 
 ## The problem

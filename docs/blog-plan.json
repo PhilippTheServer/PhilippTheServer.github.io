@@ -1530,7 +1530,7 @@
    "n": 117,
    "date": "2026-09-25",
    "slug": "opentaberna-headless-open-source-shop",
-   "title": "OpenTaberna: A Headless, Open-Source Web Shop You Run Yourself",
+   "title": "OpenTaberna: Headless, Open-Source E-Commerce You Self-Host",
    "labels": [
     "architecture",
     "api-design",
@@ -1544,7 +1544,7 @@
    "n": 118,
    "date": "2026-09-25",
    "slug": "opentaberna-order-processing-first",
-   "title": "Automating Order Processing Before the Product Catalogue",
+   "title": "Automating Web Shop Order Processing Before the Catalogue",
    "labels": [
     "automation",
     "architecture",
@@ -1558,7 +1558,7 @@
    "n": 119,
    "date": "2026-09-25",
    "slug": "opentaberna-storefront-against-the-api",
-   "title": "Building a Storefront Against a Finished Shop API",
+   "title": "Building a Headless Storefront Against the OpenTaberna API",
    "labels": [
     "frontend",
     "api-design",

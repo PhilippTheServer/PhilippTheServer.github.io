@@ -1,12 +1,16 @@
 ---
 layout: post
-title: "OpenTaberna: A Headless, Open-Source Web Shop You Run Yourself"
+title: "OpenTaberna: Headless, Open-Source E-Commerce You Self-Host"
 subtitle: "Why a friend and I are building a shop that is an API first and a website second, and why it is free to run on your own server."
 date: 2026-09-25 00:10:00 +0200
 tags: [architecture, api-design, docker, databases]
 description: >-
-  OpenTaberna is a headless, Apache-2.0 web shop: one FastAPI backend, PostgreSQL
-  and replaceable frontends, self-hosted with Docker Compose.
+  OpenTaberna is headless, open-source e-commerce: an Apache-2.0 shop API on FastAPI
+  and PostgreSQL that you self-host with Docker Compose.
+mentions:
+  - name: "OpenTaberna"
+    url: "https://opentaberna.de"
+    sameAs: "https://github.com/OpenTaberna"
 ---
 
 ## The problem

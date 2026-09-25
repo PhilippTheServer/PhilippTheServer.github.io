@@ -15,6 +15,7 @@ description: >-
   <li><span class="k">Handle</span> <span>PhilippTheServer</span></li>
   <li><span class="k">Based in</span> <span>Bochum, North Rhine-Westphalia, Germany</span></li>
   <li><span class="k">Role</span> <span>CTO, Nerd Force1 UG (AI-Gruppe) — at Nerd Force1 since 2022</span></li>
+  <li><span class="k">Founder</span> <span><a href="https://opentaberna.de">OpenTaberna</a>, with Malte Kottmann — since 2025</span></li>
   <li><span class="k">Studying</span> <span>B.Sc. IT Security / Information Engineering, Ruhr University Bochum</span></li>
   <li><span class="k">ORCID</span> <span><a href="https://orcid.org/0009-0002-3922-2471">0009-0002-3922-2471</a></span></li>
   <li><span class="k">Contact</span> <span><a href="mailto:philipp.lehmann@gruppe.ai">philipp.lehmann@gruppe.ai</a></span></li>
@@ -59,6 +60,18 @@ carries the internal messenger, time tracking, the ticket system, accounting, a 
 registry frontend, DNS management, VPN management and hosting orchestration.
 Angular on the front, FastAPI on the back, MySQL and InfluxDB underneath, Celery workers
 for anything that should not block a request.
+
+### Founder · OpenTaberna · since November 2025
+
+Malte Kottmann and I founded [OpenTaberna](https://opentaberna.de), a headless,
+open-source web shop that shops run on their own server. The shop is a FastAPI API over
+PostgreSQL, and payment confirmation, stock reservations, DHL labels and returns are
+automated behind it. The storefront and the back office are Angular clients of that API.
+Everything is Apache 2.0, and we earn money by installing and hosting it, not by licensing
+it. Code: [github.com/OpenTaberna](https://github.com/OpenTaberna). I wrote about
+[the idea](/posts/opentaberna-headless-open-source-shop/), about
+[automating orders first](/posts/opentaberna-order-processing-first/), and about
+[building a storefront against the API](/posts/opentaberna-storefront-against-the-api/).
 
 ### Executive Office · open Skunkforce e.V. · since January 2025
 

@@ -1,12 +1,16 @@
 ---
 layout: post
-title: "Automating Order Processing Before the Product Catalogue"
+title: "Automating Web Shop Order Processing Before the Catalogue"
 subtitle: "A shop earns its money in what happens after the customer clicks buy, so OpenTaberna automated that first and left the product pages for later."
 date: 2026-09-25 00:20:00 +0200
 tags: [automation, architecture, reliability, python]
 description: >-
-  Why OpenTaberna automated order processing first: webhook-confirmed payment,
-  reserved stock, outbox-driven DHL labels, and two human steps per order.
+  Web shop order processing automated first: Stripe webhook payment confirmation,
+  stock reservations, outbox-driven DHL labels, two manual steps.
+mentions:
+  - name: "OpenTaberna"
+    url: "https://opentaberna.de"
+    sameAs: "https://github.com/OpenTaberna"
 ---
 
 ## The problem

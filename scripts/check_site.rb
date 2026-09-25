@@ -170,6 +170,27 @@ if resume
   end
 end
 
+# 5b. OpenTaberna, which he founded with Malte Kottmann (#41). Founder, not
+#     co-founder: that is how the two of them describe it, and the word is checked
+#     everywhere the role is stated.
+if profile
+  taberna = Array(profile["memberOf"]).find { |o| o["name"] == "OpenTaberna" }
+  if taberna.nil?
+    fail!("profile.json: memberOf does not list OpenTaberna")
+  elsif Array(taberna["founder"]).none? { |f| f["@id"] == "https://#{DOMAIN}/#person" }
+    fail!("profile.json: OpenTaberna does not name him as a founder")
+  end
+end
+if resume
+  unless Array(resume["work"]).any? { |w| w["name"] == "OpenTaberna" && w["position"] == "Founder" }
+    fail!("resume.json: work does not list OpenTaberna with the position Founder")
+  end
+end
+%w[index.html about/index.html llms.txt profile.json resume.json].each do |f|
+  body = read(f) or next
+  fail!("#{f}: says co-founder; he and Malte Kottmann are founders of OpenTaberna") if body.downcase.match?(/co-?found/)
+end
+
 # 6. The JSON-LD embedded in each page must be byte-for-byte the same object as
 #    profile.json — the page and the file can never claim different things.
 (%w[index.html about/index.html posts/index.html] +
@@ -345,6 +366,27 @@ ARTICLES.each do |slug|
     next if addr.match?(ALLOWED_IPV4)
     fail!("posts/#{slug}/: contains the address #{addr} — articles must not carry real addresses")
   end
+end
+
+# Search results cut a title at about 60 characters. The archive predates this rule
+# (76 of the first 116 titles are longer) and keeps its titles; every article from
+# 117 on must fit, so the words a searcher reads are the ones the title leads with.
+PLAN.fetch("scheduled").select { |a| a.fetch("n") >= 117 }.each do |a|
+  if a.fetch("title").length > 60
+    fail!("posts/#{a['slug']}/: title is #{a['title'].length} characters, must be 60 or fewer")
+  end
+end
+
+# The OpenTaberna articles name the project as an entity in their BlogPosting, so a
+# search engine can connect the article to the shop rather than to a word in it (#41).
+%w[opentaberna-headless-open-source-shop opentaberna-order-processing-first
+   opentaberna-storefront-against-the-api].each do |slug|
+  html = read("posts/#{slug}/index.html") or next
+  posting = html.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten
+                .map { |b| JSON.parse(b) rescue nil }.compact
+                .find { |d| d["@type"] == "BlogPosting" }
+  named = Array(posting&.dig("mentions")).any? { |m| m["url"] == "https://opentaberna.de" }
+  fail!("posts/#{slug}/: BlogPosting does not mention OpenTaberna") unless named
 end
 
 # The feed carries the most recent articles, not the archive — that is what a feed is for,
