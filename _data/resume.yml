@@ -10,7 +10,8 @@ basics:
     CTO at Nerd Force1 UG (AI-Gruppe) since September 2026. I designed and operate a Docker cluster,
     a Kubernetes cluster, a Ceph storage cluster and the internal network behind them,
     plus the full-stack operations platform that replaced most of the company's
-    external tooling. Studying IT Security /
+    external tooling. Founder of OpenTaberna, a headless open-source web shop,
+    together with Malte Kottmann. Studying IT Security /
     Information Engineering at Ruhr University Bochum.
   location:
     city: "Bochum"
@@ -53,6 +54,19 @@ work:
       - "Designed the internal network: a NetBird overlay mesh and Bind9 DNS"
       - "Wrote the whole server estate as Ansible, so hosts are reproducible rather than hand-tuned"
       - "Designed and maintain the internal operations platform that replaced several external SaaS tools"
+  - name: "OpenTaberna"
+    location: "Bochum, Germany"
+    url: "https://opentaberna.de"
+    position: "Founder"
+    startDate: "2025-11-19"
+    summary: >-
+      Founded OpenTaberna together with Malte Kottmann: a headless, open-source
+      (Apache-2.0) web shop that shops run on their own server, with setup and
+      managed hosting in Germany as the business.
+    highlights:
+      - "Shop as an API: FastAPI over PostgreSQL, with the storefront and back office as Angular clients"
+      - "Order processing automated first: webhook-confirmed payment, stock reservations, outbox-driven DHL labels, returns"
+      - "Self-hosted with Docker Compose; Keycloak for identity, Stripe for payment, Paperless-ngx for documents"
   - name: "open Skunkforce e.V."
     location: "Bochum, Germany"
     url: "https://github.com/skunkforce"
@@ -101,6 +115,15 @@ languages:
     fluency: "Professional working proficiency"
 
 projects:
+  - name: "OpenTaberna"
+    description: >-
+      Headless, open-source web shop. One FastAPI backend with an OpenAPI
+      contract, an ARQ worker for labels and reservation expiry, PostgreSQL,
+      Keycloak, Stripe and DHL, and two Angular frontends that are clients of
+      the API.
+    url: "https://github.com/OpenTaberna"
+    keywords: ["FastAPI", "PostgreSQL", "Angular", "Stripe", "Keycloak", "Docker"]
+    roles: ["Founder", "Maintainer"]
   - name: "Internal Operations Platform"
     description: >-
       Full-stack platform that centralised company operations and replaced several

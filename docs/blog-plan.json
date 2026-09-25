@@ -1525,6 +1525,47 @@
    ],
    "source": "k8s",
    "problem": "Since v2.11.2 Traefik's respondingTimeouts.readTimeout defaults to 60s and bounds reading the entire request including the body, so every slow Nextcloud chunk upload was truncated mid-body — the fix is readTimeout: 0 on internal entrypoints, with slowloris defence left to the public edge."
+  },
+  {
+   "n": 117,
+   "date": "2026-09-25",
+   "slug": "opentaberna-headless-open-source-shop",
+   "title": "OpenTaberna: Headless, Open-Source E-Commerce You Self-Host",
+   "labels": [
+    "architecture",
+    "api-design",
+    "docker",
+    "databases"
+   ],
+   "source": "taberna",
+   "problem": "Small shops choose between renting a hosted platform with revenue fees and lock-in, or installing an open-core monolith whose storefront and logic ship together; OpenTaberna makes the shop an Apache-2.0 API over plain PostgreSQL, with every frontend a replaceable client."
+  },
+  {
+   "n": 118,
+   "date": "2026-09-25",
+   "slug": "opentaberna-order-processing-first",
+   "title": "Automating Web Shop Order Processing Before the Catalogue",
+   "labels": [
+    "automation",
+    "architecture",
+    "reliability",
+    "python"
+   ],
+   "source": "taberna",
+   "problem": "Shop systems lead with the catalogue, but the per-order work is payment confirmation, stock, labels, tracking and returns; counting who moves an order across each of its nine transitions leaves two that need a human, and both involve a box."
+  },
+  {
+   "n": 119,
+   "date": "2026-09-25",
+   "slug": "opentaberna-storefront-against-the-api",
+   "title": "Building a Headless Storefront Against the OpenTaberna API",
+   "labels": [
+    "frontend",
+    "api-design",
+    "testing"
+   ],
+   "source": "taberna",
+   "problem": "Redesigning a coupled shop means a theme engine, plugins and hooks; against a finished OpenAPI-described API a storefront is a 37-line client, and generated types make the compiler catch a field typo before it ships."
   }
  ],
  "backlog": [

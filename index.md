@@ -45,6 +45,20 @@ up to the full-stack internal tooling that sits on top of it.
 The rule I hold everything to: if a host cannot be rebuilt from the repository, it does
 not count as running. There is no configuration living only in someone's shell history.
 
+## OpenTaberna
+
+[Malte Kottmann](https://github.com/maltonoloco) and I founded
+[OpenTaberna](https://opentaberna.de). It is a headless, open-source web shop
+you run on your own server: the shop is an API, and the storefront and the back office are
+just two of its clients. It is licensed under Apache 2.0 with no paid edition hiding the
+useful parts. The code is at [github.com/OpenTaberna](https://github.com/OpenTaberna).
+
+<ul class="stack">
+  <li><b><a href="/posts/opentaberna-headless-open-source-shop/">The idea</a></b> — why the website is a client of the shop, not the shop itself</li>
+  <li><b><a href="/posts/opentaberna-order-processing-first/">Orders before products</a></b> — automating what happens after "buy" first</li>
+  <li><b><a href="/posts/opentaberna-storefront-against-the-api/">Your own frontend</a></b> — building a storefront against the finished API</li>
+</ul>
+
 ## Writing
 
 I write things down after I have learned them the expensive way. The full set is under

@@ -10,7 +10,8 @@ description: >-
   AI-Gruppe umbrella brand, and a B.Sc. student of
   IT Security / Information Engineering at Ruhr University Bochum. Works on
   container platforms, distributed storage, infrastructure automation and the
-  internal tooling that runs on top of them.
+  internal tooling that runs on top of them. Founder of OpenTaberna, a headless
+  open-source web shop, together with Malte Kottmann.
 url: "https://philipptheserver.com"
 mainEntityOfPage: "https://philipptheserver.com/about/"
 image: "https://avatars.githubusercontent.com/u/111761181?v=4"
@@ -44,9 +45,21 @@ affiliation:
   name: "Ruhr University Bochum"
   url: "https://www.ruhr-uni-bochum.de/"
 memberOf:
-  "@type": "Organization"
-  name: "open Skunkforce e.V."
-  url: "https://github.com/skunkforce"
+  - "@type": "Organization"
+    name: "open Skunkforce e.V."
+    url: "https://github.com/skunkforce"
+  - "@type": "Organization"
+    name: "OpenTaberna"
+    url: "https://opentaberna.de"
+    description: "Headless, open-source (Apache-2.0) web shop for self-hosting."
+    foundingDate: "2025-11-19"
+    sameAs:
+      - "https://github.com/OpenTaberna"
+    founder:
+      - "@id": "https://philipptheserver.com/#person"
+      - "@type": "Person"
+        name: "Malte Kottmann"
+        url: "https://github.com/maltonoloco"
 knowsAbout:
   - "Infrastructure engineering"
   - "Docker"
@@ -65,6 +78,7 @@ knowsAbout:
   - "FastAPI"
   - "Angular"
   - "IT security"
+  - "Headless e-commerce"
 sameAs:
   - "https://orcid.org/0009-0002-3922-2471"
   - "https://github.com/PhilippTheServer"

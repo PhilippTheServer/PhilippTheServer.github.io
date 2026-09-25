@@ -11,7 +11,7 @@ description: >-
 
 ## The problem
 
-[OpenTaberna](https://github.com/OpenTaberna) is an open-source hospitality system — a
+[OpenTaberna](https://github.com/OpenTaberna) is an open-source, headless web shop — a
 FastAPI backend, two TypeScript frontends, and a wiki. The wiki is the part worth writing
 about, because of where it lives: [its own repository](https://github.com/OpenTaberna/wiki)
 of Markdown files, published to a Wiki.js site, and moved through pull requests like
