@@ -552,8 +552,17 @@ fail!("index.md: the hero role is missing") unless landing.include?(%(<p class="
 
 # The sections, in reading order. A landing page a reader can follow is a landing
 # page whose sections are named; unnamed blocks of prose are the regression.
-["What I run", "Writing", "Community", "What's next", "Elsewhere"].each do |section|
+["What I run", "OpenTaberna", "Writing", "Community", "What's next", "Elsewhere"].each do |section|
   fail!("index.md: missing the '#{section}' section") unless landing.include?("## #{section}")
+end
+
+# The OpenTaberna section must keep pointing at the project and its three articles
+# (issue #41); a section that names the shop but links nowhere is the regression.
+opentaberna = landing[/^## OpenTaberna\n(.*?)^## /m, 1].to_s
+(%w[https://opentaberna.de https://github.com/OpenTaberna] +
+ %w[opentaberna-headless-open-source-shop opentaberna-order-processing-first
+    opentaberna-storefront-against-the-api].map { |s| "/posts/#{s}/" }).each do |href|
+  fail!("index.md: the OpenTaberna section does not link #{href}") unless opentaberna.include?(href)
 end
 
 # The selected articles are cards, not a bare list. The card markup is what
