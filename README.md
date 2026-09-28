@@ -30,7 +30,24 @@ the landing page, or stops sitting above the heading on `/posts/`, if an article
 meta description falls outside 70–160 characters (Google cuts the snippet
 there), if an article from #117 on has a title over 60 characters, if the
 OpenTaberna articles stop naming the project in their structured data, if
-`profile.json` or `resume.json` stop listing him as a founder of OpenTaberna, or if `CNAME` stops naming the canonical domain.
+`profile.json` or `resume.json` stop listing him as a founder of OpenTaberna, if the
+pixel repair crew animation leaves the landing page or appears on any other page, if
+the animation restarts on a height-only resize (a phone scrolling past its address
+bar — `scripts/pixel-crew.test.mjs`, run with `node --test`), or if `CNAME` stops
+naming the canonical domain.
+
+`scripts/build-local.sh` runs the Node test on the host, because the `ruby:3.3`
+image it builds in has no Node.
+
+## Pixel repair crew
+
+The landing page draws a small pixel-art scene along the bottom of the viewport: a
+worker hammers a brick server apart and rebuilds it. It is `assets/js/pixel-crew.js`
+drawing on a `<canvas id="pixel-bg">`, with no libraries or images. A page gets it
+by setting `pixel_crew: true` in its front matter; only `index.md` does. The
+`CONFIG` block at the top of the script sets pixel size, where the server stands,
+walking speed and the number of bricks. Under `prefers-reduced-motion: reduce` it
+draws one still frame.
 
 ## Machine-readable files
 

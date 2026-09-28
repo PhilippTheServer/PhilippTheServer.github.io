@@ -3,6 +3,7 @@ layout: default
 title: Philipp Lehmann
 permalink: /
 nav_order: 1
+pixel_crew: true
 description: >-
   Philipp Lehmann — infrastructure engineer in Bochum. CTO at Nerd Force1 UG
   (AI-Gruppe), IT-Security student at Ruhr University

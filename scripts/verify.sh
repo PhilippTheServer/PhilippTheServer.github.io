@@ -19,4 +19,14 @@ bundle exec htmlproofer _site \
 echo "==> structural checks"
 ruby scripts/check_site.rb _site
 
+# The pixel crew script's behaviour (issue #43). The ruby:3.3 image build-local.sh
+# uses has no Node, so build-local.sh runs this on the host and sets SKIP_NODE_TESTS=1.
+if [ "${SKIP_NODE_TESTS:-0}" = "1" ]; then
+  echo "==> node tests: already run by build-local.sh"
+else
+  echo "==> node tests (pixel crew)"
+  command -v node >/dev/null || { echo "node is required for the pixel crew tests" >&2; exit 1; }
+  node --test scripts/pixel-crew.test.mjs
+fi
+
 echo "==> all verification passed"
