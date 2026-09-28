@@ -32,6 +32,7 @@ there), if an article from #117 on has a title over 60 characters, if the
 OpenTaberna articles stop naming the project in their structured data, if
 `profile.json` or `resume.json` stop listing him as a founder of OpenTaberna, if the
 pixel repair crew animation leaves the landing page or appears on any other page, if
+it stops being the top layer or stops letting clicks through, if
 the animation runs below 700 px width, if it
 restarts on a height-only resize (a browser scrolling past its address
 bar — `scripts/pixel-crew.test.mjs`, run with `node --test`), or if `CNAME` stops
@@ -48,7 +49,8 @@ drawing on a `<canvas id="pixel-bg">`, with no libraries or images. A page gets 
 by setting `pixel_crew: true` in its front matter; only `index.md` does. The
 `CONFIG` block at the top of the script sets pixel size, where the server stands,
 walking speed and the number of bricks. Under `prefers-reduced-motion: reduce` it
-draws one still frame. Below 700 px viewport width (phones in portrait) there is
+draws one still frame. It is drawn on top of the page text, and clicks and text
+selection pass through it. Below 700 px viewport width (phones in portrait) there is
 no animation: the script draws nothing and runs no frame loop, and `site.css` hides
 the canvas at the same width.
 

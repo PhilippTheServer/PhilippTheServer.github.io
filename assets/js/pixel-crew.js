@@ -6,7 +6,7 @@
     pixelSize: 4,        // CSS px per art pixel
     sceneX: 0.72,        // where the server stands: 0 = left edge, 1 = right edge
     groundOffset: 4,     // art pixels between the ground line and the bottom of the screen
-    showGround: true,
+    showGround: false,   // on top of the text a full-width line reads as a strikethrough (#47)
     walkSpeed: 34,       // art pixels per second
     units: 5,            // bricks in the server stack
   };
