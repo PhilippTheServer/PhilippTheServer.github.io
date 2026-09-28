@@ -437,6 +437,22 @@ if writing
   end
 end
 
+# The pixel repair crew belongs to the landing page only (issue #43): it is the first
+# impression, and an animation behind a long article would compete with the text.
+# The layout renders it behind a front-matter switch, so a switch set on the wrong
+# page, or lost from index.md, only shows in the rendered output.
+crew_tag = %(<canvas id="pixel-bg")
+crew_js  = %(src="/assets/js/pixel-crew.js")
+if (home = read("index.html"))
+  fail!("index.html: the pixel crew canvas is missing") unless home.include?(crew_tag)
+  fail!("index.html: the pixel crew script is not loaded") unless home.include?(crew_js)
+end
+(["about/index.html", "posts/index.html"] + ARTICLES.map { |s| "posts/#{s}/index.html" }).each do |page|
+  html = read(page) or next
+  fail!("#{page}: renders the pixel crew, which belongs to the landing page only") if html.include?(crew_tag) || html.include?(crew_js)
+end
+fail!("assets/js/pixel-crew.js: not in the build") unless File.exist?(File.join(SITE, "assets/js/pixel-crew.js"))
+
 # The tag index must exist and list every tag actually in use.
 tag_index = read("tags/index.html")
 if tag_index.nil?

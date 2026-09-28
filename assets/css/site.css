@@ -64,6 +64,18 @@ body {
 }
 .skip-link:focus { left: 0; }
 
+/* The pixel repair crew strip along the bottom of the viewport (issue #43). It sits
+ * behind the content, which only works while body is the one element with a background. */
+#pixel-bg {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  image-rendering: pixelated;
+  opacity: 0.9;
+}
+
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 a:hover { text-decoration-thickness: 2px; }
 

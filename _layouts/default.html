@@ -3,6 +3,10 @@
 {%- include head.html -%}
 <body>
   <a class="skip-link" href="#content">Skip to content</a>
+  {%- if page.pixel_crew %}
+  <canvas id="pixel-bg" aria-hidden="true"></canvas>
+  <script src="{{ '/assets/js/pixel-crew.js' | relative_url }}" defer></script>
+  {%- endif %}
 
   <header class="masthead">
     <a class="brand" href="{{ '/' | relative_url }}">
