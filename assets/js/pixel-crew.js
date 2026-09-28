@@ -3,7 +3,7 @@
 // Rendered only on pages with `pixel_crew: true` in front matter (issue #43).
 (() => {
   const CONFIG = {
-    pixelSize: 0,        // CSS px per art pixel; 0 = auto (3 on small screens, 4 otherwise)
+    pixelSize: 4,        // CSS px per art pixel
     sceneX: 0.72,        // where the server stands: 0 = left edge, 1 = right edge
     groundOffset: 4,     // art pixels between the ground line and the bottom of the screen
     showGround: true,
@@ -15,6 +15,9 @@
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Phones get no animation at all, not a hidden one: nothing is drawn and no frame
+  // loop runs below this width (issue #45). site.css hides the canvas at the same width.
+  const phone = window.matchMedia('(max-width: 699px)');
 
   const PAL = {
     Y: '#f4c430', y: '#c9981a', S: '#f1c27d', K: '#1b1d24', O: '#e8663d',
@@ -80,8 +83,7 @@
   // bubble, anchored to the bottom. Its height does not depend on the viewport height,
   // so the resize a phone fires when its address bar slides away changes nothing here.
   function layout() {
-    builtForWidth = window.innerWidth;
-    ps = CONFIG.pixelSize || (window.innerWidth < 700 ? 3 : 4);
+    ps = CONFIG.pixelSize;
     W = Math.ceil(window.innerWidth / ps);
     H = 6 * CONFIG.units + 48 + CONFIG.groundOffset;
     canvas.width = W;
@@ -446,19 +448,28 @@
   }
 
   // ---------- run ----------
+  let running = false;
   function start() {
+    builtForWidth = window.innerWidth;
+    if (phone.matches) { running = false; return; }
     layout();
     buildScene();
     if (reducedMotion) {
       worker.x = serverX - 13;
       draw();
-    } else {
-      newRound();
+      return;
+    }
+    newRound();
+    if (!running) {
+      running = true;
+      last = performance.now();
+      requestAnimationFrame(frame);
     }
   }
 
-  let last = performance.now();
+  let last = 0;
   function frame(now) {
+    if (!running) return;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     update(dt);
@@ -475,9 +486,8 @@
 
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     readGroundColor();
-    if (reducedMotion) draw();
+    if (reducedMotion && !phone.matches) draw();
   });
 
   start();
-  if (!reducedMotion) requestAnimationFrame(frame);
 })();

@@ -61,7 +61,8 @@ on the far side, and the brick colours stay as they are.
 - `pointer-events: none` and `aria-hidden="true"`: it never blocks the page and is
   invisible to screen readers.
 - `prefers-reduced-motion: reduce` draws one still frame and starts no loop.
-- Pixel size 3 below 700 px width, 4 otherwise.
+- Pixel size 4. Below 700 px width (phones in portrait) nothing is drawn and no
+  frame loop runs; the canvas is also hidden in CSS. Added after launch in issue #45.
 
 ## Verification
 

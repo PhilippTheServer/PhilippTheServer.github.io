@@ -10,7 +10,7 @@ const source = readFileSync(
   "utf8",
 );
 
-function load({ width = 390, height = 700, reducedMotion = false } = {}) {
+function load({ width = 1280, height = 800, reducedMotion = false } = {}) {
   const listeners = {};
   const timers = new Map();
   let nextTimer = 1;
@@ -30,7 +30,11 @@ function load({ width = 390, height = 700, reducedMotion = false } = {}) {
     innerWidth: width,
     innerHeight: height,
     matchMedia: (q) => ({
-      matches: q.includes("reduce") ? reducedMotion : false,
+      get matches() {
+        if (q.includes("reduce")) return reducedMotion;
+        const max = q.match(/max-width:\s*(\d+)px/);
+        return max ? window.innerWidth <= Number(max[1]) : false;
+      },
       addEventListener() {},
     }),
     addEventListener: (type, fn) => { (listeners[type] ??= []).push(fn); },
@@ -58,9 +62,11 @@ function load({ width = 390, height = 700, reducedMotion = false } = {}) {
       timers.clear();
       pending.forEach((fn) => fn());
     },
+    get looping() { return frameCallback !== null; },
     run(seconds) {
       for (let i = 0; i < seconds * 60; i++) {
         const fn = frameCallback;
+        if (!fn) return;
         frameCallback = null;
         now += 1000 / 60;
         fn(now);
@@ -73,20 +79,37 @@ test("a height-only resize does not rebuild the scene", () => {
   const crew = load();
   crew.run(3);
   assert.equal(crew.canvas.widthWrites, 1);
-  crew.resize(390, 620);
-  crew.resize(390, 700);
+  crew.resize(1280, 720);
+  crew.resize(1280, 800);
   assert.equal(crew.canvas.widthWrites, 1, "scene rebuilt when only the height changed");
 });
 
 test("a width change rebuilds the scene", () => {
   const crew = load();
-  crew.resize(800, 700);
+  crew.resize(1024, 800);
   assert.equal(crew.canvas.widthWrites, 2);
 });
 
-test("full loops run without throwing, on a phone and on a desktop", () => {
-  load({ width: 390 }).run(90);
-  load({ width: 1440 }).run(90);
+test("full loops run without throwing, from the narrowest shown width to a wide screen", () => {
+  load({ width: 700 }).run(90);
+  load({ width: 1920 }).run(90);
+});
+
+test("phones get no animation: no canvas sizing, no animation frame", () => {
+  const crew = load({ width: 390 });
+  assert.equal(crew.canvas.widthWrites, 0);
+  assert.equal(crew.framesRequested, 0);
+});
+
+test("crossing 700 px starts and stops the animation", () => {
+  const crew = load({ width: 390 });
+  crew.resize(1024, 800);
+  assert.equal(crew.canvas.widthWrites, 1);
+  assert.ok(crew.looping, "no loop after widening past 700 px");
+  crew.run(1);
+  crew.resize(390, 800);
+  crew.run(1);
+  assert.ok(!crew.looping, "loop still running after narrowing to a phone");
 });
 
 test("reduced motion draws once and schedules no animation frame", () => {
