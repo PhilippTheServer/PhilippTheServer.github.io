@@ -64,13 +64,14 @@ body {
 }
 .skip-link:focus { left: 0; }
 
-/* The pixel repair crew strip along the bottom of the viewport (issue #43). It sits
- * behind the content, which only works while body is the one element with a background. */
+/* The pixel repair crew strip along the bottom of the viewport (issue #43). It is the
+ * top layer, so text scrolls under the sprites rather than through them (issue #47);
+ * pointer-events: none keeps links and selection working. Below the skip link. */
 #pixel-bg {
   position: fixed;
   left: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: 5;
   pointer-events: none;
   image-rendering: pixelated;
   opacity: 0.9;

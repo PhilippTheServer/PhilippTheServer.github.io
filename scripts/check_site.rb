@@ -453,6 +453,18 @@ end
 end
 fail!("assets/js/pixel-crew.js: not in the build") unless File.exist?(File.join(SITE, "assets/js/pixel-crew.js"))
 
+# The crew is drawn on top of the text (issue #47). Behind it, every line of text
+# scrolled through the sprites; on top, it only works because clicks, links and
+# selection pass through it.
+crew_rule = read("assets/css/site.css").to_s[/^#pixel-bg\s*\{[^}]*\}/m]
+if crew_rule.nil?
+  fail!("site.css: no #pixel-bg rule")
+else
+  z = crew_rule[/z-index:\s*(-?\d+)/, 1]
+  fail!("site.css: #pixel-bg is not above the page text (z-index #{z.inspect})") unless z && z.to_i > 0
+  fail!("site.css: #pixel-bg does not let clicks through (pointer-events: none)") unless crew_rule.include?("pointer-events: none")
+end
+
 # The tag index must exist and list every tag actually in use.
 tag_index = read("tags/index.html")
 if tag_index.nil?
