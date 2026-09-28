@@ -75,6 +75,7 @@ body {
   image-rendering: pixelated;
   opacity: 0.9;
 }
+@media (max-width: 699px) { #pixel-bg { display: none; } }
 
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 a:hover { text-decoration-thickness: 2px; }
