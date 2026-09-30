@@ -173,7 +173,7 @@ plain text, no highlighting, and a deliberately long line to prove the block scr
 
 | Component | Where it is styled | Scrolls |
 | --- | --- | ---: |
-| Code block | `prose.css`, `.highlight` | yes |
+| Code block | `prose.css`, `pre` and `.hljs-*` | yes |
 | Table | `prose.css`, `.table-scroll` | yes |
 | Blockquote | `prose.css`, `blockquote` | no |
 | Inline code | `prose.css`, `:not(pre) > code` | no |
@@ -196,9 +196,16 @@ into the navigation, the article index or the tag pages. Colours come from the t
 `site.css`, so light and dark are one definition rather than two.
 
 Two things Markdown does not produce on its own are added by `_plugins/prose_markup.rb`
-after conversion: `data-lang` on a code block, copied from the class Rouge already writes,
-so one CSS rule labels every language there will ever be; and a scroll container around
-every table, because otherwise the only thing that can scroll sideways is the page.
+after conversion: `data-lang` on a code block's `<pre>`, copied from the class kramdown
+already writes, so one CSS rule labels every language there will ever be; and a scroll
+container around every table, because otherwise the only thing that can scroll sideways is
+the page.
+
+Code is highlighted in the browser by highlight.js, vendored under
+`assets/vendor/highlight.js/`, and not at build time. The HTML stays a plain
+`<pre><code class="language-x">`, which is what Medium's importer keeps; server-side
+highlighting wraps every token in a `<span>`, and the importer drops the block. Without
+JavaScript the code is shown uncoloured but intact.
 
 ## Conclusion
 

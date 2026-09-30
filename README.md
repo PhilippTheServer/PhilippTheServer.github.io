@@ -68,6 +68,14 @@ second one for the same URL. Closing the issue marks the article as imported.
 `scripts/post-urls.sh` derives the URL from the filename; `verify.sh` fails if any URL
 it derives has no built page.
 
+Code blocks are served as plain `<pre><code class="language-x">`, which the importer keeps,
+and highlighted in the browser by highlight.js 11.12.0 (BSD-3, vendored under
+`assets/vendor/highlight.js/` so no reader's address goes to a CDN; grammars beyond its
+common bundle are listed in `_config.yml` as `highlight_extra_languages`). `check_site.rb`
+fails if a post's code block carries highlighting markup again, lacks its `data-lang`, or
+the page stops loading highlight.js. Medium has no table element, so tables do not
+survive an import.
+
 ## Machine-readable files
 
 | Path | What it is |
