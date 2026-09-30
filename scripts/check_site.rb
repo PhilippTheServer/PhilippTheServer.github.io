@@ -516,6 +516,32 @@ if File.directory?(posts_dir)
   end
 end
 
+# 11b. A fence meant to nest, in the SOURCE (#66). A code block that shows Markdown, such
+#      as a README template inside a Python string, holds fences of its own. If the outer
+#      fence is no longer than the inner ones, the inner closing fence ends the outer block
+#      and everything after it pairs up wrong: code renders as prose, prose as code. The
+#      build passes either way. A fence line inside a block that is as long as the block's
+#      own fence and carries an info string is that mistake; lengthen the outer fence.
+if File.directory?(posts_dir)
+  Dir.glob(File.join(posts_dir, "*.md")).sort.each do |path|
+    open_fence = nil
+    File.foreach(path).with_index(1) do |line, number|
+      fence = line[/\A {0,3}(`{3,}|~{3,})/, 1]
+      if open_fence.nil?
+        open_fence = [fence, number] if fence
+      elsif fence && fence[0] == open_fence[0][0] && fence.length >= open_fence[0].length
+        if line.strip.length > fence.length
+          fail!("#{File.basename(path)}:#{number}: a fence inside the code block opened on line " \
+                "#{open_fence[1]} is as long as its own, so it breaks the block instead of nesting; " \
+                "lengthen the outer fence")
+        else
+          open_fence = nil
+        end
+      end
+    end
+  end
+end
+
 # 12. Article rendering. Code blocks are the most-read element on the site and were the
 #     worst-looking one: an unscoped `code { border }` rule painted a box around every LINE,
 #     because the <code> inside a <pre> is inline and spans many of them. These assertions

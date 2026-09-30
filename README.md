@@ -36,8 +36,10 @@ pixel repair crew animation leaves the landing page or appears on any other page
 it stops being the top layer or stops letting clicks through, if
 the animation runs below 700 px width, if it
 restarts on a height-only resize (a browser scrolling past its address
-bar — `scripts/pixel-crew.test.mjs`, run with `node --test`), or if `CNAME` stops
-naming the canonical domain.
+bar — `scripts/pixel-crew.test.mjs`, run with `node --test`), if a code block in an
+article's source holds a fence as long as its own (meant to nest, it ends the block
+instead and turns the rest of the article inside out; the outer fence has to be longer),
+or if `CNAME` stops naming the canonical domain.
 
 `scripts/build-local.sh` runs the Node test on the host, because the `ruby:3.3`
 image it builds in has no Node.

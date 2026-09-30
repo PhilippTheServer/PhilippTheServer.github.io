@@ -65,7 +65,7 @@ string, say — that a human skimming the template text would miss.
 
 ## The solution
 
-```python
+````python
 #!/usr/bin/env python3
 # scaffold.py
 """Generate a standard Python project layout.
@@ -214,7 +214,7 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-```
+````
 
 ```python
 # test_scaffold.py
