@@ -42,7 +42,8 @@ instead and turns the rest of the article inside out; the outer fence has to be 
 or if `CNAME` stops naming the canonical domain.
 
 `scripts/build-local.sh` runs the Node test on the host, because the `ruby:3.3`
-image it builds in has no Node.
+image it builds in has no Node, and after the build `scripts/medium/check.sh`, which
+needs uv (see Medium below).
 
 ## Pixel repair crew
 
@@ -62,11 +63,35 @@ the canvas at the same width.
 Articles are cross-posted to Medium as drafts whose canonical link points back here, so
 this site stays the source of truth. Medium issues no new API tokens, so this goes through
 Medium's "Import a story" tool (<https://medium.com/p/import>), which creates the draft,
-sets the canonical link and backdates it. Pasting the URL there is the one manual step.
+sets the canonical link and backdates it. The import alone is not a usable draft, so
+`scripts/medium/medium.py` finishes it in a real browser (#68):
+
+```bash
+uv run scripts/medium/medium.py browser          # start the automation Chrome; sign in to Medium once
+uv run scripts/medium/medium.py sync SLUG        # import or repair the draft until it matches the site
+uv run scripts/medium/medium.py verify --all     # compare every draft with the site, change nothing
+```
+
+`sync` imports the article (or finds its draft), replaces the imported body with the
+built page's article HTML, pastes every code block's exact text, deletes the empty blocks
+the import adds, makes sub-headings Medium's small heading, sets every code language, and
+sets the preview subtitle, SEO title, SEO description and five topics (the tag-to-topic
+map is in `site_model.py`). It then reloads and compares every block with the site: type,
+text, code byte for byte, language, and the text of links, inline code, bold and italic.
+It works on drafts only: an article whose story is published is left alone. Which story
+belongs to which article is kept in `~/.local/state/medium-sync/state.json`. Publishing
+stays a click on Medium.
+
+The browser is Google Chrome from Google's apt repository, with its own profile in
+`~/.local/share/medium-import-browser`: Ubuntu's AppArmor only lets the packaged Chrome
+use its sandbox, not Playwright's Chrome for Testing. Leave the window alone while a sync
+runs; editing the same draft elsewhere makes Medium reject the script's saves. A sync
+takes one to two minutes per article. `scripts/medium/check.sh` lints the tooling with
+ruff and tests the site-to-Medium model with pytest; CI runs it after the site build.
 
 When a deploy that adds a post succeeds, `.github/workflows/medium-import.yml` opens an
-issue labelled `medium` with the article URL and the import steps, and never opens a
-second one for the same URL. Closing the issue marks the article as imported.
+issue labelled `medium` with the article URL and the `sync` command, and never opens a
+second one for the same URL. Closing the issue marks the article as done.
 `scripts/post-urls.sh` derives the URL from the filename; `verify.sh` fails if any URL
 it derives has no built page.
 
@@ -87,11 +112,16 @@ importer would collapse, a trailing `<br>` or a literal U+2007, U+2060 or U+00A0
 attributes other than a matching `class` and `data-lang`, is followed by whitespace, or the
 page stops loading highlight.js.
 
-What the import still does wrong: it adds an empty code block after every code block,
-whatever the markup (tested with and without attributes, with the text in a span, and
-with a trailing `<br>`); delete those in the Medium draft. Medium has no table element, so
-tables do not survive either. Re-importing a URL returns Medium's cached copy of it, so
-changes to an article already imported do not show up in a new import.
+What the import does wrong, and `sync` repairs: Medium caches each article's first import
+(neither a query string on the URL nor deleting the draft and importing again gets a
+fresh copy); it adds an empty heading after every heading and an empty code block after
+code; it makes every sub-heading a large heading; it guesses code languages, often wrong;
+it keeps the figure spaces, so code copied from an imported draft would not run; and it
+stores a tab as one space. What Medium cannot hold at all: tables (each becomes a
+plain-text code block with aligned columns), italics in headings (dropped), code inside a
+list item (the list is split around it), and code languages it does not offer, such as
+Jinja, Dockerfile, nginx and HCL (shown as Plain Text). Tabs are expanded to the site's
+tab width of 2.
 
 ## Machine-readable files
 

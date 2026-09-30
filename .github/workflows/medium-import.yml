@@ -1,8 +1,9 @@
 name: Medium import reminder
 
 # Medium issues no new API tokens, so an article reaches Medium through its "Import a
-# story" tool, which creates a draft with a canonical link back here. This opens one
-# issue per newly deployed article so the import is not forgotten.
+# story" tool, which creates a draft with a canonical link back here; scripts/medium/
+# medium.py imports and finishes that draft (#68). This opens one issue per newly
+# deployed article so it is not forgotten.
 on:
   workflow_run:
     workflows: ["Build, verify and deploy"]
@@ -31,13 +32,15 @@ jobs:
           [ -s added.txt ] || { echo "no new posts"; exit 0; }
           while read -r file; do
             url=$(scripts/post-urls.sh "$file")
+            slug=$(basename "$file" .md | cut -c12-)
             title=$(sed -n 's/^title: *"\(.*\)"$/\1/p' "$file" | head -1)
             if gh issue list --label medium --state all --search "\"$url\" in:body" --json number -q '.[0].number' | grep -q .; then
               echo "already tracked: $url"
               continue
             fi
             gh issue create --label medium --title "Import to Medium: $title" --body "$(printf '%s\n' \
-              "1. Open https://medium.com/p/import" \
-              "2. Paste $url and import. Medium creates a draft with the canonical link set to that URL." \
-              "3. Check code blocks and tables in the draft, add up to five tags, publish, and close this issue.")"
+              "Article: $url" \
+              "" \
+              "1. Run \`uv run scripts/medium/medium.py sync $slug\` (start the browser first with \`uv run scripts/medium/medium.py browser\` if it is not running). It imports the article, finishes the draft and checks it against the site." \
+              "2. Publish the draft on Medium and close this issue.")"
           done < added.txt
