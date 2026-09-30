@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-# Two things an article's HTML needs that kramdown and Rouge do not produce.
+# Two things an article's HTML needs that kramdown does not produce.
 #
-# 1. The language label on a code block. Rouge writes `class="language-yaml
-#    highlighter-rouge"`, which CSS can only turn into a label with one rule per language —
-#    a list that goes stale the first time an article uses a language nobody added. Copying
-#    it into `data-lang` lets one CSS rule cover every language there will ever be.
+# 1. The language label on a code block. kramdown writes `<pre><code class="language-yaml">`,
+#    which CSS can only turn into a label with one rule per language — a list that goes
+#    stale the first time an article uses a language nobody added. Copying it into
+#    `data-lang` on the <pre> lets one CSS rule cover every language there will ever be.
+#    The markup otherwise stays plain, because Medium's importer drops Rouge's
+#    span-per-token output (#56); highlight.js colours it in the browser.
 #
 # 2. A scroll container around tables. A wide table has to scroll inside itself; without a
 #    wrapper the only element that can scroll is the page, and a page that scrolls
@@ -15,12 +17,12 @@
 
 module Jekyll
   module ProseMarkup
-    LANGUAGE = /<div class="language-([a-z0-9+#-]+) highlighter-rouge"/i.freeze
+    LANGUAGE = /<pre><code class="language-([a-z0-9+#-]+)">/i.freeze
     TABLE = %r{<table>(.*?)</table>}m.freeze
 
     def self.apply(html)
       html = html.gsub(LANGUAGE) do
-        %(<div data-lang="#{Regexp.last_match(1)}" class="language-#{Regexp.last_match(1)} highlighter-rouge")
+        %(<pre data-lang="#{Regexp.last_match(1)}"><code class="language-#{Regexp.last_match(1)}">)
       end
 
       html.gsub(TABLE) do

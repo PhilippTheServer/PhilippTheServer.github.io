@@ -185,28 +185,16 @@
 
 /* ── code blocks ─────────────────────────────────────────────────────────── */
 
-.prose .highlighter-rouge,
-.prose pre.highlight,
-.prose > pre {
+/* Code ships as plain <pre><code> so Medium's importer keeps it (#56); highlight.js
+   colours it in the browser. */
+.prose pre {
+  position: relative;
   margin: 0 0 1.5rem;
-}
-
-.prose .highlight,
-.prose > pre {
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;          /* the block scrolls, the page never does */
   background: var(--code-bg);
   border: 1px solid var(--code-rule);
   border-radius: 8px;
-  overflow: hidden;   /* keeps the child's scrollbar inside the rounded corner */
-}
-
-.prose .highlight > pre,
-.prose pre.highlight,
-.prose > pre {
-  margin: 0;
-  padding: 0.9rem 1.1rem;
-  overflow-x: auto;          /* the block scrolls, the page never does */
-  background: transparent;
-  border: 0;
   color: var(--code-fg);
   font-family: var(--mono);
   font-size: 0.82rem;
@@ -223,13 +211,13 @@
   white-space: pre;
 }
 
-/* The language, from Rouge's own wrapper class, shown in the corner. */
-.prose .highlighter-rouge { position: relative; }
-.prose .highlighter-rouge::after {
+/* The language, copied onto <pre> by _plugins/prose_markup.rb, shown top right on a line
+   of its own: <pre> is the scroll container, so a label floated over the code would sit
+   on top of a long first line. */
+.prose pre[data-lang]::before {
   content: attr(data-lang);
-  position: absolute;
-  top: 0.45rem;
-  right: 0.7rem;
+  display: table;
+  margin: -0.45rem -0.4rem 0.15rem auto;
   font-family: var(--mono);
   font-size: 0.66rem;
   letter-spacing: 0.05em;
@@ -240,50 +228,38 @@
   padding: 0.05rem 0.35rem;
   pointer-events: none;
 }
-.prose .highlighter-rouge:not([data-lang])::after { content: none; }
 
-/* ── syntax highlighting (Rouge token classes) ───────────────────────────── */
+/* ── syntax highlighting (highlight.js token classes) ────────────────────── */
 
-.prose .highlight .c,  .prose .highlight .c1, .prose .highlight .cm,
-.prose .highlight .cs, .prose .highlight .cd, .prose .highlight .cp { color: var(--t-comment); font-style: italic; }
+.prose .hljs-comment, .prose .hljs-quote,
+.prose .hljs-meta { color: var(--t-comment); font-style: italic; }
 
-.prose .highlight .k,  .prose .highlight .kc, .prose .highlight .kd,
-.prose .highlight .kn, .prose .highlight .kp, .prose .highlight .kr,
-.prose .highlight .ow { color: var(--t-keyword); }
+.prose .hljs-keyword, .prose .hljs-selector-tag,
+.prose .hljs-literal, .prose .hljs-operator { color: var(--t-keyword); }
 
-.prose .highlight .kt, .prose .highlight .nc, .prose .highlight .nn,
-.prose .highlight .no { color: var(--t-type); }
+.prose .hljs-type, .prose .hljs-title.class_,
+.prose .hljs-built_in.class_ { color: var(--t-type); }
 
-.prose .highlight .s,  .prose .highlight .s1, .prose .highlight .s2,
-.prose .highlight .sb, .prose .highlight .sc, .prose .highlight .sd,
-.prose .highlight .se, .prose .highlight .sh, .prose .highlight .si,
-.prose .highlight .sx, .prose .highlight .sr, .prose .highlight .ss { color: var(--t-string); }
+.prose .hljs-string, .prose .hljs-regexp,
+.prose .hljs-template-tag, .prose .hljs-symbol { color: var(--t-string); }
 
-.prose .highlight .m,  .prose .highlight .mb, .prose .highlight .mf,
-.prose .highlight .mh, .prose .highlight .mi, .prose .highlight .mo,
-.prose .highlight .il { color: var(--t-number); }
+.prose .hljs-number { color: var(--t-number); }
 
-.prose .highlight .nf, .prose .highlight .nd, .prose .highlight .nb,
-.prose .highlight .bp { color: var(--t-func); }
+.prose .hljs-title, .prose .hljs-title.function_,
+.prose .hljs-built_in, .prose .hljs-section { color: var(--t-func); }
 
-.prose .highlight .na, .prose .highlight .nt, .prose .highlight .nl { color: var(--t-attr); }
+.prose .hljs-attr, .prose .hljs-attribute, .prose .hljs-name,
+.prose .hljs-selector-class, .prose .hljs-selector-id { color: var(--t-attr); }
 
-.prose .highlight .n,  .prose .highlight .nv, .prose .highlight .vc,
-.prose .highlight .vg, .prose .highlight .vi, .prose .highlight .ni,
-.prose .highlight .py { color: var(--t-name); }
+.prose .hljs-variable, .prose .hljs-template-variable,
+.prose .hljs-params, .prose .hljs-property { color: var(--t-name); }
 
-.prose .highlight .o,  .prose .highlight .p,
-.prose .highlight .pi { color: var(--t-punct); }
+.prose .hljs-punctuation { color: var(--t-punct); }
 
-.prose .highlight .err { color: var(--t-error); }
-.prose .highlight .gd { color: var(--t-removed); }
-.prose .highlight .gi { color: var(--t-added); }
-.prose .highlight .gp { color: var(--t-comment); user-select: none; }
-.prose .highlight .ge { font-style: italic; }
-.prose .highlight .gs { font-weight: 650; }
-.prose .highlight .gh,
-.prose .highlight .gu { color: var(--t-func); font-weight: 650; }
-.prose .highlight .w  { color: transparent; }
+.prose .hljs-deletion { color: var(--t-removed); }
+.prose .hljs-addition { color: var(--t-added); }
+.prose .hljs-emphasis { font-style: italic; }
+.prose .hljs-strong   { font-weight: 650; }
 
 /* ── tables ──────────────────────────────────────────────────────────────── */
 
@@ -348,8 +324,6 @@
 /* ── narrow screens ──────────────────────────────────────────────────────── */
 
 @media (max-width: 34rem) {
-  .prose .highlight > pre,
-  .prose pre.highlight,
-  .prose > pre { font-size: 0.76rem; padding: 0.75rem 0.85rem; }
+  .prose pre { font-size: 0.76rem; padding: 0.75rem 0.85rem; }
   .prose h2 { font-size: 1.18rem; }
 }

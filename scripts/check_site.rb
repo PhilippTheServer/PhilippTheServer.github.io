@@ -10,6 +10,7 @@
 
 require "cgi"
 require "json"
+require "yaml"
 
 SITE   = ARGV[0] || "_site"
 ORCID  = "0009-0002-3922-2471"
@@ -528,9 +529,9 @@ else
     "overflow-x: auto" => "a code block must scroll inside itself, never widen the page",
     ".table-scroll" => "a wide table must scroll inside itself",
     'content: attr(data-lang)' => "the language label",
-    ".highlight .k" => "a Rouge keyword colour, i.e. a syntax theme at all",
-    ".highlight .s" => "a Rouge string colour",
-    ".highlight .c" => "a Rouge comment colour",
+    ".hljs-keyword" => "a highlight.js keyword colour, i.e. a syntax theme at all",
+    ".hljs-string" => "a highlight.js string colour",
+    ".hljs-comment" => "a highlight.js comment colour",
   }.each do |needle, why|
     fail!("prose.css: no #{needle.inspect} — #{why}") unless prose.include?(needle)
   end
@@ -553,14 +554,29 @@ if site_css
   end
 end
 
-# Every article that renders a highlighted block must carry the language on it, and any
-# table must be wrapped. Both are added by _plugins/prose_markup.rb after conversion.
+# Every code block ships as plain <pre><code>, because Medium's importer drops the
+# span-per-token markup of server-side highlighting (#56); highlight.js colours it in the
+# browser. A block with a language carries it as data-lang for the label, and a page with
+# such a block loads highlight.js. Any table must be wrapped. data-lang and the wrapper
+# are added by _plugins/prose_markup.rb after conversion.
+EXTRA_GRAMMARS = Array(YAML.safe_load(File.read("_config.yml"))["highlight_extra_languages"])
 ARTICLES.each do |slug|
   html = read("posts/#{slug}/index.html") or next
-  html.scan(/<div class="language-([a-z0-9+#-]+) highlighter-rouge"/).flatten.each do |lang|
-    unless html.include?(%(data-lang="#{lang}"))
-      fail!("posts/#{slug}/: a #{lang} block carries no data-lang, so it renders with no language label")
+  html.scan(%r{<pre\b[^>]*>(.*?)</pre>}m).flatten.each do |block|
+    if block.include?("<span") || html.include?("highlighter-rouge")
+      fail!("posts/#{slug}/: a code block carries highlighting markup, which Medium's importer drops")
     end
+  end
+  langs = html.scan(/<code class="language-([a-z0-9+#-]+)">/).flatten
+  if html.scan(/<pre data-lang="[^"]+"><code class="language-/).length != langs.length
+    fail!("posts/#{slug}/: a code block with a language carries no data-lang on its <pre>")
+  end
+  if langs.any? && !html.include?("/assets/vendor/highlight.js/highlight.min.js")
+    fail!("posts/#{slug}/: has code but does not load highlight.js")
+  end
+  (["highlight.min.js"] + EXTRA_GRAMMARS.map { |g| "languages/#{g}.min.js" }).each do |file|
+    next if File.file?(File.join(SITE, "assets/vendor/highlight.js", file))
+    fail!("assets/vendor/highlight.js/#{file}: missing from the build")
   end
   tables = html.scan("<table>").length
   wrapped = html.scan('class="table-scroll"').length
@@ -572,7 +588,7 @@ style = read("style/index.html")
 if style.nil?
   fail!("style/index.html: the style reference is missing")
 else
-  %w[blockquote <table> <kbd> <dl> <hr <ol <ul footnotes highlighter-rouge].each do |component|
+  %w[blockquote <table> <kbd> <dl> <hr <ol <ul footnotes <pre\ data-lang].each do |component|
     fail!("style/index.html: does not render #{component}") unless style.include?(component)
   end
   langs = style.scan(/data-lang="([a-z]+)"/).flatten.uniq

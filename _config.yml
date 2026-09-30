@@ -27,11 +27,16 @@ feed:
 permalink: /posts/:title/
 
 markdown: kramdown
-highlighter: rouge
 
+# Code is shipped as plain <pre><code> and highlighted in the browser by highlight.js,
+# because Medium's importer drops Rouge's span-per-token markup (#56).
 kramdown:
   input: GFM
-  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    disable: true
+
+# highlight.js grammars outside its common bundle, vendored in assets/vendor/highlight.js/.
+highlight_extra_languages: [dockerfile, nginx, cmake, django]
 
 plugins:
   - jekyll-feed

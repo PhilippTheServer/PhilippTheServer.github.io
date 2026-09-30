@@ -32,3 +32,11 @@ layout: default
     <p><a href="{{ '/posts/' | relative_url }}">← All writing</a></p>
   </footer>
 </article>
+{%- if content contains '<code class="language-' %}
+{%- assign hl = '/assets/vendor/highlight.js/' | relative_url %}
+<script src="{{ hl }}highlight.min.js" defer></script>
+{%- for lang in site.highlight_extra_languages %}
+<script src="{{ hl }}languages/{{ lang }}.min.js" defer></script>
+{%- endfor %}
+<script src="{{ '/assets/js/highlight.js' | relative_url }}" defer></script>
+{%- endif %}
