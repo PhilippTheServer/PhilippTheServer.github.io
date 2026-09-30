@@ -203,8 +203,10 @@ the page.
 
 Code is highlighted in the browser by highlight.js, vendored under
 `assets/vendor/highlight.js/`, and not at build time. The HTML stays a plain
-`<pre><code class="language-x">`, which is what Medium's importer keeps; server-side
-highlighting wraps every token in a `<span>`, and the importer drops the block. Without
+`<pre><code class="language-x">` with `<br>` line breaks, which is what Medium's importer
+keeps; server-side highlighting wraps every token in a `<span>`, and the importer drops the
+block, while raw newlines inside `<pre>` are collapsed into a single line. The script turns
+the `<br>`s back into newlines before highlighting. Without
 JavaScript the code is shown uncoloured but intact.
 
 ## Conclusion

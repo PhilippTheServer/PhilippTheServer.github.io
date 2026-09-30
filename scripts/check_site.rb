@@ -554,7 +554,7 @@ if site_css
   end
 end
 
-# Every code block ships as plain <pre><code>, because Medium's importer drops the
+# Every code block ships as plain <pre><code> with <br> line breaks, because Medium's importer drops the
 # span-per-token markup of server-side highlighting (#56); highlight.js colours it in the
 # browser. A block with a language carries it as data-lang for the label, and a page with
 # such a block loads highlight.js. Any table must be wrapped. data-lang and the wrapper
@@ -565,6 +565,9 @@ ARTICLES.each do |slug|
   html.scan(%r{<pre\b[^>]*>(.*?)</pre>}m).flatten.each do |block|
     if block.include?("<span") || html.include?("highlighter-rouge")
       fail!("posts/#{slug}/: a code block carries highlighting markup, which Medium's importer drops")
+    end
+    if block.include?("\n")
+      fail!("posts/#{slug}/: a code block has a raw newline, which Medium's importer collapses into one line; use <br>")
     end
   end
   langs = html.scan(/<code class="language-([a-z0-9+#-]+)">/).flatten
