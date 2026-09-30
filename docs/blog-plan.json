@@ -1580,7 +1580,7 @@
     "python"
    ],
    "source": "daily",
-   "problem": "A food tracker dies when logging means typing; with Claude as the input device over MCP it survives, and a shopping list becomes plans minus stock, provided stock is derived from an append-only journal instead of patched in place."
+   "problem": "A food tracker dies when logging means typing; with a language model (mostly a self-hosted Qwen, sometimes Claude) as the input device over MCP it survives, and a shopping list becomes plans minus stock, provided stock is derived from an append-only journal instead of patched in place."
   }
  ],
  "backlog": [

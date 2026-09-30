@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Tracking Meals and Automating Shopping With an MCP Server"
-subtitle: "daily is a diet system that Claude operates and I only look at. The prototype turned planned meals and a live pantry into a shopping list in eleven days. The rebuild stops storing the pantry at all."
+subtitle: "daily is a diet system that a language model operates and I only look at. The prototype turned planned meals and a live pantry into a shopping list in eleven days. The rebuild stops storing the pantry at all."
 date: 2026-09-30 01:00:00 +0200
 tags: [agents, automation, api-design, architecture, python]
 description: >-
@@ -18,9 +18,16 @@ used worked perfectly for about eleven days. After that it kept working perfectl
 nobody.
 
 So the first requirement for *daily*, my personal health system, was that I do not type.
-I tell Claude what I ate, in whatever words I have at that hour, and Claude logs it
-through an [MCP](https://modelcontextprotocol.io) server. A PWA exists so I can see the
-result and fix things, but the primary user of the API is a language model.
+I tell a language model what I ate, in whatever words I have at that hour, and the model
+logs it through an [MCP](https://modelcontextprotocol.io) server. A PWA exists so I can
+see the result and fix things, but the primary user of the API is a language model.
+
+Most of the time that model is Qwen3.8, self-hosted on atlas, the inference server from
+[an earlier article](/posts/atlas-agentic-ops/). A food diary, a symptom log and the
+state of one's digestion are about as personal as data gets, and they are exactly the
+kind of context that should not leave the building by default. Sometimes it is Claude,
+through the claude.ai connector. Both talk to the same MCP server,
+and neither needs to know the other exists. That is rather the point of a protocol.
 
 The second requirement followed from the first. Once the system knows what I eat, what I
 plan to eat and what is in the kitchen, the shopping list is no longer a creative task.
@@ -32,7 +39,7 @@ and what the rebuild changes.
 
 ## Working through it
 
-### Tracking with Claude as the input device
+### Tracking with a language model as the input device
 
 The prototype, daily v1, is a FastAPI application that serves a REST API for the PWA and
 an MCP server at `/mcp` from the same process. Both authenticate against Keycloak. Both
@@ -42,11 +49,11 @@ like are written once.
 A meal is a list of `{off_code, grams}` items. The code is an
 [Open Food Facts](https://world.openfoodfacts.org/) barcode, resolved and cached locally
 on first use. Each item's nutrients are snapshotted at the moment of logging, so fixing a
-product's figures later does not rewrite what I ate last Tuesday. Claude searches for the
+product's figures later does not rewrite what I ate last Tuesday. The model searches for the
 food, picks the usable hit, and logs it. I say "the usual breakfast, but half the oats",
 and it copies yesterday's meal with one item changed.
 
-Connecting this to claude.ai cost one evening and one line. The MCP authorization flow
+Connecting the claude.ai side cost one evening and one line. The MCP authorization flow
 reads the server's OAuth protected-resource metadata. If that metadata does not list
 `scopes_supported`, claude.ai asks Keycloak for every scope the realm has, and Keycloak
 answers `invalid_scope`. Advertising exactly `["openid"]` fixes it. I mention this mostly
@@ -129,7 +136,7 @@ Day summaries, gauges and later stock and shopping lists are computed from the f
 The events form correction chains. Each event carries the `chain_id` of its original and
 the `supersedes` id of the version it replaces. Only the head of a chain counts. A
 correction sent against a version that is no longer the head is refused with
-`409 stale_head`, so Claude and I cannot overwrite each other's edits without noticing.
+`409 stale_head`, so the model and I cannot overwrite each other's edits without noticing.
 
 For the pantry, this removes the drift problem entirely. Stock is no longer a number that
 has to be kept correct. It is purchases minus consumption, computed over the heads of the
@@ -237,7 +244,7 @@ journal the day view reads.
 
 ### One operation, two doors
 
-The second change is how the API reaches Claude. In daily2 every write is a named
+The second change is how the API reaches the model. In daily2 every write is a named
 **command** and every read a named **query**, declared once in a feature's `routers.py`:
 
 ```python
@@ -266,18 +273,21 @@ have been from the start:
 - **24 tools instead of 41**, shaped like tasks rather than tables. `log_events` takes
   up to 50 facts of any kind in one call, so a breakfast, a coffee and a supplement are
   one round trip.
-- **Every command returns `effects`**, the days it changed, and warnings. Claude knows
+- **Every command returns `effects`**, the days it changed, and warnings. The model knows
   what to re-read without guessing.
 - **Every command accepts an `idempotency_key`.** A repeated call returns the stored
   response instead of logging lunch twice. Models retry, just like networks.
 - **The source is taken from the token**, never from the body. An event logged through
   MCP says `claude`, one from the PWA says `app`, and the history of an entry reads
-  "corrected by claude at 14:02".
+  "corrected by claude at 14:02". The label comes from the MCP client, not from the
+  model behind it, so whatever the local model logs over MCP is filed under `claude`
+  as well. It is the least
+  accurate word in the codebase, and I have made my peace with it.
 - **Errors have one shape**, `{code, message, field?}`, over both doors. Over MCP they
   come back as `isError` with the same body, so the model sees `stale_head` rather than a
   stack trace.
 
-"The UI and Claude can do exactly the same things" is a sentence that is easy to put in
+"The UI and the model can do exactly the same things" is a sentence that is easy to put in
 a design document and hard to keep true. So a contract test logs one event of every kind
 through REST and the same events through MCP, reads the day back through each, and
 asserts the two views are identical except for the source. A second test pins the exact
@@ -312,7 +322,8 @@ Every box on the lower row is a fact. Every box on the upper row is derived from
 **Make the model the input device, and tracking survives week two.** The value of daily
 did not come from better nutrition maths. It came from logging becoming a sentence
 instead of a form. MCP is what makes that possible without building a chat interface of
-my own.
+my own, and because it is a protocol rather than a vendor feature, the same server serves
+a self-hosted Qwen for everyday logging and Claude through claude.ai.
 
 **Shopping is subtraction, as long as you trust both operands.** Planned meals, batches
 and pack sizes make the list precise. A pantry kept as a mutable number makes it
@@ -323,7 +334,7 @@ where a correction to breakfast also corrects Saturday's shopping.
 were a mirror of the schema, and a mirror is exactly as wide as the thing it reflects.
 Declaring each operation once and serving it as both REST and MCP took the tool count
 from 41 to 24, and put idempotency, effects and a single error shape on every call without anyone
-remembering to add them. A parity test keeps "Claude can do what the app can" true.
+remembering to add them. A parity test keeps "the model can do what the app can" true.
 
 The prototype took eleven days and answered the only question a prototype should: would
 I actually use this? I did, every day, which is also how I found out where it was wrong.

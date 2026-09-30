@@ -29,7 +29,8 @@ callout that tells readers how to put `/feed.xml` into a reader stops rendering 
 the landing page, or stops sitting above the heading on `/posts/`, if an article's
 meta description falls outside 70–160 characters (Google cuts the snippet
 there), if an article from #117 on has a title over 60 characters, if the
-OpenTaberna articles stop naming the project in their structured data, if
+OpenTaberna articles stop naming the project in their structured data, if the daily
+article stops naming the self-hosted Qwen on atlas that mostly operates daily, if
 `profile.json` or `resume.json` stop listing him as a founder of OpenTaberna, if the
 pixel repair crew animation leaves the landing page or appears on any other page, if
 it stops being the top layer or stops letting clicks through, if

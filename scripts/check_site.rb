@@ -389,6 +389,13 @@ end
   fail!("posts/#{slug}/: BlogPosting does not mention OpenTaberna") unless named
 end
 
+# daily is operated mostly by the self-hosted Qwen on atlas, not only by Claude (#51).
+if (daily = read("posts/daily-meal-tracking-shopping-automation-mcp/index.html"))
+  unless daily.include?("Qwen") && daily.include?('href="/posts/atlas-agentic-ops/"')
+    fail!("posts/daily-meal-tracking-shopping-automation-mcp/: must name the self-hosted Qwen on atlas and link its article")
+  end
+end
+
 # The feed carries the most recent articles, not the archive — that is what a feed is for,
 # and jekyll-feed caps it at `posts_limit`. Assert the newest ones are in it and that the
 # cap is doing what it says, rather than demanding every article.
