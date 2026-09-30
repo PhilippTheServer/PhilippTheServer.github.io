@@ -202,9 +202,10 @@ container around every table, because otherwise the only thing that can scroll s
 the page.
 
 The code block shape is the one Medium's importer keeps: a `<pre>` with no `<code>`
-inside, `<br>` for line breaks, `&nbsp;` wherever a space or tab would be collapsed as in
-ordinary HTML text, a single `&nbsp;` on an empty line so the block is not split there,
-and no whitespace after `</pre>`. Server-side highlighting wraps every token in a `<span>`,
+inside, `<br>` for line breaks, a figure space (U+2007) wherever a space would be
+collapsed, since the importer collapses `&nbsp;` too, a word joiner plus four figure spaces
+for a tab, a single `&nbsp;` on an empty line so the block is not split there, and no
+whitespace after `</pre>`. Server-side highlighting wraps every token in a `<span>`,
 which the importer drops, so code is highlighted in the browser by highlight.js, vendored
 under `assets/vendor/highlight.js/`, after the script restores the exact text. Without
 JavaScript the code is shown uncoloured but intact.

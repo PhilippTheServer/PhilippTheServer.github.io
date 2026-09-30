@@ -556,8 +556,10 @@ end
 
 # Every code block ships in the shape Medium's importer keeps (#56): a bare <pre>, <br> for
 # line breaks, no highlighting <span>s, no <code> inside, no whitespace the importer would
-# collapse (a line starting with a space or tab, two in a row, an empty line), and nothing
-# between </pre> and the next tag, which the importer turns into an empty block. A block
+# collapse (a line starting with a space or tab, two in a row, an empty line, &nbsp;
+# anywhere but alone on an empty line), no trailing <br>, which makes the importer drop the
+# block, no literal U+2007, U+2060 or U+00A0 that the site script could not tell from its
+# own encoding, and nothing between </pre> and the next tag. A block
 # with a language carries it as class and data-lang, and a page with code loads
 # highlight.js, which restores the text and colours it. Any table must be wrapped. Both are
 # done by _plugins/prose_markup.rb after conversion.
@@ -574,8 +576,14 @@ ARTICLES.each do |slug|
     if block.include?("\n")
       fail!("posts/#{slug}/: a code block has a raw newline, which Medium's importer collapses into one line; use <br>")
     end
+    if block.end_with?("<br>")
+      fail!("posts/#{slug}/: a code block ends in <br>, which makes Medium's importer drop it")
+    end
+    if block.match?(/[\u2007\u2060\u00a0]/)
+      fail!("posts/#{slug}/: a code block has a literal U+2007, U+2060 or U+00A0, which the site script would rewrite")
+    end
     block.split("<br>", -1).each do |line|
-      next unless line.empty? || line.match?(/\A[ \t]|[ \t][ \t]/)
+      next unless line.empty? || line.match?(/\A[ \t]|[ \t][ \t]/) || (line.include?("&nbsp;") && line != "&nbsp;")
 
       fail!("posts/#{slug}/: a code line #{line[0, 40].inspect} has whitespace Medium's importer collapses")
       break
