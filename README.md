@@ -55,6 +55,19 @@ selection pass through it. Below 700 px viewport width (phones in portrait) ther
 no animation: the script draws nothing and runs no frame loop, and `site.css` hides
 the canvas at the same width.
 
+## Medium
+
+Articles are cross-posted to Medium as drafts whose canonical link points back here, so
+this site stays the source of truth. Medium issues no new API tokens, so this goes through
+Medium's "Import a story" tool (<https://medium.com/p/import>), which creates the draft,
+sets the canonical link and backdates it. Pasting the URL there is the one manual step.
+
+When a deploy that adds a post succeeds, `.github/workflows/medium-import.yml` opens an
+issue labelled `medium` with the article URL and the import steps, and never opens a
+second one for the same URL. Closing the issue marks the article as imported.
+`scripts/post-urls.sh` derives the URL from the filename; `verify.sh` fails if any URL
+it derives has no built page.
+
 ## Machine-readable files
 
 | Path | What it is |
