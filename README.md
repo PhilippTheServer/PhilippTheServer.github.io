@@ -68,16 +68,21 @@ second one for the same URL. Closing the issue marks the article as imported.
 `scripts/post-urls.sh` derives the URL from the filename; `verify.sh` fails if any URL
 it derives has no built page.
 
-Code blocks are served in the shape of Medium's own code blocks, because that is all the
-importer keeps: a bare `<pre class="language-x" data-lang="x">`, `<br>` for each line
-break, indentation as plain spaces, and no `<code>` inside (the importer collapses the
-whitespace of a `<code>` in a `<pre>`, newlines and indentation alike, and drops
-server-side highlighting spans). They are highlighted in the browser by highlight.js
+Code blocks are served in the shape the importer keeps, found by importing articles and
+comparing the drafts: a bare `<pre class="language-x" data-lang="x">` with no `<code>`
+inside, `<br>` for each line break, and nothing between `</pre>` and the next tag. The
+importer drops server-side highlighting spans, collapses whitespace as in any HTML text,
+splits a block at an empty line, and turns whitespace after `</pre>` into an empty block.
+So a space at the start of a line or next to other whitespace is written as `&nbsp;`, a
+tab as `&nbsp;` plus the tab, and an empty line as a single `&nbsp;`. On the site,
+`assets/js/highlight.js` restores the exact text (no code source contains a real `&nbsp;`)
+and highlights it with highlight.js
 11.12.0 (BSD-3, vendored under `assets/vendor/highlight.js/` so no reader's address goes
 to a CDN; grammars beyond its common bundle are listed in `_config.yml` as
 `highlight_extra_languages`). `check_site.rb` fails if a post's code block carries
-highlighting spans, a `<code>` element or a raw newline, has attributes other than a
-matching `class` and `data-lang`, or the page stops loading highlight.js. Medium has no
+highlighting spans, a `<code>` element, a raw newline, an empty line or whitespace the
+importer would collapse, has attributes other than a matching `class` and `data-lang`, is
+followed by whitespace, or the page stops loading highlight.js. Medium has no
 table element, so tables do not survive an import.
 
 ## Machine-readable files
