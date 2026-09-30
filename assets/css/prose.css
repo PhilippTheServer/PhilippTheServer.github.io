@@ -185,8 +185,8 @@
 
 /* ── code blocks ─────────────────────────────────────────────────────────── */
 
-/* Code ships as plain <pre><code> so Medium's importer keeps it (#56); highlight.js
-   colours it in the browser. */
+/* Code ships as a bare <pre> with <br> line breaks, the shape Medium's importer keeps
+   (#56); highlight.js colours it in the browser. */
 .prose pre {
   position: relative;
   margin: 0 0 1.5rem;
@@ -200,15 +200,6 @@
   font-size: 0.82rem;
   line-height: 1.6;
   tab-size: 2;
-}
-
-.prose pre code {
-  font-family: inherit;
-  font-size: inherit;
-  background: none;
-  border: 0;
-  padding: 0;
-  white-space: pre;
 }
 
 /* The language, copied onto <pre> by _plugins/prose_markup.rb, shown top right on a line

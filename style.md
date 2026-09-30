@@ -196,18 +196,18 @@ into the navigation, the article index or the tag pages. Colours come from the t
 `site.css`, so light and dark are one definition rather than two.
 
 Two things Markdown does not produce on its own are added by `_plugins/prose_markup.rb`
-after conversion: `data-lang` on a code block's `<pre>`, copied from the class kramdown
-already writes, so one CSS rule labels every language there will ever be; and a scroll
+after conversion: code blocks reshaped into a bare `<pre>` carrying the language as
+`data-lang`, so one CSS rule labels every language there will ever be; and a scroll
 container around every table, because otherwise the only thing that can scroll sideways is
 the page.
 
-Code is highlighted in the browser by highlight.js, vendored under
-`assets/vendor/highlight.js/`, and not at build time. The HTML stays a plain
-`<pre><code class="language-x">` with `<br>` line breaks, which is what Medium's importer
-keeps; server-side highlighting wraps every token in a `<span>`, and the importer drops the
-block, while raw newlines inside `<pre>` are collapsed into a single line. The script turns
-the `<br>`s back into newlines before highlighting. Without
-JavaScript the code is shown uncoloured but intact.
+The code block shape is Medium's own: a `<pre>` with `<br>` for line breaks, indentation
+as plain spaces, and no `<code>` inside, because that is all Medium's importer keeps.
+Server-side highlighting wraps every token in a `<span>`, which the importer drops, and it
+collapses the whitespace of a `<code>` inside a `<pre>`. So code is highlighted in the
+browser by highlight.js, vendored under `assets/vendor/highlight.js/`, which turns the
+`<br>`s back into newlines first. Without JavaScript the code is shown uncoloured but
+intact.
 
 ## Conclusion
 

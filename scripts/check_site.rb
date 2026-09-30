@@ -554,27 +554,30 @@ if site_css
   end
 end
 
-# Every code block ships as plain <pre><code> with <br> line breaks, because Medium's importer drops the
-# span-per-token markup of server-side highlighting (#56); highlight.js colours it in the
-# browser. A block with a language carries it as data-lang for the label, and a page with
-# such a block loads highlight.js. Any table must be wrapped. data-lang and the wrapper
-# are added by _plugins/prose_markup.rb after conversion.
+# Every code block ships in the shape of Medium's own code blocks, because that is all its
+# importer keeps (#56): a bare <pre>, <br> for line breaks, no highlighting <span>s, and no
+# <code> inside, whose whitespace the importer collapses. A block with a language carries
+# it as class and data-lang, and a page with such a block loads highlight.js, which colours
+# it in the browser. Any table must be wrapped. Both are done by _plugins/prose_markup.rb
+# after conversion.
 EXTRA_GRAMMARS = Array(YAML.safe_load(File.read("_config.yml"))["highlight_extra_languages"])
 ARTICLES.each do |slug|
   html = read("posts/#{slug}/index.html") or next
-  html.scan(%r{<pre\b[^>]*>(.*?)</pre>}m).flatten.each do |block|
-    if block.include?("<span") || html.include?("highlighter-rouge")
+  html.scan(%r{<pre\b([^>]*)>(.*?)</pre>}m).each do |attrs, block|
+    if block.include?("<span")
       fail!("posts/#{slug}/: a code block carries highlighting markup, which Medium's importer drops")
+    end
+    if block.include?("<code")
+      fail!("posts/#{slug}/: a code block has a <code> inside its <pre>, whose whitespace Medium's importer collapses")
     end
     if block.include?("\n")
       fail!("posts/#{slug}/: a code block has a raw newline, which Medium's importer collapses into one line; use <br>")
     end
+    unless attrs.empty? || attrs.match?(/\A class="language-([a-z0-9+#-]+)" data-lang="\1"\z/)
+      fail!("posts/#{slug}/: <pre#{attrs}> is neither a bare <pre> nor one with a matching class and data-lang")
+    end
   end
-  langs = html.scan(/<code class="language-([a-z0-9+#-]+)">/).flatten
-  if html.scan(/<pre data-lang="[^"]+"><code class="language-/).length != langs.length
-    fail!("posts/#{slug}/: a code block with a language carries no data-lang on its <pre>")
-  end
-  if langs.any? && !html.include?("/assets/vendor/highlight.js/highlight.min.js")
+  if html.include?(" data-lang=") && !html.include?("/assets/vendor/highlight.js/highlight.min.js")
     fail!("posts/#{slug}/: has code but does not load highlight.js")
   end
   (["highlight.min.js"] + EXTRA_GRAMMARS.map { |g| "languages/#{g}.min.js" }).each do |file|
@@ -591,7 +594,7 @@ style = read("style/index.html")
 if style.nil?
   fail!("style/index.html: the style reference is missing")
 else
-  %w[blockquote <table> <kbd> <dl> <hr <ol <ul footnotes <pre\ data-lang].each do |component|
+  %w[blockquote <table> <kbd> <dl> <hr <ol <ul footnotes data-lang=].each do |component|
     fail!("style/index.html: does not render #{component}") unless style.include?(component)
   end
   langs = style.scan(/data-lang="([a-z]+)"/).flatten.uniq
