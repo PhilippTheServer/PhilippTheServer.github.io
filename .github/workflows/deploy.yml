@@ -32,7 +32,7 @@ jobs:
         env:
           JEKYLL_ENV: production
 
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.2.0
 
       # After the build, so the test that models every built article has pages (#68).
       - name: Lint and test the Medium tooling
