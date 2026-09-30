@@ -9,8 +9,8 @@
   medium.py sync SLUG... | --all        import or repair drafts until they match the site
   medium.py verify SLUG... | --all      compare drafts with the site, change nothing
 
-Drafts only: an article whose story is published is skipped, so a live story is never
-edited. Which story belongs to which article is kept in ~/.local/state/medium-sync/.
+Drafts only: a published story is never edited; its canonical link is checked instead.
+Which story belongs to which article is kept in ~/.local/state/medium-sync/.
 """
 
 import argparse
@@ -244,6 +244,7 @@ GRAFS = """() => { const sq = (e, sel) => [...e.querySelectorAll(sel)].filter(x 
     return {name: e.getAttribute('name'), tag: e.tagName, title: e.classList.contains('graf--title'),
       empty: e.classList.contains('graf--empty') || !text.trim(), text,
       label: e.querySelector('.codeBlockMenu-button')?.innerText.trim() || null,
+      hrefs: [...e.querySelectorAll('a')].map(a => a.href),
       links: sq(e, 'a'), code: sq(e, 'code'), strong: sq(e, 'strong, b'), em: sq(e, 'em, i')}; }); }"""
 
 
@@ -257,6 +258,12 @@ def body_grafs(pg):
 def compare(pg, art):
     grafs, footer = body_grafs(pg)
     problems = [] if footer else ["no 'Originally published at' footer"]
+    if footer:
+        # The footer links to the URL Medium imported from, which is also what it makes the
+        # canonical link once the story is published.
+        problem = sm.canonical_problem([sm.unwrap_medium_link(h) for h in grafs[-1]["hrefs"]], art["url"])
+        if problem:
+            problems.append("footer: " + problem.replace("canonical ", "links to "))
     empties = sum(g["empty"] for g in grafs)
     if empties:
         problems.append(f"{empties} empty blocks")
@@ -580,12 +587,19 @@ def sync_meta(pg, story, art):
 
 
 def story_for(pg, art, state, drafts, published, create):
-    """The draft of an article: from the state file, else by title. Never a published story,
-    and never a second import of an article Medium already has."""
+    """The article's story and whether it is a draft or published: from the state file, else
+    by title. Never a second import of an article Medium already has."""
     title = sm.norm_text(art["title"])
     story = state.get(art["slug"], {}).get("story")
-    if title in published or (story and any(story in ids for ids in published.values())):
-        return None, "published; left alone"
+    live = published.get(title, set())
+    if story and any(story in ids for ids in published.values()):
+        return story, "published"
+    if live:
+        return (
+            (next(iter(live)), "published")
+            if len(live) == 1
+            else (None, f"{len(live)} published stories share this title")
+        )
     ids = drafts.get(title, set())
     if story and story not in ids:
         return None, f"story {story} from the state file is not among the drafts"
@@ -593,7 +607,18 @@ def story_for(pg, art, state, drafts, published, create):
         if len(ids) > 1:
             return None, f"{len(ids)} drafts share this title: {sorted(ids)}"
         story = next(iter(ids)) if ids else (import_story(pg, art["url"]) if create else None)
-    return story, None if story else "no draft"
+    return (story, "draft") if story else (None, "no draft")
+
+
+def canonical_of(pg, story):
+    """The canonical links of a published story's public page. Medium sets them when it imports
+    an article, to the URL it fetched, and offers no way to change them afterwards."""
+    wait_saved(pg)
+    pg.goto(f"https://medium.com/p/{story}", wait_until="domcontentloaded")
+    pg.wait_for_timeout(2500)
+    return pg.evaluate(
+        """() => [...document.querySelectorAll('link[rel="canonical"]')].map(l => l.getAttribute('href'))"""
+    )
 
 
 def run(slugs, create):
@@ -603,16 +628,20 @@ def run(slugs, create):
         drafts, live = list_titles(pg, "Drafts"), list_titles(pg, "Published")
         for slug in slugs:
             t0 = time.time()
+            story = None
             try:
                 art = sm.fetch(slug)
-                story, skip = story_for(pg, art, state, drafts, live, create)
-                if skip:
-                    log(f"{slug}: {skip}")
-                    (published if skip.startswith("published") else failed).append(slug)
-                    continue
-                state.setdefault(slug, {})["story"] = story
-                save_state(state)
-                if create:
+                story, kind = story_for(pg, art, state, drafts, live, create)
+                if story:
+                    state.setdefault(slug, {})["story"] = story
+                    save_state(state)
+                if kind == "published":
+                    published.append(slug)
+                    problem = sm.canonical_problem(canonical_of(pg, story), art["url"])
+                    problems = [problem] if problem else []
+                elif kind != "draft":
+                    problems = [kind]
+                elif create:
                     problems = sync_body(pg, story, art) + sync_meta(pg, story, art)
                 else:
                     open_editor(pg, story)
@@ -623,15 +652,18 @@ def run(slugs, create):
                 if "has been closed" in str(e):
                     sys.exit(f"{slug}: the browser was closed; rerun to continue")
                 problems = [f"{type(e).__name__}: {str(e)[:300]}"]
+            label = "published, left alone; canonical" if slug in published else "draft"
             status = "OK" if not problems else f"PROBLEMS {problems[:5]}"
-            log(f"{slug} [{state.get(slug, {}).get('story')}] {status} in {time.time() - t0:.0f}s")
+            log(f"{slug} [{story}] {label} {status} in {time.time() - t0:.0f}s")
             if problems:
                 failed.append(slug)
-    checked = len(slugs) - len(published)
+    bad_live = [s for s in failed if s in published]
+    bad_drafts = [s for s in failed if s not in published]
+    drafts_checked = len(slugs) - len(published)
     log(
-        f"{checked - len(failed)} of {checked} drafts match the site"
-        + (f"; {len(published)} published, left alone" if published else "")
-        + (f"; not matching: {failed}" if failed else "")
+        f"{drafts_checked - len(bad_drafts)} of {drafts_checked} drafts match the site; "
+        f"{len(published) - len(bad_live)} of {len(published)} published stories have the article as canonical"
+        + (f"; not OK: {failed}" if failed else "")
     )
     return 1 if failed else 0
 

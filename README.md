@@ -78,9 +78,12 @@ the import adds, makes sub-headings Medium's small heading, sets every code lang
 sets the preview subtitle, SEO title, SEO description and five topics (the tag-to-topic
 map is in `site_model.py`). It then reloads and compares every block with the site: type,
 text, code byte for byte, language, and the text of links, inline code, bold and italic.
-It works on drafts only: an article whose story is published is left alone. Which story
-belongs to which article is kept in `~/.local/state/medium-sync/state.json`. Publishing
-stays a click on Medium.
+It works on drafts only: a published story is never edited. For those, `sync` and `verify`
+check instead that the story's canonical link is exactly the article's URL, and for drafts
+that the "Originally published at" footer links to it (#70). Medium sets both from the URL
+it imported and offers no way to change them, so a wrong one means deleting the story and
+running `sync` again. Which story belongs to which article is kept in
+`~/.local/state/medium-sync/state.json`. Publishing stays a click on Medium.
 
 The browser is Google Chrome from Google's apt repository, with its own profile in
 `~/.local/share/medium-import-browser`: Ubuntu's AppArmor only lets the packaged Chrome

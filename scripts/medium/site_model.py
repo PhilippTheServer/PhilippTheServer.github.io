@@ -8,6 +8,7 @@ the browser side lives in medium.py.
 import copy
 import html
 import re
+import urllib.parse
 import urllib.request
 
 from bs4 import BeautifulSoup
@@ -211,3 +212,20 @@ def article(page_html, slug):
 def fetch(slug):
     with urllib.request.urlopen(f"{SITE}/posts/{slug}/") as r:
         return article(r.read().decode(), slug)
+
+
+def canonical_problem(links, url):
+    """None if a published story's canonical links are exactly the article's URL."""
+    if links == [url]:
+        return None
+    if not links:
+        return "no canonical link"
+    return f"canonical {links} should be {url}"
+
+
+def unwrap_medium_link(href):
+    """Medium routes outbound links through medium.com/r/?url=…; the target is the parameter."""
+    parsed = urllib.parse.urlparse(href)
+    if parsed.netloc == "medium.com" and parsed.path == "/r/":
+        return urllib.parse.parse_qs(parsed.query).get("url", [href])[0]
+    return href

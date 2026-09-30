@@ -118,3 +118,18 @@ def test_every_built_article_can_be_modelled():
         assert len(art["fills"]) == body.count("<pre") + body.count("<table"), page.parent.name
         for fill in art["fills"]:
             assert not re.search(f"[{FS}{WJ}\u00a0\t]", fill["text"]), page.parent.name
+
+
+def test_canonical_must_be_exactly_the_article_url():
+    url = "https://philipptheserver.com/posts/a-slug/"
+    assert sm.canonical_problem([url], url) is None
+    assert sm.canonical_problem([url + "?v=2"], url) == f"canonical ['{url}?v=2'] should be {url}"
+    assert sm.canonical_problem([], url) == "no canonical link"
+    assert sm.canonical_problem([url, url], url) is not None
+
+
+def test_medium_redirect_links_unwrap_to_their_target():
+    url = "https://philipptheserver.com/posts/a-slug/"
+    wrapped = "https://medium.com/r/?url=https%3A%2F%2Fphilipptheserver.com%2Fposts%2Fa-slug%2F%3Fv%3D2"
+    assert sm.unwrap_medium_link(wrapped) == url + "?v=2"
+    assert sm.unwrap_medium_link(url) == url
