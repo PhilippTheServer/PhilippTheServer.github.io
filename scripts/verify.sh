@@ -19,6 +19,14 @@ bundle exec htmlproofer _site \
 echo "==> structural checks"
 ruby scripts/check_site.rb _site
 
+# The Medium import reminder links each new article by the URL post-urls.sh derives
+# (issue #53). Every URL it produces must be a page this build actually has.
+echo "==> post URLs resolve to built pages"
+scripts/post-urls.sh _posts/*.md | while read -r url; do
+  page="_site${url#https://philipptheserver.com}index.html"
+  [ -f "$page" ] || { echo "post-urls.sh: $url has no page at $page" >&2; exit 1; }
+done
+
 # The pixel crew script's behaviour (issue #43). The ruby:3.3 image build-local.sh
 # uses has no Node, so build-local.sh runs this on the host and sets SKIP_NODE_TESTS=1.
 if [ "${SKIP_NODE_TESTS:-0}" = "1" ]; then
