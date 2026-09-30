@@ -1566,6 +1566,21 @@
    ],
    "source": "taberna",
    "problem": "Redesigning a coupled shop means a theme engine, plugins and hooks; against a finished OpenAPI-described API a storefront is a 37-line client, and generated types make the compiler catch a field typo before it ships."
+  },
+  {
+   "n": 120,
+   "date": "2026-09-30",
+   "slug": "daily-meal-tracking-shopping-automation-mcp",
+   "title": "Tracking Meals and Automating Shopping With an MCP Server",
+   "labels": [
+    "agents",
+    "automation",
+    "api-design",
+    "architecture",
+    "python"
+   ],
+   "source": "daily",
+   "problem": "A food tracker dies when logging means typing; with Claude as the input device over MCP it survives, and a shopping list becomes plans minus stock, provided stock is derived from an append-only journal instead of patched in place."
   }
  ],
  "backlog": [
