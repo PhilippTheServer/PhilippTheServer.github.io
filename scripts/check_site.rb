@@ -554,12 +554,13 @@ if site_css
   end
 end
 
-# Every code block ships in the shape of Medium's own code blocks, because that is all its
-# importer keeps (#56): a bare <pre>, <br> for line breaks, no highlighting <span>s, and no
-# <code> inside, whose whitespace the importer collapses. A block with a language carries
-# it as class and data-lang, and a page with such a block loads highlight.js, which colours
-# it in the browser. Any table must be wrapped. Both are done by _plugins/prose_markup.rb
-# after conversion.
+# Every code block ships in the shape Medium's importer keeps (#56): a bare <pre>, <br> for
+# line breaks, no highlighting <span>s, no <code> inside, no whitespace the importer would
+# collapse (a line starting with a space or tab, two in a row, an empty line), and nothing
+# between </pre> and the next tag, which the importer turns into an empty block. A block
+# with a language carries it as class and data-lang, and a page with code loads
+# highlight.js, which restores the text and colours it. Any table must be wrapped. Both are
+# done by _plugins/prose_markup.rb after conversion.
 EXTRA_GRAMMARS = Array(YAML.safe_load(File.read("_config.yml"))["highlight_extra_languages"])
 ARTICLES.each do |slug|
   html = read("posts/#{slug}/index.html") or next
@@ -573,11 +574,20 @@ ARTICLES.each do |slug|
     if block.include?("\n")
       fail!("posts/#{slug}/: a code block has a raw newline, which Medium's importer collapses into one line; use <br>")
     end
+    block.split("<br>", -1).each do |line|
+      next unless line.empty? || line.match?(/\A[ \t]|[ \t][ \t]/)
+
+      fail!("posts/#{slug}/: a code line #{line[0, 40].inspect} has whitespace Medium's importer collapses")
+      break
+    end
     unless attrs.empty? || attrs.match?(/\A class="language-([a-z0-9+#-]+)" data-lang="\1"\z/)
       fail!("posts/#{slug}/: <pre#{attrs}> is neither a bare <pre> nor one with a matching class and data-lang")
     end
   end
-  if html.include?(" data-lang=") && !html.include?("/assets/vendor/highlight.js/highlight.min.js")
+  if html.match?(%r{</pre>\s})
+    fail!("posts/#{slug}/: whitespace after </pre>, which Medium's importer turns into an empty code block")
+  end
+  if html.include?("<pre") && !html.include?("/assets/vendor/highlight.js/highlight.min.js")
     fail!("posts/#{slug}/: has code but does not load highlight.js")
   end
   (["highlight.min.js"] + EXTRA_GRAMMARS.map { |g| "languages/#{g}.min.js" }).each do |file|
