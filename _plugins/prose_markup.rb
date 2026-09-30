@@ -4,10 +4,11 @@
 #
 # 1. Code blocks in a shape Medium's importer keeps (#56): a bare <pre> with no <code>
 #    inside, <br> for each line break, and nothing after it but the next tag. The importer
-#    drops Rouge's span-per-token markup, collapses whitespace like in any HTML text,
-#    splits a block at an empty line, and turns whitespace after </pre> into an empty
-#    block. So a space at the start of a line or next to other whitespace becomes &nbsp;,
-#    a tab gets an &nbsp; in front, and an empty line holds a single &nbsp;. kramdown
+#    drops Rouge's span-per-token markup, collapses runs of spaces and &nbsp; alike, drops
+#    tabs, splits a block at an empty line, and drops a block that ends in <br>. Figure
+#    spaces (U+2007) survive, so a space at the start of a line or next to other
+#    whitespace becomes a figure space, a tab becomes a word joiner (U+2060) plus four
+#    figure spaces, and an empty line holds a single &nbsp;. kramdown
 #    writes `<pre><code class="language-yaml">`; the language moves onto the <pre>, as the
 #    class highlight.js reads and as `data-lang`, which one CSS rule turns into the label
 #    for every language there will ever be. assets/js/highlight.js restores the exact
@@ -24,6 +25,8 @@ module Jekyll
     CODE = %r{<pre><code(?: class="language-([a-z0-9+#-]+)")?>(.*?)</code></pre>\s*}m.freeze
     TABLE = %r{<table>(.*?)</table>}m.freeze
     NBSP = "&nbsp;"
+    FIGURE = "&#8199;"
+    TAB = "&#8288;#{FIGURE * 4}".freeze
 
     def self.apply(html)
       html = html.gsub(CODE) do
@@ -42,10 +45,10 @@ module Jekyll
 
       line.each_char.with_index.map do |char, i|
         case char
-        when "\t" then "#{NBSP}\t"
+        when "\t" then TAB
         when " "
           lone = i.positive? && !" \t".include?(line[i - 1]) && line[i + 1] != " "
-          lone ? " " : NBSP
+          lone ? " " : FIGURE
         else char
         end
       end.join

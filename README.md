@@ -71,19 +71,25 @@ it derives has no built page.
 Code blocks are served in the shape the importer keeps, found by importing articles and
 comparing the drafts: a bare `<pre class="language-x" data-lang="x">` with no `<code>`
 inside, `<br>` for each line break, and nothing between `</pre>` and the next tag. The
-importer drops server-side highlighting spans, collapses whitespace as in any HTML text,
-splits a block at an empty line, and turns whitespace after `</pre>` into an empty block.
-So a space at the start of a line or next to other whitespace is written as `&nbsp;`, a
-tab as `&nbsp;` plus the tab, and an empty line as a single `&nbsp;`. On the site,
-`assets/js/highlight.js` restores the exact text (no code source contains a real `&nbsp;`)
-and highlights it with highlight.js
+importer drops server-side highlighting spans, collapses runs of spaces and `&nbsp;` alike,
+drops tabs, splits a block at an empty line, and drops a block that ends in `<br>`. Figure
+spaces (U+2007) survive, so a space at the start of a line or next to other whitespace is
+written as a figure space, a tab as a word joiner (U+2060) plus four figure spaces, and an
+empty line as a single `&nbsp;`. On the site, `assets/js/highlight.js` restores the exact
+text (no code source contains those characters) and highlights it with highlight.js
 11.12.0 (BSD-3, vendored under `assets/vendor/highlight.js/` so no reader's address goes
 to a CDN; grammars beyond its common bundle are listed in `_config.yml` as
 `highlight_extra_languages`). `check_site.rb` fails if a post's code block carries
-highlighting spans, a `<code>` element, a raw newline, an empty line or whitespace the
-importer would collapse, has attributes other than a matching `class` and `data-lang`, is
-followed by whitespace, or the page stops loading highlight.js. Medium has no
-table element, so tables do not survive an import.
+highlighting spans, a `<code>` element, a raw newline, an empty line, whitespace the
+importer would collapse, a trailing `<br>` or a literal U+2007, U+2060 or U+00A0, has
+attributes other than a matching `class` and `data-lang`, is followed by whitespace, or the
+page stops loading highlight.js.
+
+What the import still does wrong: it adds an empty code block after every code block,
+whatever the markup (tested with and without attributes, with the text in a span, and
+with a trailing `<br>`); delete those in the Medium draft. Medium has no table element, so
+tables do not survive either. Re-importing a URL returns Medium's cached copy of it, so
+changes to an article already imported do not show up in a new import.
 
 ## Machine-readable files
 
