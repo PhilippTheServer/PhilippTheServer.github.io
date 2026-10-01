@@ -1,0 +1,83 @@
+# The career as a git log, newest first, for /about/ (#74). The three Nerd Force1 roles
+# carry `role` and `start`; check_site.rb fails if they disagree with resume.yml.
+# lane 0 is main, lane 1 the study branch; `fork` marks where that branch leaves main.
+- hash: a3f9c1e
+  date: Sep 2026
+  lane: 0
+  type: feat(role)
+  msg: CTO at Nerd Force1 UG (AI-Gruppe)
+  head: true
+  role: CTO
+  start: "2026-09-06"
+  story: >-
+    Responsible for the company’s technology: the servers, the network, the platforms
+    and the internal tooling. Nerd Force1 is part of the AI-Gruppe umbrella brand.
+- hash: 0be5a11
+  date: Nov 2025
+  lane: 0
+  type: feat
+  msg: found OpenTaberna with Malte Kottmann
+  url: https://opentaberna.de
+  url_label: opentaberna.de
+  story: >-
+    A headless, open-source web shop you run on your own server. We earn money by
+    installing and hosting it, not by licensing it.
+- hash: 7a1c2e5
+  date: Jul 2025
+  lane: 0
+  type: feat(talk)
+  msg: first talk at the pkcds4k data science conference
+  url: https://github.com/PhilippTheServer/ceph-cluster-on-a-budget
+  url_label: Ceph Cluster on a Budget
+  story: >-
+    My first conference talk: twelve minutes, in German, on building a distributed Ceph
+    storage cluster from used hardware, with cheap cloud nodes for management and
+    external reachability.
+- hash: 9b2e4d0
+  date: Jan 2025
+  lane: 0
+  type: feat
+  msg: Executive Office at open Skunkforce e.V.
+  url: https://skunkforce.org/
+  url_label: skunkforce.org
+  story: >-
+    Leading a small developer team and coordinating the association’s open-source work.
+    Once a year we host emBO++ and KiCon in Bochum.
+- hash: 4c81f77
+  date: "2023"
+  lane: 0
+  type: feat
+  msg: Head of Administration and IT at Nerd Force1
+  role: Head of Administration and IT
+  start: "2023"
+  story: >-
+    Owned production infrastructure end to end: a Docker cluster, a Kubernetes cluster,
+    Ceph, NetBird and Bind9, and the whole estate as Ansible.
+- hash: 2b0c0de
+  date: Mar 2022
+  lane: 0
+  type: feat(role)
+  msg: sysadmin at Nerd Force1 (AI-Gruppe)
+  role: System Administrator
+  start: "2022-03-01"
+  story: >-
+    Where it started: servers, network, and whatever broke that day.
+- hash: e17a2b3
+  date: Oct 2021
+  lane: 1
+  fork: true
+  type: study
+  msg: "branch study/it-security: B.Sc. at Ruhr University Bochum"
+  url: https://informatik.rub.de/en/studies/its/
+  url_label: IT Security at RUB
+  story: >-
+    Cryptographic schemes, software security, operating systems, system theory. Some of
+    the LaTeX lecture scripts are mine, because the alternative was reading a scan of a
+    scan.
+- hash: 1f00ba5
+  date: "—"
+  lane: 0
+  type: init
+  msg: git init ~/philipp
+  story: >-
+    Everything before this commit lives in a different repository.

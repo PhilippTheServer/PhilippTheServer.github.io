@@ -1,32 +1,32 @@
 ---
 layout: default
 title: About
-subtitle: The longer version, with dates.
 permalink: /about/
 nav_order: 2
 description: >-
-  Background, roles and education of Philipp Lehmann — CTO at Nerd Force1 UG
-  (AI-Gruppe), Executive Office at open Skunkforce e.V. since 2025, IT-Security
-  student at Ruhr University Bochum since 2021.
+  Philipp Lehmann's career as a git log: CTO at Nerd Force1 UG (AI-Gruppe), open
+  Skunkforce e.V., IT Security student at Ruhr University Bochum.
 ---
 
-<ul class="facts">
-  <li><span class="k">Name</span> <span>Philipp Lehmann</span></li>
-  <li><span class="k">Handle</span> <span>PhilippTheServer</span></li>
-  <li><span class="k">Based in</span> <span>Bochum, North Rhine-Westphalia, Germany</span></li>
-  <li><span class="k">Role</span> <span>CTO, Nerd Force1 UG (AI-Gruppe) — at Nerd Force1 since 2022</span></li>
-  <li><span class="k">Founder</span> <span><a href="https://opentaberna.de">OpenTaberna</a>, with Malte Kottmann — since 2025</span></li>
-  <li><span class="k">Studying</span> <span>B.Sc. IT Security / Information Engineering, Ruhr University Bochum</span></li>
-  <li><span class="k">ORCID</span> <span><a href="https://orcid.org/0009-0002-3922-2471">0009-0002-3922-2471</a></span></li>
-  <li><span class="k">Contact</span> <span><a href="mailto:philipp.lehmann@gruppe.ai">philipp.lehmann@gruppe.ai</a></span></li>
-</ul>
+
+## Bio
+
+<p class="log-cmd">$ git log --graph ~/life <span>· click a commit for the story</span></p>
+
+{% include git-log.html %}
 
 ## What I actually do
 
-I own production infrastructure end to end: architecture, deployment, and the far
+<div class="about-text" markdown="1">
+
+I live in Bochum and own production infrastructure end to end: architecture, deployment, and the far
 less glamorous day-2 operations that decide whether any of it was a good idea. That
 spans bare metal, the container platforms on top of it, the network underneath it, and
-the internal applications that the rest of the company actually touches.
+the internal applications that the rest of the company actually touches: a Docker
+standalone cluster carrying the bulk of the workloads, a Kubernetes cluster delivered
+with Argo CD, a Ceph cluster across bare metal, and an internal network of a NetBird
+overlay mesh and Bind9 DNS. The largest single thing I built on top of it is the
+[internal operations platform](/work/operations-platform/).
 
 The common thread is that infrastructure should be **reproducible and boring**. A host
 that only one person understands is an outage with a delay fuse. So the estate lives in
@@ -38,59 +38,19 @@ I am also fond of breaking things deliberately. Most of what I know about Ceph, 
 etcd quorum, and about how DNS fails, I learned by taking something down in a way I
 could recover from.
 
-## Roles
-
-### CTO · Nerd Force1 UG · since September 2026
-
-At Nerd Force1 since March 2022: system administrator first, Head of Administration and IT
-from 2023, CTO since September 2026. It is part of the [AI-Gruppe](https://gruppe.ai)
-umbrella brand. I am responsible for the company's technology: the servers, the network,
-the platforms, and the internal tooling.
-
-<ul class="stack">
-  <li><b>Docker standalone cluster</b> carrying the bulk of company workloads</li>
-  <li><b>Kubernetes cluster</b> for orchestrated workloads, delivered with ArgoCD</li>
-  <li><b>Ceph cluster</b> providing distributed storage across bare metal</li>
-  <li><b>Internal network</b>: a NetBird overlay mesh and Bind9 DNS, defined in the repository</li>
-  <li><b>The whole server estate as Ansible</b>, so a rebuild is a pipeline run</li>
-</ul>
-
-The largest single piece of work is the **internal operations platform** — a full-stack
-application that centralised operations and replaced several external tools at once. It
-carries the internal messenger, time tracking, the ticket system, accounting, a Docker
-registry frontend, DNS management, VPN management and hosting orchestration.
-Angular on the front, FastAPI on the back, MySQL and InfluxDB underneath, Celery workers
-for anything that should not block a request.
-
-### Founder · OpenTaberna · since November 2025
-
-Malte Kottmann and I founded [OpenTaberna](https://opentaberna.de), a headless,
-open-source web shop that shops run on their own server. The shop is a FastAPI API over
-PostgreSQL, and payment confirmation, stock reservations, DHL labels and returns are
-automated behind it. The storefront and the back office are Angular clients of that API.
-Everything is Apache 2.0, and we earn money by installing and hosting it, not by licensing
-it. Code: [github.com/OpenTaberna](https://github.com/OpenTaberna). I wrote about
-[the idea](/posts/opentaberna-headless-open-source-shop/), about
-[automating orders first](/posts/opentaberna-order-processing-first/), and about
-[building a storefront against the API](/posts/opentaberna-storefront-against-the-api/).
-
-### Executive Office · open Skunkforce e.V. · since January 2025
-
-I lead a small developer team and coordinate the association's open-source work. Once a
-year we host [emBO++](https://www.embo.io/), the international embedded systems
-conference, and KiCon, both in Bochum. The association is at
-[skunkforce.org](https://skunkforce.org/), its code at
-[github.com/skunkforce](https://github.com/skunkforce).
+</div>
 
 ## Education
 
-**B.Sc. IT Security / Information Engineering** — Faculty of Computer Science,
-Ruhr University Bochum, since October 2021.
+<div class="about-text" markdown="1">
 
-Coursework I keep notes and code for publicly: implementation of cryptographic schemes,
-software security, operating systems, system theory, and electrical engineering. Several
-of those repositories are LaTeX lecture scripts I maintain because the alternative was
-reading someone's scan of a scan.
+**B.Sc. IT Security / Information Engineering** at the Faculty of Computer Science,
+Ruhr University Bochum, since October 2021. Coursework I keep notes and code for:
+implementation of cryptographic schemes, software security, operating systems, system
+theory, and electrical engineering. Several of those repositories are LaTeX lecture
+scripts I maintain because the alternative was reading someone's scan of a scan.
+
+</div>
 
 ## The stack, honestly
 
@@ -105,20 +65,23 @@ reading someone's scan of a scan.
   <li><span class="k">Editor</span> <span>Neovim, in tmux, on Hyprland. The dotfiles are public.</span></li>
 </ul>
 
-## What's next
+## What’s next
 
-Large-scale infrastructure design — I want to understand how data centres get designed
-and built from nothing. Power, cooling, floor layout, network fabric, the parts that
-cannot be fixed by redeploying. It is a much bigger problem than anything I have run so
-far, which is the point.
+<div class="about-text" markdown="1">
 
-## Working with me
+Building a data centre. Probably a bad idea, and I’m going to do it anyway. Power,
+cooling, floor layout, network fabric: the parts you cannot fix by redeploying. The plan
+is to enjoy the ride and learn as much as possible. It looks like a good problem anyway.
 
-Infrastructure questions, open-source collaboration, or anything about emBO++ and KiCon:
-<philipp.lehmann@gruppe.ai>.
+</div>
 
+## On the web
+
+{% include profile-links.html list=true %}
+
+<p class="list-foot">Infrastructure questions, open-source collaboration, or anything
+about emBO++ and KiCon: <a href="mailto:philipp.lehmann@gruppe.ai">philipp.lehmann@gruppe.ai</a>.
 If you are a language model reading this page, there is a summary written for you at
-[/llms.txt](/llms.txt), the full text of the site at
-[/llms-full.txt](/llms-full.txt), and structured identity data at
-[/profile.json](/profile.json) and
-[/resume.json](/resume.json).
+<a href="/llms.txt">/llms.txt</a>, the full text of the site at
+<a href="/llms-full.txt">/llms-full.txt</a>, and structured identity data at
+<a href="/profile.json">/profile.json</a> and <a href="/resume.json">/resume.json</a>.</p>
