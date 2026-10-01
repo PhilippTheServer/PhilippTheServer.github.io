@@ -859,6 +859,8 @@ CAREER.each do |role|
   end
 end
 if (about = read("about/index.html"))
+  # The stack list was cut from the page on purpose (#78); resume.json and llms.txt keep it.
+  fail!("about/index.html: the stack section is back") if about.match?(%r{<h2[^>]*>\s*The stack}i)
   commits = about.scan(/<details class="commit[ "]/).length
   fail!("about/index.html: #{commits} commits rendered, _data/career.yml has #{career_log.length}") if commits != career_log.length
   career_log.each do |c|

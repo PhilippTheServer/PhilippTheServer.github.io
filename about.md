@@ -52,19 +52,6 @@ scripts I maintain because the alternative was reading someone's scan of a scan.
 
 </div>
 
-## The stack, honestly
-
-<ul class="facts">
-  <li><span class="k">Containers</span> <span>Docker (daily), Kubernetes, Portainer, Harbor</span></li>
-  <li><span class="k">IaC</span> <span>Ansible, Terraform, Kubernetes manifests, Kustomize</span></li>
-  <li><span class="k">CI/CD</span> <span>GitHub Actions, ArgoCD, Jenkins</span></li>
-  <li><span class="k">Storage &amp; net</span> <span>Ceph, NetBird, Bind9, HashiCorp Vault</span></li>
-  <li><span class="k">Languages</span> <span>Python, Go, C, C++, TypeScript, Bash</span></li>
-  <li><span class="k">Apps</span> <span>FastAPI, Celery, Angular, MySQL, InfluxDB</span></li>
-  <li><span class="k">Systems</span> <span>Linux — Debian in production, Arch on my own machines</span></li>
-  <li><span class="k">Editor</span> <span>Neovim, in tmux, on Hyprland. The dotfiles are public.</span></li>
-</ul>
-
 ## What’s next
 
 <div class="about-text" markdown="1">

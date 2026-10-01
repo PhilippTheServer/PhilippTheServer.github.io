@@ -45,7 +45,7 @@ Container orchestration: Docker (daily driver), Kubernetes, Portainer, Harbor. I
 ## Key pages
 
 - [Home]({{ '/' | absolute_url }}): short introduction: who he is, what he runs, where to find him
-- [About]({{ '/about/' | absolute_url }}): career as a git log with dates, what he does, education, complete stack
+- [About]({{ '/about/' | absolute_url }}): career as a git log with dates, what he does, education
 - [Works]({{ '/work/' | absolute_url }}): every project, one page each, with role, stack and status
 - [Writing]({{ '/posts/' | absolute_url }}): every article, newest first
 - [Impressum]({{ '/impressum/' | absolute_url }}): legal notice (Angaben gemäß § 5 DDG), in German
