@@ -19,6 +19,15 @@ sitemap: false
 # {{ p.title }}
 {{ p.url | absolute_url }}
 ================================================================================
-{{ p.content | markdownify | html_to_text }}
+{% if p.collection == "work" -%}
+{{ p.description | strip_newlines | strip }}
+{% if p.role %}Role: {{ p.role }}
+{% endif %}{% if p.stack %}Stack: {{ p.stack }}
+{% endif %}{% if p.status %}Status: {{ p.status }}
+{% endif %}{% if p.website %}Website: {{ p.website }}
+{% endif %}{% if p.repo %}Code: {{ p.repo }}
+{% endif %}{% for hl in p.highlights %}- {{ hl | markdownify | html_to_text | strip }}
+{% endfor %}{% endif -%}
+{% if p.collection == nil %}{{ p.content | render_liquid | markdownify | html_to_text }}{% else %}{{ p.content | markdownify | html_to_text }}{% endif %}
 
 {% endfor -%}

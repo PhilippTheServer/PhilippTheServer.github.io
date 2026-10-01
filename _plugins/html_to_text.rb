@@ -22,6 +22,15 @@ module Jekyll
       tidy(out)
     end
 
+    # A page's Liquid, rendered. /llms-full.txt is built from each page's content, and a
+    # page that has not been rendered yet still holds its {% include %} tags: the git log
+    # on /about/ and the project cards on /work/ reached the file as template source (#74).
+    # Rendering an already rendered page again is a no-op, so the build order stops
+    # mattering.
+    def render_liquid(input)
+      Liquid::Template.parse(input.to_s).render!(@context)
+    end
+
     private
 
     def walk(node, out)

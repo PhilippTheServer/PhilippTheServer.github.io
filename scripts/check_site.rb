@@ -728,6 +728,12 @@ if full
     fail!("llms-full.txt: page #{title.inspect} is missing") unless full.include?("# #{title}\n")
   end
   fail!("llms-full.txt: suspiciously short (#{full.length} bytes) — bodies did not render") if full.length < 40_000
+  # A page copied in before it was rendered carries its template source instead of its
+  # text (#74). No article uses Jekyll's include or assign, so either one here is a leak.
+  full.scan(/\{%-?\s*(?:include|assign)\b[^%]*%\}/).uniq.first(3).each do |tag|
+    fail!("llms-full.txt: carries unrendered Liquid #{tag.inspect}")
+  end
+  fail!("llms-full.txt: the About git log is missing") unless full.include?("git init ~/philipp")
 end
 
 # 15. No file that gets served should leak an unrendered Liquid tag.
@@ -828,6 +834,12 @@ WORK.each do |p|
 end
 Array(resume&.dig("projects")).each do |r|
   fail!("resume.json: project #{r['name']} has no Work page") unless WORK.any? { |p| p["title"] == r["name"] }
+end
+if (full_text = read("llms-full.txt"))
+  WORK.each do |p|
+    first_words = p["description"].to_s.split.first(8).join(" ")
+    fail!("llms-full.txt: does not carry the description of #{p['title']}") unless full_text.include?(first_words)
+  end
 end
 
 # 19. The git log on /about/ tells the same career as resume.json (#74). Each Nerd
