@@ -1,0 +1,65 @@
+{%- comment -%}
+  Projects as structured data (#74): an ItemList on /work/, one node per project page.
+  A project with a public repository is SoftwareSourceCode, anything else CreativeWork.
+  The creator is a reference to the Person node, never a copy of it.
+{%- endcomment -%}
+{%- assign person_id = site.url | append: "/#person" -%}
+{%- if page.url == '/work/' -%}
+{%- assign projects = site.work | sort: "order" %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": {{ page.url | absolute_url | append: "#projects" | jsonify }},
+  "name": "Works by Philipp Lehmann",
+  "itemListOrder": "https://schema.org/ItemListUnordered",
+  "numberOfItems": {{ projects.size }},
+  "itemListElement": [
+    {%- for p in projects %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "url": {{ p.url | absolute_url | jsonify }},
+      "item": {
+        "@type": {% if p.repo %}"SoftwareSourceCode"{% else %}"CreativeWork"{% endif %},
+        "@id": {{ p.url | absolute_url | append: "#project" | jsonify }},
+        "name": {{ p.title | jsonify }},
+        "url": {{ p.url | absolute_url | jsonify }}
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}
+</script>
+{%- else -%}
+{%- assign page_url = page.url | absolute_url %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": {% if page.repo %}"SoftwareSourceCode"{% else %}"CreativeWork"{% endif %},
+  "@id": {{ page_url | append: "#project" | jsonify }},
+  "name": {{ page.title | jsonify }},
+  "description": {{ page.description | strip_newlines | strip | jsonify }},
+  "url": {{ page_url | jsonify }},
+  "mainEntityOfPage": {{ page_url | jsonify }},
+  {%- if page.website %}
+  "sameAs": [{{ page.website | jsonify }}],
+  {%- endif %}
+  {%- if page.repo %}
+  "codeRepository": {{ page.repo | jsonify }},
+  {%- endif %}
+  {%- if page.stack %}
+  "keywords": {{ page.stack | split: " · " | join: ", " | jsonify }},
+  {%- endif %}
+  {%- if page.contributors %}
+  "contributor": [
+    {%- for c in page.contributors %}
+    { "@type": "Person", "name": {{ c.name | jsonify }}, "url": {{ c.url | jsonify }} }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ],
+  {%- endif %}
+  "creator": { "@id": {{ person_id | jsonify }} },
+  "inLanguage": {{ site.lang | jsonify }}
+}
+</script>
+{%- endif -%}

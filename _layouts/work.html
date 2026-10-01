@@ -1,0 +1,55 @@
+---
+layout: default
+---
+<article class="work">
+  <nav class="work-crumbs" aria-label="Breadcrumb">
+    <a href="{{ '/work/' | relative_url }}">Works</a>
+    <span class="crumb-sep" aria-hidden="true">›</span>
+    <h1>{{ page.title }}</h1>
+    {%- if page.year %}<span class="pill">{{ page.year }}</span>{% endif %}
+  </nav>
+
+  <p class="work-lead">{{ page.description | strip_newlines | strip }}</p>
+
+  <ul class="work-facts">
+    {%- if page.role and page.role != "" %}<li><span class="fact-key">ROLE</span><span>{{ page.role }}</span></li>{% endif %}
+    {%- if page.stack and page.stack != "" %}<li><span class="fact-key">STACK</span><span>{{ page.stack }}</span></li>{% endif %}
+    {%- if page.status and page.status != "" %}<li><span class="fact-key">STATUS</span><span>{{ page.status }}</span></li>{% endif %}
+  </ul>
+
+  {%- if page.highlights %}
+  <ul class="work-highlights">
+    {%- for hl in page.highlights %}
+    <li>{{ hl | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+
+  {{ content }}
+
+  {%- if page.website or page.repo %}
+  <ul class="work-links">
+    {%- if page.website %}<li><a href="{{ page.website }}">{{ page.website | remove: 'https://' | remove: 'http://' | remove_last: '/' }} ↗</a></li>{% endif %}
+    {%- if page.repo %}<li><a href="{{ page.repo }}">{{ page.repo | remove: 'https://' }} ↗</a></li>{% endif %}
+  </ul>
+  {%- endif %}
+
+  {%- if page.posts %}
+  <h2 class="section-title work-posts-title">Written about it</h2>
+  <ul class="work-posts">
+    {%- for slug in page.posts %}
+    {%- assign post = site.posts | where_exp: "p", "p.slug == slug" | first %}
+    {%- if post %}
+    <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a> <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time></li>
+    {%- endif %}
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+
+  {%- if page.image %}
+  <div class="work-shots">
+    <img src="{{ page.image | relative_url }}" alt="{{ page.photo }}">
+    {%- for shot in page.screenshots %}<img src="{{ shot | relative_url }}" alt="{{ page.title }} screenshot">{% endfor %}
+  </div>
+  {%- endif %}
+</article>

@@ -26,6 +26,16 @@ feed:
 # Articles are posts; the date lives in the front matter, not in the URL.
 permalink: /posts/:title/
 
+# Projects, one file each in _work/, rendered at /work/<file name>/ (#74).
+collections:
+  work:
+    output: true
+    permalink: /work/:name/
+
+defaults:
+  - scope: { type: work }
+    values: { layout: work }
+
 markdown: kramdown
 
 # Code is shipped as plain <pre><code> and highlighted in the browser by highlight.js,
