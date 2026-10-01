@@ -47,7 +47,9 @@ affiliation:
 memberOf:
   - "@type": "Organization"
     name: "open Skunkforce e.V."
-    url: "https://github.com/skunkforce"
+    url: "https://skunkforce.org/"
+    sameAs:
+      - "https://github.com/skunkforce"
   - "@type": "Organization"
     name: "OpenTaberna"
     url: "https://opentaberna.de"
@@ -60,6 +62,15 @@ memberOf:
       - "@type": "Person"
         name: "Malte Kottmann"
         url: "https://github.com/maltonoloco"
+performerIn:
+  "@type": "Event"
+  name: "pkcds4k data science conference"
+  startDate: "2025-07"
+  workPerformed:
+    "@type": "CreativeWork"
+    name: "Ceph Cluster on a Budget"
+    inLanguage: "de"
+    url: "https://github.com/PhilippTheServer/ceph-cluster-on-a-budget"
 knowsAbout:
   - "Infrastructure engineering"
   - "Docker"

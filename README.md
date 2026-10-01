@@ -21,8 +21,15 @@ The script runs Jekyll in Docker, so no local Ruby install is needed.
 
 `verify.sh` is what CI runs on every push and pull request. It fails if the
 build breaks, if an internal link or image is dead, if `profile.json` or
-`resume.json` stop being valid JSON, if the embedded JSON-LD drifts away from
-`profile.json`, if the ORCID iD disappears from any file that must carry it,
+`resume.json` stop being valid JSON, if any of the machine-readable files below goes
+missing or renders empty, if the embedded JSON-LD drifts away from
+`profile.json`, if the home page loses its `WebSite` node, its `ProfilePage` node, its
+`rel="me"` links to GitHub, ORCID and LinkedIn, its preview image or a title that leads
+with the name and role, if the career at Nerd Force1 (system administrator from
+2022-03-01, Head of Administration and IT from 2023, CTO since 2026-09-06) changes in
+`resume.json` or loses a role in `llms.txt`, if a file links one of my GitHub
+repositories that is not in the public list in `check_site.rb`,
+if the ORCID iD disappears from any file that must carry it,
 if the landing page loses the structure that makes it readable (hero, named
 sections including OpenTaberna, carded articles, fact list — see `check_site.rb`), if the subscribe
 callout that tells readers how to put `/feed.xml` into a reader stops rendering on
@@ -141,4 +148,11 @@ tab width of 2.
 | `/impressum/` | Legal notice (Angaben gemäß § 5 DDG), in German |
 
 `profile.json`, `resume.json` and the embedded JSON-LD are all generated from
-`_data/person.yml` and `_data/resume.yml`, so they cannot disagree.
+`_data/person.yml` and `_data/resume.yml`, so they cannot disagree. The role and project
+lists in `llms.txt` are rendered from `_data/resume.yml` too; its prose is written by hand.
+
+Besides the Person node in every page, the home page carries a `WebSite` node (the site
+name search engines show) and the home and about pages a `ProfilePage` node whose
+`mainEntity` is the Person node, referenced by `@id`. Articles carry `BlogPosting`, the
+article index `Blog`. Only public repositories are linked: a private one is a 404 for
+whoever follows it.
