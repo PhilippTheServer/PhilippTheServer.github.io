@@ -1,320 +1,226 @@
 /* prose.css — the universal appearance of an article's body.
  *
- * One rule per Markdown construct, in the order a document tends to use them. An article
- * should render like a well-set Markdown document: this file is what makes that true, and
- * it is the only place any of it is decided.
- *
- * Colours come from the tokens in site.css, so light and dark both work without a second
- * copy of anything. Everything here is scoped to .prose so it cannot leak into the
- * navigation, the article index or the tag pages.
+ * One rule per Markdown construct, in the order a document tends to use them, set as the
+ * design handoff's Markdown table specifies (#74). Colours come from the tokens in
+ * site.css. Everything here is scoped to .prose so it cannot leak into the navigation,
+ * the article index or the tag pages.
  */
 
 .prose {
-  --prose-measure: 34em;   /* ~66 characters at this size: the comfortable reading width */
-  --prose-gap: 1.15rem;
-  --code-bg: #f6f7f9;
-  --code-fg: #24292f;
-  --code-rule: #dcdfe4;
-  --code-head: #eceff3;
-
-  /* syntax tokens */
-  --t-comment: #6a737d;
-  --t-keyword: #a626a4;
-  --t-string:  #50a14f;
-  --t-number:  #b76b01;
-  --t-name:    #24292f;
-  --t-func:    #4078f2;
-  --t-type:    #c18401;
-  --t-attr:    #986801;
-  --t-punct:   #6a737d;
-  --t-error:   #d13438;
-  --t-added:   #22863a;
-  --t-removed: #b31d28;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .prose {
-    --code-bg: #14181d;
-    --code-fg: #d5dae1;
-    --code-rule: #262c34;
-    --code-head: #1a1f26;
-
-    --t-comment: #7b8798;
-    --t-keyword: #c678dd;
-    --t-string:  #98c379;
-    --t-number:  #d19a66;
-    --t-name:    #d5dae1;
-    --t-func:    #61afef;
-    --t-type:    #e5c07b;
-    --t-attr:    #e5c07b;
-    --t-punct:   #8b95a3;
-    --t-error:   #e06c75;
-    --t-added:   #98c379;
-    --t-removed: #e06c75;
-  }
-}
-
-:root[data-theme="dark"] .prose {
-  --code-bg: #14181d;
-  --code-fg: #d5dae1;
-  --code-rule: #262c34;
-  --code-head: #1a1f26;
-
-  --t-comment: #7b8798;
-  --t-keyword: #c678dd;
-  --t-string:  #98c379;
-  --t-number:  #d19a66;
-  --t-name:    #d5dae1;
-  --t-func:    #61afef;
-  --t-type:    #e5c07b;
-  --t-attr:    #e5c07b;
-  --t-punct:   #8b95a3;
-  --t-error:   #e06c75;
-  --t-added:   #98c379;
-  --t-removed: #e06c75;
+  margin-top: 32px;
+  font-family: var(--read);
+  font-size: 17.5px;
+  line-height: 1.65;
+  letter-spacing: -0.005em;
 }
 
 /* ── headings ────────────────────────────────────────────────────────────── */
 
+.prose h1,
 .prose h2,
 .prose h3,
 .prose h4,
 .prose h5,
-.prose h6 {
-  line-height: 1.25;
-  letter-spacing: -0.012em;
-  scroll-margin-top: 1.5rem;
-}
+.prose h6 { font-weight: 700; scroll-margin-top: 72px; }
 
-.prose h2 {
-  font-size: 1.3rem;
-  font-weight: 650;
-  margin: 3rem 0 1rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-.prose h3 { font-size: 1.08rem; font-weight: 650; margin: 2.25rem 0 0.7rem; }
-.prose h4 { font-size: 0.98rem; font-weight: 650; margin: 1.9rem 0 0.6rem; }
-.prose h5,
+.prose h1 { font-size: 30px; line-height: 1.25; margin: 44px 0 18px; letter-spacing: -0.02em; text-wrap: balance; }
+.prose h2 { font-size: 24px; line-height: 1.3; margin: 44px 0 16px; letter-spacing: -0.015em; text-wrap: balance; }
+.prose h3 { font-size: 20px; line-height: 1.35; margin: 34px 0 12px; letter-spacing: -0.01em; }
+.prose h4 { font-size: 17.5px; line-height: 1.4; margin: 28px 0 10px; }
+.prose h5 { font-size: 15.5px; line-height: 1.4; margin: 24px 0 8px; }
 .prose h6 {
-  font-size: 0.85rem;
-  font-weight: 650;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 22px 0 8px;
+  color: var(--mute);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--fg-muted);
-  margin: 1.75rem 0 0.5rem;
 }
 
-.prose > h2:first-child,
-.prose > h3:first-child { margin-top: 0; }
+.prose > :first-child { margin-top: 0; }
 
 /* ── text ────────────────────────────────────────────────────────────────── */
 
-.prose p { margin: 0 0 var(--prose-gap); }
-.prose > p:first-of-type { font-size: 1.05rem; }
+.prose p { margin: 0 0 22px; text-wrap: pretty; }
 
-.prose strong { font-weight: 650; }
+.prose strong { font-weight: 700; }
 .prose em { font-style: italic; }
-.prose del { color: var(--fg-muted); }
+.prose del { color: var(--mute); }
 
-.prose mark {
-  background: color-mix(in srgb, var(--accent) 18%, transparent);
-  color: inherit;
-  padding: 0.05em 0.2em;
-  border-radius: 3px;
-}
-
+.prose mark { background: var(--hl); color: inherit; padding: 0.05em 0.2em; border-radius: 3px; }
 .prose abbr[title] { text-decoration: underline dotted; cursor: help; }
 
 .prose kbd {
   font-family: var(--mono);
   font-size: 0.8em;
-  background: var(--code-bg);
-  border: 1px solid var(--code-rule);
+  background: var(--wash);
+  border: 1px solid var(--line);
   border-bottom-width: 2px;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 0.1em 0.4em;
   white-space: nowrap;
 }
 
-/* ── lists ───────────────────────────────────────────────────────────────── */
+/* ── lists: markers in mononoki, in the accent ───────────────────────────── */
 
 .prose ul,
-.prose ol { margin: 0 0 var(--prose-gap); padding-left: 1.4rem; }
-
-.prose li { margin-bottom: 0.4rem; }
+.prose ol { margin: 0 0 22px; padding-left: 26px; }
+.prose ul { list-style-type: "•  "; }
+.prose ul ul { list-style-type: "◦  "; }
+.prose li { margin-bottom: 6px; padding-left: 2px; }
+.prose li::marker { color: var(--red); font-family: var(--mono); }
 .prose li > ul,
-.prose li > ol { margin: 0.4rem 0 0.2rem; }
-.prose li::marker { color: var(--fg-muted); }
+.prose li > ol { margin: 6px 0 0; }
 
 /* A task list is a list without bullets; kramdown leaves the checkbox inline. */
-.prose li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.4rem; }
-.prose li > input[type="checkbox"] { margin-right: 0.45rem; }
+.prose li:has(> input[type="checkbox"]) { list-style: none; }
+.prose li > input[type="checkbox"] { margin: 0 0.5rem 0 -1.4rem; accent-color: var(--red); }
 
-.prose dl { margin: 0 0 var(--prose-gap); }
-.prose dt { font-weight: 650; margin-top: 0.8rem; }
-.prose dd { margin: 0.2rem 0 0 1.2rem; color: var(--fg-muted); }
+.prose dl { margin: 0 0 22px; }
+.prose dt { font-weight: 700; margin-top: 12px; }
+.prose dd { margin: 4px 0 0 20px; color: var(--mute); }
 
 /* ── quotes ──────────────────────────────────────────────────────────────── */
 
 .prose blockquote {
-  margin: 0 0 var(--prose-gap);
-  padding: 0.1rem 0 0.1rem 1.1rem;
-  border-left: 3px solid var(--accent);
-  color: var(--fg-muted);
+  margin: 28px 0;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: var(--pill);
+  font-style: italic;
 }
 .prose blockquote > :last-child { margin-bottom: 0; }
 
 /* ── inline code ─────────────────────────────────────────────────────────── */
 
-/* :not(pre) is the whole fix for the boxed-per-line bug: the <code> inside a <pre> is an
- * inline element spanning many lines, so a border and background on it are painted once
- * per line fragment rather than once around the block. */
+/* :not(pre) keeps this off code blocks: a border on an inline element spanning many
+ * lines is painted once per line, which is how every line once got its own box. */
 .prose :not(pre) > code {
   font-family: var(--mono);
-  font-size: 0.86em;
-  background: var(--code-bg);
-  border: 1px solid var(--code-rule);
-  border-radius: 4px;
-  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--wash);
+  border: 1px solid var(--line);
   overflow-wrap: break-word;
 }
-
 .prose a > code { color: inherit; }
 
 /* ── code blocks ─────────────────────────────────────────────────────────── */
 
 /* Code ships as a bare <pre> with <br> line breaks, the shape Medium's importer keeps
-   (#56); highlight.js colours it in the browser. */
+   (#56); highlight.js colours it in the browser. So the card and its header bar are
+   drawn on the <pre> itself: no wrapper element may sit around it. */
 .prose pre {
-  position: relative;
-  margin: 0 0 1.5rem;
-  padding: 0.9rem 1.1rem;
+  margin: 28px 0;
+  padding: 16px;
   overflow-x: auto;          /* the block scrolls, the page never does */
-  background: var(--code-bg);
-  border: 1px solid var(--code-rule);
-  border-radius: 8px;
-  color: var(--code-fg);
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  color: var(--ink);
   font-family: var(--mono);
-  font-size: 0.82rem;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.7;
   tab-size: 2;
 }
 
-/* The language, copied onto <pre> by _plugins/prose_markup.rb, shown top right on a line
-   of its own: <pre> is the scroll container, so a label floated over the code would sit
-   on top of a long first line. */
+/* The header bar with the language, from the data-lang that _plugins/prose_markup.rb
+   copies onto <pre>. The bar is the <pre>'s own background, which stays put while the
+   code scrolls sideways; the label is sticky, so it stays in view too. A sticky box keeps
+   inside its scroll container's padding, so the label spans the content box only. */
+.prose pre[data-lang] {
+  --bar: 36px;
+  background: linear-gradient(var(--wash) var(--bar), var(--card) var(--bar));
+}
 .prose pre[data-lang]::before {
   content: attr(data-lang);
-  display: table;
-  margin: -0.45rem -0.4rem 0.15rem auto;
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
-  background: var(--code-head);
-  border-radius: 3px;
-  padding: 0.05rem 0.35rem;
-  pointer-events: none;
+  position: sticky;
+  left: 0;
+  display: block;
+  height: var(--bar);
+  margin: -16px 0 16px;
+  color: var(--mute);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: var(--bar);
+  text-align: right;
 }
 
-/* ── syntax highlighting (highlight.js token classes) ────────────────────── */
+/* ── syntax highlighting (highlight.js classes onto the design's four tokens) ── */
 
-.prose .hljs-comment, .prose .hljs-quote,
-.prose .hljs-meta { color: var(--t-comment); font-style: italic; }
+.prose .hljs-keyword, .prose .hljs-selector-tag, .prose .hljs-literal,
+.prose .hljs-built_in, .prose .hljs-type, .prose .hljs-meta .hljs-keyword { color: var(--tk-kw); }
 
-.prose .hljs-keyword, .prose .hljs-selector-tag,
-.prose .hljs-literal, .prose .hljs-operator { color: var(--t-keyword); }
+.prose .hljs-string, .prose .hljs-regexp, .prose .hljs-symbol,
+.prose .hljs-template-tag, .prose .hljs-addition { color: var(--tk-str); }
 
-.prose .hljs-type, .prose .hljs-title.class_,
-.prose .hljs-built_in.class_ { color: var(--t-type); }
+.prose .hljs-number { color: var(--tk-num); }
 
-.prose .hljs-string, .prose .hljs-regexp,
-.prose .hljs-template-tag, .prose .hljs-symbol { color: var(--t-string); }
+.prose .hljs-comment, .prose .hljs-quote, .prose .hljs-meta { color: var(--tk-com); }
 
-.prose .hljs-number { color: var(--t-number); }
-
-.prose .hljs-title, .prose .hljs-title.function_,
-.prose .hljs-built_in, .prose .hljs-section { color: var(--t-func); }
-
-.prose .hljs-attr, .prose .hljs-attribute, .prose .hljs-name,
-.prose .hljs-selector-class, .prose .hljs-selector-id { color: var(--t-attr); }
-
-.prose .hljs-variable, .prose .hljs-template-variable,
-.prose .hljs-params, .prose .hljs-property { color: var(--t-name); }
-
-.prose .hljs-punctuation { color: var(--t-punct); }
-
-.prose .hljs-deletion { color: var(--t-removed); }
-.prose .hljs-addition { color: var(--t-added); }
+.prose .hljs-deletion { color: var(--gitred); }
+.prose .hljs-section, .prose .hljs-title { color: var(--ink); font-weight: 700; }
 .prose .hljs-emphasis { font-style: italic; }
-.prose .hljs-strong   { font-weight: 650; }
+.prose .hljs-strong { font-weight: 700; }
 
 /* ── tables ──────────────────────────────────────────────────────────────── */
 
 /* The wrapper is what scrolls; the table itself must never widen the page. */
-.prose .table-scroll { overflow-x: auto; margin: 0 0 1.5rem; }
-
-.prose table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 0.92rem;
-  margin: 0;
+.prose .table-scroll {
+  overflow-x: auto;
+  margin: 24px 0 28px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 
-.prose thead th {
+.prose table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+
+.prose th {
   text-align: left;
-  font-weight: 650;
-  border-bottom: 2px solid var(--rule);
-  padding: 0.5rem 0.7rem;
-  white-space: nowrap;
+  font-weight: 700;
+  padding: 10px 14px;
+  background: var(--wash);
+  border-bottom: 1px solid var(--line);
 }
 
-.prose tbody td {
-  border-bottom: 1px solid var(--rule);
-  padding: 0.5rem 0.7rem;
-  vertical-align: top;
-}
-
+.prose td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .prose tbody tr:last-child td { border-bottom: 0; }
 
 /* ── figures, images, rules ──────────────────────────────────────────────── */
 
-.prose img { max-width: 100%; height: auto; border-radius: 6px; }
+.prose img { display: block; max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow); }
+.prose figure { margin: 28px 0; }
+.prose figcaption { font-size: 13.5px; color: var(--mute); margin-top: 10px; text-align: center; }
 
-.prose figure { margin: 0 0 1.5rem; }
-.prose figcaption {
-  font-size: 0.85rem;
-  color: var(--fg-muted);
-  margin-top: 0.5rem;
-}
-
-.prose hr {
-  border: 0;
-  border-top: 1px solid var(--rule);
-  margin: 2.5rem 0;
+.prose hr { border: 0; margin: 40px 0; text-align: center; }
+.prose hr::before {
+  content: "* * *";
+  color: var(--mute);
+  font-family: var(--mono);
+  letter-spacing: 0.6em;
 }
 
 /* ── footnotes (kramdown) ────────────────────────────────────────────────── */
 
 .prose sup[role="doc-noteref"] a,
-.prose a.footnote { text-decoration: none; font-size: 0.8em; padding: 0 0.1em; }
+.prose a.footnote { font-size: 0.8em; padding: 0 0.1em; }
 
 .prose .footnotes {
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--rule);
-  font-size: 0.9rem;
-  color: var(--fg-muted);
+  margin-top: 44px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 15px;
+  color: var(--mute);
 }
-.prose .footnotes ol { padding-left: 1.2rem; }
-.prose .footnotes p { margin-bottom: 0.4rem; }
+.prose .footnotes ol { padding-left: 20px; }
+.prose .footnotes p { margin-bottom: 6px; }
 
 /* ── narrow screens ──────────────────────────────────────────────────────── */
 
-@media (max-width: 34rem) {
-  .prose pre { font-size: 0.76rem; padding: 0.75rem 0.85rem; }
-  .prose h2 { font-size: 1.18rem; }
+@media (max-width: 520px) {
+  .prose { font-size: 16.5px; }
+  .prose pre { font-size: 13px; padding: 14px; }
+  .prose pre[data-lang]::before { margin: -14px 0 14px; }
+  .prose h2 { font-size: 22px; }
 }

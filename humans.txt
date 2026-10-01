@@ -18,5 +18,5 @@ sitemap: false
   Standards: HTML5, CSS3, schema.org JSON-LD, JSON Resume
   Components: Jekyll, jekyll-feed, jekyll-sitemap
   Hosting: GitHub Pages
-  Fonts: system stack — no webfonts, no third-party requests
+  Fonts: system stack, Inter and mononoki, served from this site — no third-party requests
   Software: Neovim, tmux, Docker, Ansible, and a lot of terminals
