@@ -656,16 +656,6 @@ a:hover { text-decoration: underline; }
 
 .about-text p { text-indent: 1em; line-height: 1.75; text-wrap: pretty; }
 
-.facts { list-style: none; padding: 0; margin: 0 0 1.5rem; }
-.facts li {
-  display: grid;
-  grid-template-columns: 9.5rem 1fr;
-  gap: 0.35rem 1rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--line);
-}
-.facts .k { font-family: var(--mono); font-size: 13px; color: var(--mute); padding-top: 0.15rem; }
-@media (max-width: 32rem) { .facts li { grid-template-columns: 1fr; } }
 
 /* ---------- footer and toast ---------- */
 
