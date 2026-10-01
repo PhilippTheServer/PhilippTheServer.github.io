@@ -1,0 +1,23 @@
+{%- comment -%}
+  The article list on /posts/ and on every tag page. The title link covers the whole
+  entry; the tag labels sit above it so they stay clickable.
+{%- endcomment -%}
+<ol class="timeline">
+  {%- for post in include.posts %}
+  <li class="timeline-entry">
+    <div class="entry-main">
+      <time class="entry-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+      <h2 class="entry-title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+      <div class="entry-box">
+        <p class="entry-desc">{{ post.description | strip_newlines | strip }}</p>
+        {%- if post.tags and post.tags.size > 0 %}
+        <p class="entry-tags">{% for tag in post.tags %}{% include tag-label.html tag=tag %}{% endfor %}</p>
+        {%- endif %}
+      </div>
+    </div>
+    {%- if post.image %}
+    <img class="entry-image" src="{{ post.image | relative_url }}" alt="" loading="lazy">
+    {%- endif %}
+  </li>
+  {%- endfor %}
+</ol>

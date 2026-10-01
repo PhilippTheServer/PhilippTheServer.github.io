@@ -1,36 +1,24 @@
 ---
 layout: default
-title: Writing
-subtitle: What I have learned running this, written down before I forget it.
+title: Blog
 permalink: /posts/
-subscribe_box: top
+featured_tags: [kubernetes, ceph, docker, ansible, observability, security, llm, architecture]
 description: >-
-  Articles by Philipp Lehmann on infrastructure as code, Kubernetes, Ceph
-  storage, monitoring, overlay VPNs, identity management, and running language
-  models on your own hardware.
+  Articles by Philipp Lehmann on infrastructure as code, Kubernetes, Ceph, monitoring,
+  overlay networks and running language models on your own hardware.
 ---
 
-Most of these started as something that broke, or as an argument I kept having. I write
-them down because the second time I hit the same problem I would rather read than
-re-derive.
+{% include rss-row.html %}
 
-<ul class="post-list">
-  {%- for post in site.posts %}
-  <li class="post-entry">
-    <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-    <p class="post-entry-meta">
-      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%-d %B %Y" }}</time>
-      {%- if post.tags and post.tags.size > 0 %}
-      <span class="post-tags">{% for tag in post.tags %}<a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}">{{ tag }}</a>{% endfor %}</span>
-      {%- endif %}
-    </p>
-    <p>{{ post.description }}</p>
-  </li>
+<ul class="tag-chips" aria-label="Topics">
+  <li><a href="{{ '/posts/' | relative_url }}" aria-current="page">everything</a></li>
+  {%- for tag in page.featured_tags %}
+  <li><a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}">#{{ tag }}</a></li>
   {%- endfor %}
+  <li><a href="{{ '/tags/' | relative_url }}">all topics</a></li>
 </ul>
 
-Everything is also grouped [by topic]({{ '/tags/' | relative_url }}) if you are looking for
-one subject rather than the newest thing.
+{% include post-list.html posts=site.posts %}
 
-The full text of everything here is in one file at
-[/llms-full.txt]({{ '/llms-full.txt' | relative_url }}).
+<p class="list-foot">The full text of everything here is in one file at
+<a href="{{ '/llms-full.txt' | relative_url }}">/llms-full.txt</a>.</p>

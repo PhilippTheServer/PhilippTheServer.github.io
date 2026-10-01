@@ -1,0 +1,7 @@
+{%- assign feed_url = '/feed.xml' | absolute_url -%}
+<div class="rss-row">
+  <span class="rss-badge">RSS</span>
+  <span class="rss-cmd">$ subscribe</span>
+  <a class="rss-url" href="{{ feed_url }}">{{ feed_url | remove: 'https://' }}</a>
+  <button class="copy-btn" type="button" data-copy="{{ feed_url }}" data-toast="feed URL copied. welcome aboard.">copy</button>
+</div>
