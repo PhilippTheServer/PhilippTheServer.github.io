@@ -1,6 +1,6 @@
 ---
 title: gym-bro
-order: 8
+order: 7
 group: side
 year: side project
 role: author

@@ -1,6 +1,6 @@
 ---
 title: homelab
-order: 9
+order: 8
 group: side
 year: always
 role: operator

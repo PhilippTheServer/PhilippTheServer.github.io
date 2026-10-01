@@ -159,14 +159,6 @@ projects:
     url: "https://github.com/PhilippTheServer/daily-companion"
     keywords: ["Python", "FastAPI", "PostgreSQL", "MCP"]
     roles: ["Author"]
-  - name: "merge digest"
-    description: >-
-      A daily digest of what actually got merged: an MQTT subscriber stores the day's
-      merged pull requests in SQLite, and a locally served LLM summarises each
-      repository's changes from the diff stats. No cloud API.
-    url: "https://philipptheserver.com/posts/daily-pr-digest/"
-    keywords: ["Python", "MQTT", "SQLite", "LLM"]
-    roles: ["Author"]
   - name: "gym-bro"
     description: "Workout tracker: an Angular PWA with a FastAPI backend."
     url: "https://github.com/PhilippTheServer/gym-bro-tracking"

@@ -290,13 +290,16 @@ end
 
 # 8. Retired projects must not reappear. neteye was dropped from the site deliberately
 #    (issue #3); it lives on in the GitHub account but is not presented as current work.
+#    The merge digest was dropped from Work (#76); its article stays, the project does not.
 #    Every generated file derives from the pages, so one stray card would put it back in
 #    resume.json, llms-full.txt and the JSON-LD at once.
-RETIRED = %w[neteye].freeze
+RETIRED = ["neteye", "merge digest"].freeze
+
+fail!("work/merge-digest/index.html: the retired merge digest has a page again") if File.file?(File.join(SITE, "work/merge-digest/index.html"))
 
 RETIRED.each do |name|
   %w[
-    index.html about/index.html projects/index.html
+    index.html about/index.html projects/index.html work/index.html
     llms.txt llms-full.txt profile.json resume.json
   ].each do |f|
     body = read(f) or next
