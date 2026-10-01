@@ -42,7 +42,8 @@ could recover from.
 
 ### CTO · Nerd Force1 UG · since September 2026
 
-At Nerd Force1 since March 2022, as Head of Administration and IT until the move to CTO. It is part of the [AI-Gruppe](https://gruppe.ai)
+At Nerd Force1 since March 2022: system administrator first, Head of Administration and IT
+from 2023, CTO since September 2026. It is part of the [AI-Gruppe](https://gruppe.ai)
 umbrella brand. I am responsible for the company's technology: the servers, the network,
 the platforms, and the internal tooling.
 
@@ -77,7 +78,8 @@ it. Code: [github.com/OpenTaberna](https://github.com/OpenTaberna). I wrote abou
 
 I lead a small developer team and coordinate the association's open-source work. Once a
 year we host [emBO++](https://www.embo.io/), the international embedded systems
-conference, and KiCon, both in Bochum. Association work on GitHub:
+conference, and KiCon, both in Bochum. The association is at
+[skunkforce.org](https://skunkforce.org/), its code at
 [github.com/skunkforce](https://github.com/skunkforce).
 
 ## Education

@@ -1,0 +1,34 @@
+{%- comment -%}
+  What a search engine reads to answer "who is this" (#72). The home page names the site
+  (WebSite), and both it and /about/ say the page is about one person (ProfilePage) by
+  pointing at the Person node rather than repeating it.
+{%- endcomment -%}
+{%- assign person_id = site.url | append: "/#person" -%}
+{%- assign website_id = site.url | append: "/#website" -%}
+{%- if page.url == '/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": {{ website_id | jsonify }},
+  "url": {{ site.url | append: "/" | jsonify }},
+  "name": {{ site.title | jsonify }},
+  "alternateName": {{ site.author.github | jsonify }},
+  "inLanguage": {{ site.lang | jsonify }},
+  "publisher": { "@id": {{ person_id | jsonify }} }
+}
+</script>
+{%- endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": {{ page.url | absolute_url | jsonify }},
+  "url": {{ page.url | absolute_url | jsonify }},
+  "name": {{ page.head_title | default: page.title | append: "" | jsonify }},
+  "inLanguage": {{ site.lang | jsonify }},
+  "dateModified": {{ site.time | date_to_xmlschema | jsonify }},
+  "isPartOf": { "@id": {{ website_id | jsonify }} },
+  "mainEntity": { "@id": {{ person_id | jsonify }} }
+}
+</script>

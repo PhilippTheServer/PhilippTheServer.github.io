@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Philipp Lehmann
+head_title: "Philipp Lehmann · CTO & infrastructure engineer in Bochum"
 permalink: /
 nav_order: 1
 pixel_crew: true

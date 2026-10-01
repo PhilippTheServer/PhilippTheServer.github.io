@@ -69,6 +69,14 @@ end
   fail!("#{f}: missing from the built site") unless File.file?(File.join(SITE, f))
 end
 
+# The files written for machines live at fixed paths that crawlers and models have already
+# learned (#72). A path that still exists but renders empty is as gone as a missing one.
+%w[llms.txt llms-full.txt profile.json resume.json ai.txt humans.txt robots.txt
+   .well-known/security.txt feed.xml sitemap.xml].each do |f|
+  path = File.join(SITE, f)
+  fail!("#{f}: empty") if File.file?(path) && File.size(path).zero?
+end
+
 # The repository listing was replaced by the articles; it must not come back.
 fail!("projects/index.html: the repo list should be gone") if File.file?(File.join(SITE, "projects/index.html"))
 
@@ -210,6 +218,67 @@ end
   end
 end
 
+# 6b. What a search engine needs to answer "who is this" from the home page (#72): a
+#     WebSite node for the site name, a ProfilePage whose subject is the Person node, the
+#     profiles that are his as rel="me", a preview image, and a title that leads with the
+#     name and role rather than a tagline.
+def ld_nodes(html)
+  html.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten
+      .map { |b| JSON.parse(b) rescue nil }.compact
+end
+
+PERSON_ID = "https://#{DOMAIN}/#person"
+PROFILES = [
+  "https://github.com/PhilippTheServer",
+  "https://orcid.org/#{ORCID}",
+  "https://www.linkedin.com/in/philipp-lehmann-17995521b/",
+].freeze
+
+if (home = read("index.html"))
+  site_node = ld_nodes(home).find { |n| n["@type"] == "WebSite" }
+  if site_node.nil?
+    fail!("index.html: no WebSite structured data")
+  else
+    fail!("index.html: WebSite name is #{site_node['name'].inspect}") unless site_node["name"] == "Philipp Lehmann"
+    fail!("index.html: WebSite alternateName must be PhilippTheServer") unless site_node["alternateName"] == "PhilippTheServer"
+  end
+  title = home[%r{<title>(.*?)</title>}m, 1].to_s
+  fail!("index.html: <title> #{title.inspect} does not lead with the name and role") unless title.start_with?("Philipp Lehmann · CTO")
+end
+
+%w[index.html about/index.html].each do |page|
+  html = read(page) or next
+  profile_page = ld_nodes(html).find { |n| n["@type"] == "ProfilePage" }
+  if profile_page.nil?
+    fail!("#{page}: no ProfilePage structured data")
+  elsif profile_page.dig("mainEntity", "@id") != PERSON_ID
+    fail!("#{page}: ProfilePage mainEntity must reference #{PERSON_ID}")
+  end
+  PROFILES.each do |me|
+    fail!("#{page}: no rel=\"me\" link to #{me}") unless html.include?(%(<link rel="me" href="#{me}">))
+  end
+  fail!("#{page}: no og:image") unless html.include?(%(<meta property="og:image"))
+end
+
+if profile
+  skunk = Array(profile["memberOf"]).find { |o| o["name"] == "open Skunkforce e.V." }
+  fail!("profile.json: open Skunkforce's url must be https://skunkforce.org/") unless skunk && skunk["url"] == "https://skunkforce.org/"
+  talk = profile["performerIn"]
+  fail!("profile.json: performerIn must name the pkcds4k talk") unless talk.is_a?(Hash) && talk["name"].to_s.include?("pkcds4k")
+end
+
+# 6c. A link to a private repository is a 404 for every reader and crawler that follows
+#     it (#72). These are the public ones; a repository made public is added here on
+#     purpose, which is the point.
+PUBLIC_REPOS = %w[homelab-setup daily-companion gym-bro-tracking ceph-cluster-on-a-budget].freeze
+%w[index.html about/index.html llms.txt llms-full.txt profile.json resume.json].each do |f|
+  body = read(f) or next
+  body.scan(%r{github\.com/PhilippTheServer/([A-Za-z0-9._-]+)}).flatten.uniq.each do |repo|
+    next if PUBLIC_REPOS.include?(repo)
+    fail!("#{f}: links github.com/PhilippTheServer/#{repo}, which is not a public repository")
+  end
+end
+
 # 7. The ORCID iD is what binds every one of these files to one person.
 %w[
   profile.json resume.json llms.txt llms-full.txt
@@ -235,37 +304,37 @@ RETIRED.each do |name|
   end
 end
 
-# 9. Two facts I got wrong once, from sources that looked authoritative (issue #7).
-#
-#    He became CTO on 2026-09-06. Before that he was Head of Administration and IT at the
-#    same employer since 2022-03-01, which is what the ORCID record still lists — his
-#    previous title, not an error. Two work entries, because one entry carrying the new
-#    title and the old start date would claim he has been CTO since 2022.
+# 9. The career at Nerd Force1, which I got wrong twice from sources that looked
+#    authoritative (issues #7, #72). He joined on 2022-03-01 as system administrator, was
+#    Head of Administration and IT from 2023, and CTO since 2026-09-06. One entry per
+#    title, newest first: an entry carrying a newer title and an older start date would
+#    claim he held that title for longer than he did.
 CTO_SINCE = "2026-09-06"
+HEAD_SINCE = "2023"
+JOINED = "2022-03-01"
+EMPLOYER = "Nerd Force1 UG"
+CAREER = [
+  { "position" => "CTO", "startDate" => CTO_SINCE, "endDate" => nil },
+  { "position" => "Head of Administration and IT", "startDate" => HEAD_SINCE, "endDate" => CTO_SINCE },
+  { "position" => "System Administrator", "startDate" => JOINED, "endDate" => HEAD_SINCE },
+].freeze
 
 if profile
   fail!("profile.json: jobTitle is #{profile['jobTitle'].inspect}, expected \"CTO\"") unless profile["jobTitle"] == "CTO"
 end
 
 if resume
-  work = Array(resume["work"])
-  current = work.first
-
-  fail!("resume.json: work[0].position is #{current&.dig('position').inspect}, expected \"CTO\"") unless current&.dig("position") == "CTO"
-  unless current&.dig("startDate") == CTO_SINCE
-    fail!("resume.json: the CTO entry starts #{current&.dig('startDate').inspect}, expected #{CTO_SINCE.inspect} — the promotion date, not the date he joined")
+  fail!("resume.json: work[0].position is #{resume.dig('work', 0, 'position').inspect}, expected \"CTO\"") unless resume.dig("work", 0, "position") == "CTO"
+  at_employer = Array(resume["work"]).select { |w| w["name"] == EMPLOYER }
+  if at_employer.length != CAREER.length
+    fail!("resume.json: #{at_employer.length} entries at #{EMPLOYER}, expected #{CAREER.length}")
   end
-  fail!("resume.json: the current role must not carry an endDate") if current&.key?("endDate")
-
-  previous = work[1]
-  unless previous && previous["position"] == "Head of Administration and IT"
-    fail!("resume.json: work[1] must be the previous role at the same employer")
-  end
-  if previous && previous["endDate"] != CTO_SINCE
-    fail!("resume.json: the previous role must end when the CTO role starts (#{CTO_SINCE})")
-  end
-  if previous && previous["startDate"] != "2022-03-01"
-    fail!("resume.json: the previous role must start 2022-03-01, when he joined")
+  CAREER.each_with_index do |want, i|
+    got = at_employer[i] or next
+    %w[position startDate endDate].each do |key|
+      next if got[key] == want[key]
+      fail!("resume.json: #{EMPLOYER} entry #{i} has #{key} #{got[key].inspect}, expected #{want[key].inspect}")
+    end
   end
 end
 
@@ -287,6 +356,15 @@ end
 llms_txt = read("llms.txt")
 if llms_txt && !llms_txt.include?(CTO_SINCE)
   fail!("llms.txt: does not name the promotion date #{CTO_SINCE} — the one thing the ORCID note is for")
+end
+if llms_txt
+  CAREER.each do |role|
+    fail!("llms.txt: does not name the role #{role['position']}") unless llms_txt.include?(role["position"])
+  end
+  fail!("llms.txt: still says he joined as Head of Administration and IT") if llms_txt.match?(/joined[^.]*\bas Head of Administration/i)
+  Array(resume&.dig("projects")).each do |p|
+    fail!("llms.txt: does not list the project #{p['name']}") unless llms_txt.include?("**#{p['name']}**")
+  end
 end
 
 llms = read("llms.txt")

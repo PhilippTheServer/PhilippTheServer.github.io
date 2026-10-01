@@ -41,7 +41,7 @@ work:
     location: "Bochum, Germany"
     url: "https://nerd-force1.de"
     position: "Head of Administration and IT"
-    startDate: "2022-03-01"
+    startDate: "2023"
     endDate: "2026-09-06"
     summary: >-
       Owned the company's production infrastructure end to end — architecture,
@@ -54,6 +54,14 @@ work:
       - "Designed the internal network: a NetBird overlay mesh and Bind9 DNS"
       - "Wrote the whole server estate as Ansible, so hosts are reproducible rather than hand-tuned"
       - "Designed and maintain the internal operations platform that replaced several external SaaS tools"
+  - name: "Nerd Force1 UG"
+    location: "Bochum, Germany"
+    url: "https://nerd-force1.de"
+    position: "System Administrator"
+    startDate: "2022-03-01"
+    endDate: "2023"
+    summary: >-
+      Where it started: the servers, the network, and whatever broke that day.
   - name: "OpenTaberna"
     location: "Bochum, Germany"
     url: "https://opentaberna.de"
@@ -69,7 +77,7 @@ work:
       - "Self-hosted with Docker Compose; Keycloak for identity, Stripe for payment, Paperless-ngx for documents"
   - name: "open Skunkforce e.V."
     location: "Bochum, Germany"
-    url: "https://github.com/skunkforce"
+    url: "https://skunkforce.org/"
     position: "Executive Office"
     startDate: "2025-01-01"
     summary: >-
@@ -121,9 +129,14 @@ projects:
       contract, an ARQ worker for labels and reservation expiry, PostgreSQL,
       Keycloak, Stripe and DHL, and two Angular frontends that are clients of
       the API.
-    url: "https://github.com/OpenTaberna"
+    url: "https://opentaberna.de"
     keywords: ["FastAPI", "PostgreSQL", "Angular", "Stripe", "Keycloak", "Docker"]
     roles: ["Founder", "Maintainer"]
+  - name: "APIC-Modmode"
+    description: >-
+      A gaming PC configurator platform: pick the parts, get a build that
+      actually fits together.
+    url: "https://apic-modmode.de"
   - name: "Internal Operations Platform"
     description: >-
       Full-stack platform that centralised company operations and replaced several
@@ -136,25 +149,26 @@ projects:
     description: >-
       Self-hosted model-serving stack — an OpenAI-compatible API, repeatable
       capability benchmarks for the locally served models, and a metrics poller.
-    url: "https://github.com/PhilippTheServer/atlas"
     keywords: ["Python", "FastAPI", "llama-swap", "uv"]
     roles: ["Author"]
-  - name: "Server-Administration (Ansible)"
-    description: "The company's server infrastructure as code."
-    url: "https://github.com/PhilippTheServer/Server-Administration_ansible"
-    keywords: ["Ansible", "Linux"]
-    roles: ["Author"]
-  - name: "energy-data-api"
+  - name: "daily"
     description: >-
-      FastAPI service over the German SMARD electricity market data, with an
-      Angular frontend.
-    url: "https://github.com/PhilippTheServer/energy-data-api"
-    keywords: ["Python", "FastAPI", "Angular"]
+      Agent-operated, human-viewed health and diet system with an MCP server: a
+      journal of meals and symptoms, a versioned food catalogue and shopping
+      automation, operated mostly by a self-hosted model on atlas.
+    url: "https://github.com/PhilippTheServer/daily-companion"
+    keywords: ["Python", "FastAPI", "PostgreSQL", "MCP"]
     roles: ["Author"]
-  - name: "create_project_cli-tool"
+  - name: "gym-bro"
+    description: "Workout tracker: an Angular PWA with a FastAPI backend."
+    url: "https://github.com/PhilippTheServer/gym-bro-tracking"
+    keywords: ["Angular", "FastAPI", "PWA"]
+    roles: ["Author"]
+  - name: "homelab"
     description: >-
-      CLI that scaffolds a FastAPI or Angular repository, for people too lazy to
-      lay out the same directory tree twice.
-    url: "https://github.com/PhilippTheServer/create_project_cli-tool"
-    keywords: ["Python", "CLI"]
-    roles: ["Author"]
+      The rack at home where ideas get tested, broken and rebuilt before they get
+      near production: Ansible and Docker Compose behind Traefik, Headscale and
+      Keycloak.
+    url: "https://github.com/PhilippTheServer/homelab-setup"
+    keywords: ["Ansible", "Docker", "Traefik", "Headscale", "Keycloak"]
+    roles: ["Operator"]
