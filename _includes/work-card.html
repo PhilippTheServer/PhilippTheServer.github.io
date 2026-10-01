@@ -1,0 +1,9 @@
+<li class="work-card">
+  <a href="{{ include.project.url | relative_url }}">
+    {%- if include.project.image %}
+    <img src="{{ include.project.image | relative_url }}" alt="{{ include.project.photo }}" loading="lazy">
+    {%- endif %}
+    <span class="work-name">{{ include.project.title }}</span>
+    <span class="work-desc">{{ include.project.description | strip_newlines | strip }}</span>
+  </a>
+</li>

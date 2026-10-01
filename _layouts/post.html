@@ -1,22 +1,29 @@
 ---
 layout: default
 ---
+{%- comment -%}
+  scripts/medium reads h1.page-title, p.page-subtitle, .post-body.prose and the text of
+  .post-tags a from this markup; keep those selectors when the look changes.
+{%- endcomment -%}
 <article class="post" itemscope itemtype="https://schema.org/BlogPosting">
   <header class="post-head">
+    <nav class="post-crumbs" aria-label="Breadcrumb">
+      <a href="{{ '/posts/' | relative_url }}">Posts</a>
+      <span class="crumb-sep" aria-hidden="true">›</span>
+      <time class="pill" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>
+      {%- if page.tags and page.tags.size > 0 %}
+      <span class="post-tags">
+        {%- for tag in page.tags %}{% include tag-label.html tag=tag %}{% endfor -%}
+      </span>
+      {%- endif %}
+    </nav>
     <h1 class="page-title" itemprop="headline">{{ page.title }}</h1>
     {%- if page.subtitle %}
     <p class="page-subtitle" itemprop="description">{{ page.subtitle }}</p>
     {%- endif %}
-    <p class="post-meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-        {{ page.date | date: "%-d %B %Y" }}
-      </time>
-      {%- if page.tags and page.tags.size > 0 %}
-      <span class="post-tags">
-        {%- for tag in page.tags %}<a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}">{{ tag }}</a>{% endfor -%}
-      </span>
-      {%- endif %}
-    </p>
+    {%- if page.image %}
+    <img class="post-image" src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: '' }}">
+    {%- endif %}
   </header>
 
   <div class="post-body prose" itemprop="articleBody">
@@ -24,13 +31,20 @@ layout: default
   </div>
 
   <footer class="post-foot">
-    <p>
-      Written by Philipp Lehmann.
-      Corrections and arguments are welcome at
-      <a href="mailto:{{ site.author.email }}">{{ site.author.email }}</a>.
-    </p>
-    <p><a href="{{ '/posts/' | relative_url }}">← All writing</a></p>
+    <p>Written by <span itemprop="author">Philipp Lehmann</span>. Questions, corrections or a better idea? Get in touch.</p>
+    <a class="mail-line" href="mailto:{{ site.author.email }}?subject={{ page.title | uri_escape }}"><span class="prompt-user">philipp@theserver</span>:<span class="prompt-path">~</span>$ mail {{ site.author.email }}</a>
   </footer>
+
+  {%- if page.previous or page.next %}
+  <nav class="post-nav" aria-label="More articles">
+    {%- if page.previous %}
+    <a class="prev" href="{{ page.previous.url | relative_url }}"><small>‹ previous</small><span>{{ page.previous.title }}</span></a>
+    {%- endif %}
+    {%- if page.next %}
+    <a class="next" href="{{ page.next.url | relative_url }}"><small>next ›</small><span>{{ page.next.title }}</span></a>
+    {%- endif %}
+  </nav>
+  {%- endif %}
 </article>
 {%- if content contains '<pre' %}
 {%- assign hl = '/assets/vendor/highlight.js/' | relative_url %}

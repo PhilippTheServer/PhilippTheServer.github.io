@@ -29,31 +29,10 @@ module Jekyll
           "#{posts.length} #{posts.length == 1 ? 'article' : 'articles'} by Philipp Lehmann " \
           "on #{tag}: #{description}",
       }
-      self.content = render_list(posts)
-    end
-
-    private
-
-    def render_list(posts)
-      items = posts.sort_by { |p| p.data["date"] }.reverse.map do |post|
-        date = post.data["date"].strftime("%-d %B %Y")
-        tags = Array(post.data["tags"]).map do |t|
-          %(<a href="/tags/#{t}/">#{t}</a>)
-        end.join(" ")
-        <<~ITEM
-          <li class="post-entry">
-            <h2><a href="#{post.url}">#{post.data['title']}</a></h2>
-            <p class="post-entry-meta">
-              <time datetime="#{post.data['date'].strftime('%Y-%m-%d')}">#{date}</time>
-              <span class="post-tags">#{tags}</span>
-            </p>
-            <p>#{post.data['description'].to_s.strip}</p>
-          </li>
-        ITEM
-      end
-
-      %(<ul class="post-list">\n#{items.join}\n</ul>\n) +
-        %(<p><a href="/tags/">All topics</a> · <a href="/posts/">All writing</a></p>\n)
+      self.content = <<~LIQUID
+        {% include post-list.html posts=page.posts %}
+        <p class="list-foot"><a href="/tags/">All topics</a> · <a href="/posts/">All writing</a></p>
+      LIQUID
     end
   end
 
@@ -67,8 +46,9 @@ module Jekyll
       process(@name)
       rows = counts.sort_by { |tag, n| [-n, tag] }.map do |tag, n|
         <<~ROW
-          <li class="post-entry">
-            <h2><a href="/tags/#{tag}/">#{tag}</a> <span class="tag-count">#{n}</span></h2>
+          <li>
+            <a class="tag-label" href="/tags/#{tag}/" style="--h: #{TagHue.of(tag)}">#{tag}</a>
+            <span class="tag-count">#{n}</span>
             <p>#{descriptions[tag]}</p>
           </li>
         ROW
@@ -82,7 +62,7 @@ module Jekyll
           "All #{counts.length} topics covered on philipptheserver.com, from Ansible and " \
           "Ceph to Kubernetes, observability and self-hosted language models.",
       }
-      self.content = %(<ul class="post-list">\n#{rows.join}\n</ul>\n)
+      self.content = %(<ul class="tag-index">\n#{rows.join}\n</ul>\n)
     end
   end
 

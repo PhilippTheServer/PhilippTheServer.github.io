@@ -1,0 +1,12 @@
+{%- comment -%}
+  The profiles that are his, as rel="me" so a crawler can tie them to this site.
+  include.list renders them as a column with the full handles (About); without it, a
+  compact row (home).
+{%- endcomment -%}
+<ul class="profile-links{% if include.list %} profile-links-list{% endif %}">
+  <li><a href="https://github.com/{{ site.author.github }}" rel="me"><span class="badge" aria-hidden="true">gh</span>{% if include.list %}{{ site.author.github }}{% else %}GitHub{% endif %}</a></li>
+  <li><a href="https://orcid.org/{{ site.author.orcid }}" rel="me"><span class="badge" aria-hidden="true">id</span>{% if include.list %}ORCID {{ site.author.orcid }}{% else %}ORCID{% endif %}</a></li>
+  <li><a href="{{ site.author.linkedin }}" rel="me"><span class="badge" aria-hidden="true">in</span>{% if include.list %}philipp-lehmann{% else %}LinkedIn{% endif %}</a></li>
+  <li><a href="mailto:{{ site.author.email }}"><span class="badge" aria-hidden="true">✉</span>{% if include.list %}{{ site.author.email }}{% else %}mail{% endif %}</a></li>
+  <li><a href="{{ '/feed.xml' | relative_url }}"><span class="badge" aria-hidden="true">rss</span>{% if include.list %}feed.xml{% else %}RSS{% endif %}</a></li>
+</ul>

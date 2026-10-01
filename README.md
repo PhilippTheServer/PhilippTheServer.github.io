@@ -30,17 +30,21 @@ with the name and role, if the career at Nerd Force1 (system administrator from
 `resume.json` or loses a role in `llms.txt`, if a file links one of my GitHub
 repositories that is not in the public list in `check_site.rb`,
 if the ORCID iD disappears from any file that must carry it,
-if the landing page loses the structure that makes it readable (hero, named
-sections including OpenTaberna, carded articles, fact list — see `check_site.rb`), if the subscribe
-callout that tells readers how to put `/feed.xml` into a reader stops rendering on
-the landing page, or stops sitting above the heading on `/posts/`, if an article's
+if the home page loses the name as its `<h1>`, the role line or a whoami naming
+Nerd Force1, AI-Gruppe, Ruhr University Bochum and OpenTaberna, if the RSS row with
+the feed URL and its copy button leaves the top of `/posts/`, if any page stops linking
+the Impressum or loads a script, stylesheet, font or image from another origin, if the
+site stops being dark only, if a Work project loses its page, its structured data, its
+place in the `/work/` `ItemList` or in `resume.json`, if the git log on `/about/`
+disagrees with `resume.json` or hides a story from the HTML, if an article's
 meta description falls outside 70–160 characters (Google cuts the snippet
 there), if an article from #117 on has a title over 60 characters, if the
 OpenTaberna articles stop naming the project in their structured data, if the daily
 article stops naming the self-hosted Qwen on atlas that mostly operates daily, if
 `profile.json` or `resume.json` stop listing him as a founder of OpenTaberna, if the
 pixel repair crew animation leaves the landing page or appears on any other page, if
-it stops being the top layer or stops letting clicks through, if
+it stops being the top layer or stops letting clicks through, if the home footer stops
+leaving room for it, if
 the animation runs below 700 px width, if it
 restarts on a height-only resize (a browser scrolling past its address
 bar — `scripts/pixel-crew.test.mjs`, run with `node --test`), if a code block in an
@@ -51,6 +55,34 @@ or if `CNAME` stops naming the canonical domain.
 `scripts/build-local.sh` runs the Node test on the host, because the `ruby:3.3`
 image it builds in has no Node, and after the build `scripts/medium/check.sh`, which
 needs uv (see Medium below).
+
+## Design
+
+Dark only, after the design handoff of 2026-10-01 (#74; spec in
+`docs/superpowers/specs/2026-10-01-site-redesign-design.md`). The colour tokens are the
+custom properties at the top of `assets/css/site.css`; `assets/css/prose.css` sets an
+article's body from them. Body text uses the system font stack, articles Inter, code and
+list markers mononoki. Both fonts are served from `assets/fonts/` with their OFL licences
+beside them, so no reader's address goes to Google Fonts or a CDN.
+
+| Where | What renders it |
+| --- | --- |
+| Header, footer, page title | `_layouts/default.html` |
+| `/` | `index.md`, `_includes/profile-links.html` |
+| `/posts/`, `/tags/<tag>/` | `posts.md`, `_plugins/tag_pages.rb`, `_includes/post-list.html`, `_includes/rss-row.html` |
+| Tag labels | `_includes/tag-label.html`; the hue comes from `_plugins/tag_hue.rb` (a hash of the name) |
+| An article | `_layouts/post.html` |
+| `/work/`, `/work/<id>/` | `work.md`, `_layouts/work.html`, one file per project in `_work/` |
+| `/about/` | `about.md`; the git log is `_data/career.yml` through `_includes/git-log.html` |
+
+A project is a file in `_work/` whose front matter holds `title`, `order`, `group`
+(`main` or `side`), `year`, `role`, `stack`, `status`, `website`, `repo` (a public
+repository only), `description`, `highlights` and `posts` (article slugs). An `image` in
+`assets/work/` shows on the card and the project page; without one the card is text.
+Every project must also appear in `resume.yml`, under `projects` or `work`.
+
+`assets/js/site.js` copies the feed URL, answers the Konami code and leaves a coffee in
+the console. Nothing on the site depends on it.
 
 ## Pixel repair crew
 
@@ -138,7 +170,7 @@ tab width of 2.
 | Path | What it is |
 | --- | --- |
 | `/llms.txt` | Summary of who I am and what is on this site, for language models |
-| `/llms-full.txt` | Full text of every page, in one file |
+| `/llms-full.txt` | Full text of every page and project, in one file |
 | `/profile.json` | schema.org `Person` JSON-LD — also embedded in every page's `<head>` |
 | `/resume.json` | [JSON Resume](https://jsonresume.org) v1 |
 | `/ai.txt` | Crawler and training policy |

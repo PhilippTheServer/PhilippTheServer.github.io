@@ -1,0 +1,16 @@
+{%- comment -%}
+  The career as `git log --graph` (#74). Each commit is a <details>, so the story is in
+  the HTML for anyone who cannot or will not run a script, and opens on a click. The
+  graph lines are drawn on the <details> itself so they run through an open story.
+{%- endcomment -%}
+{%- assign fork_index = -1 -%}
+{%- for c in site.data.career %}{% if c.fork %}{% assign fork_index = forloop.index0 %}{% endif %}{% endfor -%}
+<div class="git-log">
+{%- for c in site.data.career %}
+{%- capture cls %}commit lane-{{ c.lane }}{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %}{% if forloop.index0 < fork_index %} branch-open{% endif %}{% if c.fork %} fork{% endif %}{% endcapture %}
+<details class="{{ cls }}">
+<summary><span class="graph" aria-hidden="true"><span class="dot"></span>{% if c.fork %}<svg width="46" height="46"><path d="M32 18 C32 34, 12 30, 12 46" fill="none" stroke="var(--gitgreen)" stroke-width="2"/></svg>{% endif %}</span><span class="commit-line"><span class="commit-hash">{{ c.hash }}</span> <span class="commit-type">{{ c.type }}:</span> <span class="commit-msg">{{ c.msg | escape }}{% if c.url %} <a href="{{ c.url }}">↗ {{ c.url_label }}</a>{% endif %}{% if c.head %} <span class="commit-head">(HEAD -&gt; <span>main</span>)</span>{% endif %}</span> <span class="commit-date">{{ c.date }}</span></span></summary>
+<p class="commit-story">{{ c.story | escape }}</p>
+</details>
+{%- endfor %}
+</div>

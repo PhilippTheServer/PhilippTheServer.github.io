@@ -12,12 +12,22 @@ sitemap: false
 > Structured identity: {{ '/profile.json' | absolute_url }} · CV: {{ '/resume.json' | absolute_url }}
 
 {% assign doc_pages = site.pages | where_exp: "p", "p.nav_order or p.permalink == '/impressum/'" | sort: "nav_order" -%}
-{% assign everything = doc_pages | concat: site.posts -%}
+{% assign projects = site.work | sort: "order" -%}
+{% assign everything = doc_pages | concat: projects | concat: site.posts -%}
 {% for p in everything %}
 ================================================================================
 # {{ p.title }}
 {{ p.url | absolute_url }}
 ================================================================================
-{{ p.content | markdownify | html_to_text }}
+{% if p.collection == "work" -%}
+{{ p.description | strip_newlines | strip }}
+{% if p.role %}Role: {{ p.role }}
+{% endif %}{% if p.stack %}Stack: {{ p.stack }}
+{% endif %}{% if p.status %}Status: {{ p.status }}
+{% endif %}{% if p.website %}Website: {{ p.website }}
+{% endif %}{% if p.repo %}Code: {{ p.repo }}
+{% endif %}{% for hl in p.highlights %}- {{ hl | markdownify | html_to_text | strip }}
+{% endfor %}{% endif -%}
+{% if p.collection == nil %}{{ p.content | render_liquid | markdownify | html_to_text }}{% else %}{{ p.content | markdownify | html_to_text }}{% endif %}
 
 {% endfor -%}
