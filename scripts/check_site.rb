@@ -202,7 +202,7 @@ end
 
 # 6. The JSON-LD embedded in each page must be byte-for-byte the same object as
 #    profile.json — the page and the file can never claim different things.
-(%w[index.html about/index.html posts/index.html] +
+(%w[index.html about/index.html posts/index.html work/index.html] +
  ARTICLES.map { |a| "posts/#{a}/index.html" }).each do |page|
   html = read(page) or next
   block = html[%r{<script type="application/ld\+json">(.*?)</script>}m, 1]
@@ -492,34 +492,17 @@ end
 
 # A feed nobody can find is a feed nobody reads. The link elements and the footer
 # entry are for software; a reader who does not already know what feed.xml is needs
-# the URL and the steps in front of them (issues #33, #35). Both pages render the
-# same include, so this checks the rendered output rather than either source: an
-# include that stops being included is invisible in the source of the page.
-subscribe_pages = {
-  "index.html"       => "the landing page",
-  "posts/index.html" => "the Writing index",
-}
-subscribe_pages.each do |page, what|
-  html = read(page) or next
-  box = html[%r{<div class="callout"[^>]*>.*?</div>}m]
-  if box.nil?
-    fail!("#{page}: #{what} has no subscribe callout")
-    next
-  end
-  fail!("#{page}: the subscribe callout has no title row") unless box.include?(%(class="callout-title"))
-  fail!("#{page}: the subscribe callout does not give the feed URL to copy") unless box.include?("https://#{DOMAIN}/feed.xml")
-  fail!("#{page}: the subscribe callout lists no steps") if box.scan("<li>").length < 3
-end
-
-# On /posts/ the box comes before the page heading, so it is the first thing a reader
-# who came to follow the blog sees (issue #37). The heading is rendered by the layout,
-# so this only holds while posts.md keeps `subscribe_box: top`.
+# the URL in front of them (issues #33, #35), at the top of the blog (#37). Since the
+# redesign (#74) that is the RSS row: the URL as a link and a button that copies it.
 writing = read("posts/index.html")
 if writing
-  box_at = writing.index(%(<div class="callout"))
-  h1_at  = writing.index(%(<h1 class="page-title">))
-  if box_at.nil? || h1_at.nil? || box_at > h1_at
-    fail!("posts/index.html: the subscribe callout does not sit above the Writing heading")
+  row = writing[%r{<div class="rss-row".*?</div>}m]
+  if row.nil?
+    fail!("posts/index.html: no RSS row")
+  else
+    fail!("posts/index.html: the RSS row does not link the feed") unless row.include?(%(href="https://#{DOMAIN}/feed.xml"))
+    fail!("posts/index.html: the RSS row has no copy button") unless row.include?(%(data-copy="https://#{DOMAIN}/feed.xml"))
+    fail!("posts/index.html: the RSS row does not come before the posts") if writing.index("rss-row") > writing.index(%(class="timeline")).to_i
   end
 end
 
@@ -533,7 +516,7 @@ if (home = read("index.html"))
   fail!("index.html: the pixel crew canvas is missing") unless home.include?(crew_tag)
   fail!("index.html: the pixel crew script is not loaded") unless home.include?(crew_js)
 end
-(["about/index.html", "posts/index.html"] + ARTICLES.map { |s| "posts/#{s}/index.html" }).each do |page|
+(["about/index.html", "posts/index.html", "work/index.html"] + ARTICLES.map { |s| "posts/#{s}/index.html" }).each do |page|
   html = read(page) or next
   fail!("#{page}: renders the pixel crew, which belongs to the landing page only") if html.include?(crew_tag) || html.include?(crew_js)
 end
@@ -550,6 +533,12 @@ else
   fail!("site.css: #pixel-bg is not above the page text (z-index #{z.inspect})") unless z && z.to_i > 0
   fail!("site.css: #pixel-bg does not let clicks through (pointer-events: none)") unless crew_rule.include?("pointer-events: none")
 end
+# The home page fits on one screen since the redesign (#74), which put the footer right
+# under the server. The footer leaves room for the crew on the page that has it.
+unless read("assets/css/site.css").to_s.match?(/\.has-crew \.site-foot\s*\{\s*padding-bottom:\s*\d{3}px/)
+  fail!("site.css: the footer does not leave room for the pixel crew (.has-crew .site-foot)")
+end
+fail!("index.html: the body does not mark the pixel crew (has-crew)") unless read("index.html").to_s.include?(%(<body class="has-crew">))
 
 # The tag index must exist and list every tag actually in use.
 tag_index = read("tags/index.html")
@@ -640,19 +629,18 @@ else
     fail!("prose.css: no #{needle.inspect} — #{why}") unless prose.include?(needle)
   end
 
-  # Both colour schemes, and both ways of choosing one.
-  fail!("prose.css: no dark tokens under prefers-color-scheme") unless prose.include?("prefers-color-scheme: dark")
-  fail!("prose.css: no dark tokens under an explicit [data-theme]") unless prose.include?('[data-theme="dark"]')
+  # The syntax colours are the design's tokens, defined once in site.css (#74).
+  %w[--tk-kw --tk-str --tk-num --tk-com].each do |token|
+    fail!("prose.css: the syntax theme does not use #{token}") unless prose.include?("var(#{token})")
+  end
 end
 
 site_css = read("assets/css/site.css")
 if site_css
-  # The two stylesheets must agree on how a theme is chosen. They did not: prose.css
-  # honoured [data-theme] and site.css only had the media query, so an explicit dark theme
-  # gave dark code blocks on a light page with unreadable inline code.
-  unless site_css.include?('[data-theme="dark"]')
-    fail!("site.css: honours only prefers-color-scheme while prose.css also honours [data-theme] — an explicit theme would style one and not the other")
-  end
+  # Dark only (#74). One scheme means the two stylesheets cannot disagree about which
+  # one is showing, which is how code blocks once went dark on a light page.
+  fail!("site.css: not dark only (color-scheme: dark)") unless site_css.match?(/(?<![-\w])color-scheme:\s*dark\s*;/)
+  fail!("site.css: still carries a light/dark switch") if site_css.include?("prefers-color-scheme") || site_css.include?("data-theme")
   if site_css.match?(/^code \{/)
     fail!("site.css: an unscoped `code {` rule is what boxed every line of every code block")
   end
@@ -727,7 +715,7 @@ end
 cname = read("CNAME")&.strip
 fail!("CNAME: is #{cname.inspect}, expected #{DOMAIN.inspect}") unless cname == DOMAIN
 
-(%w[index.html about/index.html posts/index.html] +
+(%w[index.html about/index.html posts/index.html work/index.html] +
  ARTICLES.map { |a| "posts/#{a}/index.html" }).each do |page|
   html = read(page) or next
   fail!("#{page}: no canonical link to https://#{DOMAIN}") unless html.include?(%(rel="canonical" href="https://#{DOMAIN}))
@@ -736,7 +724,7 @@ end
 # 14. llms-full.txt must actually carry the pages, not just its own header.
 full = read("llms-full.txt")
 if full
-  ["Philipp Lehmann", "About", "Impressum"].each do |title|
+  ["Philipp Lehmann", "About", "Works", "OpenTaberna", "Impressum"].each do |title|
     fail!("llms-full.txt: page #{title.inspect} is missing") unless full.include?("# #{title}\n")
   end
   fail!("llms-full.txt: suspiciously short (#{full.length} bytes) — bodies did not render") if full.length < 40_000
@@ -753,65 +741,115 @@ end
   fail!("#{f}: contains unrendered Liquid") if body.include?("{{") || body.include?("{%")
 end
 
-# 15. The landing page must stay structured and readable (issue #23).
-#     The page is the first thing a reader sees, and a build that merely
-#     succeeds cannot tell a page that holds together from one that does not:
-#     Jekyll renders flat prose, bare bullet lists and inline links just as
-#     happily as it renders a page with a shape. So the shape is pinned here,
-#     in the source, from the components site.css already styles — a hero,
-#     named sections, carded articles, a fact list for contact — and the
-#     source itself is kept free of the things that made the first version
-#     hard to follow: bare markdown bullets, mixed indentation, trailing
-#     whitespace. The rendered HTML is checked by this file's article checks
-#     and by html-proofer; this is the check that fails if the structure
-#     regresses.
-landing = File.read(File.join(__dir__, "..", "index.md"))
-
-# The hero: name and role, the first thing a reader sees.
-fail!("index.md: the hero name is missing") unless landing.include?(%(<h1 class="hero-name">Philipp Lehmann</h1>))
-fail!("index.md: the hero role is missing") unless landing.include?(%(<p class="hero-role">))
-
-# The sections, in reading order. A landing page a reader can follow is a landing
-# page whose sections are named; unnamed blocks of prose are the regression.
-["What I run", "OpenTaberna", "Writing", "Community", "What's next", "Elsewhere"].each do |section|
-  fail!("index.md: missing the '#{section}' section") unless landing.include?("## #{section}")
+# 16. The home page says who he is in visible text (#74). The design's home is a short
+#     whoami; a name search needs the name as the page heading, the role beside it, and
+#     the employer, the university and OpenTaberna in the prose a summary is built from.
+if (home = read("index.html"))
+  fail!("index.html: no <h1> with the name") unless home.match?(%r{<h1[^>]*>\s*Philipp Lehmann\s*</h1>})
+  fail!("index.html: no role line") unless home.include?("CTO at Nerd Force1 UG · infrastructure engineer · Bochum, Germany")
+  whoami = home[%r{<section class="whoami".*?</section>}m].to_s
+  fail!("index.html: no whoami section") if whoami.empty?
+  ["Nerd Force1 UG", "AI-Gruppe", "Ruhr University Bochum", "OpenTaberna"].each do |name|
+    fail!("index.html: the whoami does not name #{name}") unless whoami.include?(name)
+  end
+  PROFILES.each do |me|
+    fail!("index.html: the profile links do not include #{me}") unless home.include?(%(href="#{me}"))
+  end
 end
 
-# The OpenTaberna section must keep pointing at the project and its three articles
-# (issue #41); a section that names the shop but links nowhere is the regression.
-opentaberna = landing[/^## OpenTaberna\n(.*?)^## /m, 1].to_s
-(%w[https://opentaberna.de https://github.com/OpenTaberna] +
- %w[opentaberna-headless-open-source-shop opentaberna-order-processing-first
-    opentaberna-storefront-against-the-api].map { |s| "/posts/#{s}/" }).each do |href|
-  fail!("index.md: the OpenTaberna section does not link #{href}") unless opentaberna.include?(href)
+# 17. Every page, not a sample: the footer links the Impressum, and nothing is loaded
+#     from another origin (#74). Fonts, scripts and styles are served from the site, so
+#     no reader's address goes to a third party, which the colophon has always promised.
+html_pages = Dir.glob(File.join(SITE, "**", "*.html")).select { |f| File.read(f, 200).include?("<!DOCTYPE html>") }
+fail!("_site: suspiciously few HTML pages (#{html_pages.length})") if html_pages.length < 100
+html_pages.each do |path|
+  rel = path.delete_prefix("#{SITE}/")
+  html = File.read(path)
+  fail!("#{rel}: does not link the Impressum") unless html.include?(%(href="/impressum/"))
+  html.scan(/<(?:script|img|iframe|source|video|audio)\b[^>]*\ssrc="((?:https?:)?\/\/[^"]+)"/).flatten.each do |url|
+    fail!("#{rel}: loads #{url} from another origin")
+  end
+  html.scan(/<link\b[^>]*>/).each do |tag|
+    next unless tag.match?(/rel="(?:stylesheet|preload|modulepreload|icon|prefetch|preconnect|dns-prefetch)"/)
+    url = tag[/href="([^"]+)"/, 1].to_s
+    fail!("#{rel}: loads #{url} from another origin") if url.match?(%r{\A(?:https?:)?//})
+  end
+end
+Dir.glob(File.join(SITE, "assets", "css", "*.css")).each do |path|
+  File.read(path).scan(/(?:url\(|@import\s+)\s*['"]?((?:https?:)?\/\/[^'")\s]+)/).flatten.each do |url|
+    fail!("#{File.basename(path)}: loads #{url} from another origin")
+  end
+end
+%w[Inter-latin.woff2 mononoki-Regular.woff2 mononoki-Bold.woff2 mononoki-Italic.woff2
+   Inter-OFL.txt mononoki-OFL.txt].each do |font|
+  fail!("assets/fonts/#{font}: missing from the build") unless File.file?(File.join(SITE, "assets", "fonts", font))
 end
 
-# The selected articles are cards, not a bare list. The card markup is what
-# site.css styles; a bullet list of links is the shape the page had before.
-projects = landing.scan(%r{<ul class="projects">(.*?)</ul>}m).flatten
-fail!("index.md: the selected articles are not in a projects list") if projects.empty?
-cards = projects.first.to_s.scan(%r{<li class="project">}).length
-fail!("index.md: the selected articles are not cards (#{cards} found, expected at least 3)") if cards < 3
-
-# The contact block is a fact list, the component site.css styles for key/value
-# pairs. Inline links in a paragraph are the shape the page had before.
-fail!("index.md: the contact links are not in a facts list") unless landing.include?(%(<ul class="facts">))
-
-# No bare markdown bullets in the body: the lists on this page are the styled
-# components above, and a stray bullet is the shape the page had before.
-# The frontmatter is stripped first: its folded scalar is indented prose, not
-# a list, but the rule is about the rendered page.
-landing.sub(/^---\n.*?\n---\n/m, "").each_line.with_index(1) do |line, n|
-  fail!("index.md:#{n}: bare markdown bullet") if line =~ /\s*[-*+] /
+# 18. Work (#74): every project has its own page with structured data naming him as its
+#     creator, a place in the /work/ ItemList, and an entry in resume.json, so the page a
+#     reader sees and the CV a machine reads list the same things. A repository is linked
+#     only if it is public.
+WORK = Dir.glob(File.join(__dir__, "..", "_work", "*.md")).sort.map do |f|
+  YAML.safe_load(File.read(f)[/\A---\n(.*?)\n---/m, 1]).merge("id" => File.basename(f, ".md"))
+end
+fail!("_work/: no projects") if WORK.empty?
+if (works = read("work/index.html"))
+  list = ld_nodes(works).find { |n| n["@type"] == "ItemList" }
+  fail!("work/index.html: no ItemList structured data") if list.nil?
+  WORK.each do |p|
+    fail!("work/index.html: does not link /work/#{p['id']}/") unless works.include?(%(href="/work/#{p['id']}/"))
+    named = Array(list&.dig("itemListElement")).any? { |e| e.dig("item", "name") == p["title"] }
+    fail!("work/index.html: the ItemList does not name #{p['title']}") unless named
+  end
+else
+  fail!("work/index.html: missing")
+end
+WORK.each do |p|
+  html = read("work/#{p['id']}/index.html")
+  if html.nil?
+    fail!("work/#{p['id']}/: missing")
+    next
+  end
+  node = ld_nodes(html).find { |n| %w[CreativeWork SoftwareSourceCode].include?(n["@type"]) }
+  if node.nil?
+    fail!("work/#{p['id']}/: no project structured data")
+  else
+    fail!("work/#{p['id']}/: creator must reference #{PERSON_ID}") unless node.dig("creator", "@id") == PERSON_ID
+    fail!("work/#{p['id']}/: structured data names #{node['name'].inspect}") unless node["name"] == p["title"]
+  end
+  in_resume = Array(resume&.dig("projects")).any? { |r| r["name"] == p["title"] } ||
+              Array(resume&.dig("work")).any? { |w| w["name"] == p["title"] }
+  fail!("resume.json: does not carry the Work project #{p['title']}") unless in_resume
+  repo = p["repo"].to_s[%r{github\.com/PhilippTheServer/([^/]+)}, 1]
+  fail!("_work/#{p['id']}.md: links #{repo}, which is not a public repository") if repo && !PUBLIC_REPOS.include?(repo)
+  html.scan(%r{github\.com/PhilippTheServer/([A-Za-z0-9._-]+)}).flatten.uniq.each do |r|
+    fail!("work/#{p['id']}/: links github.com/PhilippTheServer/#{r}, which is not a public repository") unless PUBLIC_REPOS.include?(r)
+  end
+end
+Array(resume&.dig("projects")).each do |r|
+  fail!("resume.json: project #{r['name']} has no Work page") unless WORK.any? { |p| p["title"] == r["name"] }
 end
 
-# Indentation discipline: the page must not mix tab and space indentation, and
-# no line may carry trailing whitespace. Mixed indentation is the thing that
-# made the source of this page unreadable, and it is invisible in a build.
-landing.each_line.with_index(1) do |line, n|
-  next if line.strip.empty?
-  fail!("index.md:#{n}: mixes tab and space indentation") if line.start_with?("\t") && line.include?("\t ")
-  fail!("index.md:#{n}: trailing whitespace") if line =~ /[ \t]+\z/
+# 19. The git log on /about/ tells the same career as resume.json (#74). Each Nerd
+#     Force1 role is a commit dated with the role's start, and every commit is a
+#     <details>, so its story is in the HTML rather than behind a script.
+career_path = File.join(__dir__, "..", "_data", "career.yml")
+career_log = File.file?(career_path) ? YAML.safe_load(File.read(career_path)) : (fail!("_data/career.yml: missing"); [])
+CAREER.each do |role|
+  entry = career_log.find { |c| c["role"] == role["position"] }
+  if entry.nil?
+    fail!("_data/career.yml: no commit for #{role['position']}")
+  elsif entry["start"] != role["startDate"]
+    fail!("_data/career.yml: #{role['position']} starts #{entry['start'].inspect}, resume.json says #{role['startDate'].inspect}")
+  end
+end
+if (about = read("about/index.html"))
+  commits = about.scan(/<details class="commit[ "]/).length
+  fail!("about/index.html: #{commits} commits rendered, _data/career.yml has #{career_log.length}") if commits != career_log.length
+  career_log.each do |c|
+    fail!("about/index.html: commit #{c['hash']} is missing") unless about.include?(">#{c['hash']}<")
+    fail!("about/index.html: the story of #{c['hash']} is missing") unless about.include?(CGI.escapeHTML(c["story"]))
+  end
 end
 
 if @failures.empty?
