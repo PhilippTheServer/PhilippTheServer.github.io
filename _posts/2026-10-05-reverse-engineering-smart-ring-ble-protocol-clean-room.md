@@ -1,36 +1,44 @@
 ---
 layout: post
 title: "I Reverse-Engineered My Smart Ring BLE Protocol Clean-Room"
-subtitle: "A week, one ring, 58 numbered captures, and a protocol that turns out to be 16 bytes of discipline and a checksum nobody enforces. Everything below is protocol facts and methodology, because that is all that is public."
+subtitle: "COLMi R02 on a Realtek RTL8762E, read over BLE from Linux and a Pixel 10a with GrapheneOS. 58 captures, one protocol, and the method that kept it honest."
 date: 2026-10-05 09:00:00 +0200
 tags: [embedded, bluetooth, reverse-engineering, flutter, linux, methodology]
 description: >-
-  A smart ring BLE protocol mapped by observation alone: 16-byte framing, an
-  unenforced checksum, and a clean-room method with evidence levels.
+  COLMi R02, Realtek RTL8762E, BLE from Linux and a Pixel 10a. 16-byte
+  framing, an unenforced checksum, and a clean-room method with evidence levels.
 ---
 
 ## The problem
 
-A smart ring costs about forty euros and comes with a subscription. The
-subscription is not in the ring. The ring measures heart rate, steps, SpO2,
-stress and HRV on its own, stores the results on itself, and hands them over
-over Bluetooth Low Energy. What it needs the subscription for is the vendor's
-companion app, which phones home, wants an account, and treats your resting
-heart rate as a line item.
+The ring is a **COLMi R02**, a white-label smart ring in a family that ships
+under at least a dozen brand names. The board is `RY02R_V3.0`, the firmware
+`RY02R_3.01.00_250611`, and the radio chip is a **Realtek RTL8762E** (most
+likely the RTL8762ESF variant, QFN24 package), which I confirmed over the air
+with `Read Remote Version Information` before I ever opened the ring. It
+measures heart rate, steps, SpO2, stress and HRV, stores the results on
+itself, and hands them over Bluetooth Low Energy. The vendor's companion app
+wants an account and a subscription; the ring does not.
 
-So the project, which I am calling **OpenHealth**, has a simple shape: read my
+The project, which I am calling **OpenHealth**, has a simple shape: read my
 own ring's data over BLE with my own software, store it on my own phone, and
 never talk to the vendor again. No account, no cloud, no tracking. The
 hardware stays stock; the software is mine.
 
-That sounds like a weekend. It was a week, and the week was mostly not
-reverse engineering. It was method.
+The setup:
 
-The ring is a COLMi R02, a white-label ring in a family that ships under at
-least a dozen brand names. One unit, no second one to sacrifice, and a
-firmware that, as far as I could determine, cannot be restored if it is
-damaged. That last fact shaped everything: every byte I sent to the ring had
-to be a byte I was allowed to send.
+- **Ring:** COLMi R02, one unit, no second one to sacrifice. The firmware
+  cannot be restored if it is damaged, so every byte I sent to the ring had
+  to be a byte I was allowed to send.
+- **PC:** Linux, BlueZ 5.85, Python with [bleak](https://github.com/hbldh/bleak)
+  and `uv`, a Realtek USB Bluetooth controller.
+- **Phone:** Pixel 10a with GrapheneOS (Android 17), running the Flutter app
+  **OwnRing**, which has no `INTERNET` permission.
+- **Reference:** an Apple Watch for comparing heart-rate and step values.
+
+The work took a week, and most of it was not reverse engineering. It was
+setting up the Bluetooth stack, writing the capture tooling, and building the
+method that made the protocol document trustworthy.
 
 This article is about the protocol, the method, and the app. It is
 deliberately limited to protocol facts and methodology. The captures contain
@@ -144,8 +152,7 @@ The checksum is the sum of bytes 0–14 modulo 256. And the ring does not check
 it. Packets with a deliberately wrong sum were answered the same way as
 packets with a correct one. The ring sets the checksum correctly on its own
 packets, every time, so the field is useful for validating replies and
-meaningless for requests. I keep a straight face when I write this down, but
-a protocol that ships a checksum it does not enforce is a small joy.
+meaningless for requests.
 
 Replies are 16 bytes on the notify handle, repeating the command byte. The
 first reply in the first capture arrived after 67 milliseconds. An unknown
@@ -238,8 +245,7 @@ measurement pace, which means an app can fetch new values on that signal
 instead of polling. It also sends `73 04` at hh:00:12 every hour, and a live
 step counter `73 12` about every 0.8 seconds while you walk. The last one I
 found during a midnight walk, and the final value before midnight was 0.6
-percent below the sum of the stored hour entries. The gap is unexplained. I
-like unexplained gaps.
+percent below the sum of the stored hour entries. The gap is unexplained.
 
 ### Live heart rate
 
@@ -399,32 +405,24 @@ Where the week ended:
    reads, and the guard refuses any write longer than one 16-byte packet.
 
 The general shape of the problem is a proprietary device whose data is
-yours, held hostage by software you do not control. The answer is not to
-build the device. It is to observe the device, document what you observe with
-a method that makes every claim checkable, and build the thin client that
-uses the documented facts. The protocol of a €40 ring is not a secret. It is
-16 bytes of framing, a checksum nobody enforces, and a week of paying
-attention.
+yours, held behind software you do not control. The answer is not to build
+the device. It is to observe the device, document what you observe with a
+method that makes every claim checkable, and build the thin client that uses
+the documented facts.
 
 ## Conclusion
 
-A week of reverse engineering a smart ring is roughly half a week of
-reverse engineering your own Linux Bluetooth stack, and the other half is a
-discipline that has nothing to do with Bluetooth.
-
-The protocol is small and a little bit funny: exactly 16 bytes or nothing, a
-checksum the ring does not check, a heart-rate setting where off is `02` and
-on is `01`, and a step counter that is 1.6 percent accurate on a walk and 35
-percent optimistic on a hundred counted steps. The interesting part is not
-the protocol. It is that every fact in it has a status and a capture, that
-the two wrong answers about the step slots are still in the document next to
-the right one, and that a ring with no recovery path got a week of careful,
-allowlisted, reversible-looking experiments instead of a sweep that might
-have bricked it.
+The protocol is small: exactly 16 bytes or nothing, a checksum the ring does
+not check, a heart-rate setting where off is `02` and on is `01`, and a step
+counter that is 1.6 percent accurate on a walk and 35 percent optimistic on
+a hundred counted steps. The interesting part is not the protocol. It is
+that every fact in it has a status and a capture, that the two wrong answers
+about the step slots are still in the document next to the right one, and
+that a ring with no recovery path got a week of careful, allowlisted
+experiments instead of a sweep that might have bricked it.
 
 The method transfers to any device you own and do not fully control: decide
 the purpose and the prediction before the run, log everything as data you can
 re-evaluate, keep the recordings that support a claim unchanged, and let the
 test suite check that every citation resolves. The captures stay private,
-because they contain health data. The facts do not have to, and this article
-is the proof that they do not.
+because they contain health data. The facts do not have to.

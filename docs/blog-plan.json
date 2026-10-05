@@ -1596,7 +1596,7 @@
     "methodology"
    ],
    "source": "openhealth",
-   "problem": "A smart ring measures heart rate, steps and SpO2 on its own but locks the data behind a subscription app; reading your own ring's BLE protocol by observation alone means a week of captures, a 16-byte command channel with an unenforced checksum, and a clean-room method with evidence levels to keep the protocol facts honest."
+   "problem": "A COLMi R02 smart ring on a Realtek RTL8762E measures heart rate, steps and SpO2 but locks the data behind a subscription app; reading the BLE protocol from Linux and a Pixel 10a with GrapheneOS means 58 captures, a 16-byte command channel with an unenforced checksum, and a clean-room method with evidence levels."
   }
  ],
  "backlog": [
