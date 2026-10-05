@@ -25,6 +25,7 @@ redis: "Redis as a pipeline substrate: streams, sorted sets, pub/sub and their l
 # ── what it talks over ───────────────────────────────────────────────────────
 networking: "Overlay meshes, routing, MTU, and the layers that fail quietly."
 dns: "Resolution, wildcards, split horizons, and the failures that return success."
+bluetooth: "BLE links, GATT services, and the stack problems that hide in the host, not the device."
 
 # ── who is allowed ───────────────────────────────────────────────────────────
 security: "Hardening, boundaries, and being honest about what a control actually protects."
@@ -44,6 +45,7 @@ fastapi: "Building HTTP APIs with FastAPI and Pydantic."
 go: "Go services: concurrency, HTTP, and shipping a single binary."
 cpp: "C++ services and the build systems that make them reproducible."
 frontend: "Angular, TypeScript, and interfaces that show the truth about a system."
+flutter: "Cross-platform mobile apps and the toolchain that builds them on Linux."
 
 # ── what it is ───────────────────────────────────────────────────────────────
 llm: "Serving language models on your own hardware, and measuring whether they are any good."
@@ -58,3 +60,5 @@ reliability: "Behaving correctly when something is already broken."
 ci-cd: "Pipelines, builds and getting a change from a branch to a running system."
 automation: "Removing a task rather than documenting it."
 documentation: "Documentation that is reviewed, tested and therefore still true."
+reverse-engineering: "Learning how a closed system works by observing it, and documenting what you find."
+methodology: "The repeatable process behind a result: evidence levels, captures, and checks that keep it honest."
