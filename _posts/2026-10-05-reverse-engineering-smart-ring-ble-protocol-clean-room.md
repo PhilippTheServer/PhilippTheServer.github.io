@@ -5,9 +5,8 @@ subtitle: "A week, one ring, 58 numbered captures, and a protocol that turns out
 date: 2026-10-05 09:00:00 +0200
 tags: [embedded, bluetooth, reverse-engineering, flutter, linux, methodology]
 description: >-
-  Mapping a smart ring's BLE protocol by observation alone: the 16-byte command
-  channel, the unenforced checksum, an allowlist because there is no recovery
-  path, a clean-room method with evidence levels, and the app that uses it.
+  A smart ring BLE protocol mapped by observation alone: 16-byte framing, an
+  unenforced checksum, and a clean-room method with evidence levels.
 ---
 
 ## The problem
@@ -47,8 +46,8 @@ publish.
 The first thing I built was a Python script that connects to the ring with
 [bleak](https://github.com/hbldh/bleak) and reads its GATT structure. The
 first thing that happened was that the connection dropped about 100
-milliseconds after connecting, every time, with bleak reporting `GATT Protocol
-Error: Unlikely Error`.
+milliseconds after connecting, every time, with bleak reporting
+`GATT Protocol Error: Unlikely Error`.
 
 A `btmon` capture showed who was doing it. The sequence, right after the
 connection was established:
@@ -117,8 +116,9 @@ multi-payload measurements come back. Everything else is identity information,
 a mystery service under `0xFEE7`, and the HID service that causes the pairing
 problem above.
 
-The chip was identified over the air, without opening the ring: `Read Remote
-Version Information` reports manufacturer Realtek, subversion `0x8762`. That
+The chip was identified over the air, without opening the ring:
+`Read Remote Version Information` reports manufacturer Realtek, subversion
+`0x8762`. That
 is the RTL8762E, a Bluetooth 5.2 LE SoC with a Cortex-M0+ at 40 MHz and 512
 KB of in-package flash on the variant the ring uses. The ring reports
 Bluetooth 5.0 at the link layer, which the datasheet's 5.2 does not
@@ -179,11 +179,10 @@ The command table that matters for an app:
 | `43 <day> …` | header + entries, or `43 ff` | steps of one day |
 | `69 01 01` / `69 01 04` | `69 01 00 00`, then ten `69 01 00 <bpm>` | live heart rate start / stop |
 
-The big-data channel uses a different frame: `bc <data id> <length LE16>
-<CRC LE16>` plus payload, with the CRC being CRC-16/MODBUS over the payload
-only. The only frame the firmware ever answers is the SpO2 request, and the
-reply is split across several notifications that you reassemble until you
-have 6 + length bytes.
+The big-data channel uses a different frame: `bc <data id> <length LE16> <CRC LE16>`
+plus payload, with the CRC being CRC-16/MODBUS over the payload only. The only
+frame the firmware ever answers is the SpO2 request, and the reply is split
+across several notifications that you reassemble until you have 6 + length bytes.
 
 ### The clock, and how to decide an encoding
 
