@@ -245,7 +245,7 @@
     "reliability"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 20,
@@ -300,7 +300,7 @@
     "reliability"
    ],
    "source": "iac",
-   "problem": "Placement is pseudo-random, so a cluster that looks 70% full can have a disk at 90% — and one full OSD stops cluster-wide writes."
+   "problem": "Placement is pseudo-random, so a cluster that looks 70% full can have a disk at 90% \u2014 and one full OSD stops cluster-wide writes."
   },
   {
    "n": 24,
@@ -340,7 +340,7 @@
     "security"
    ],
    "source": "iac",
-   "problem": "put replaces the whole secret, so adding one field destroys the others — and there is no single-key delete."
+   "problem": "put replaces the whole secret, so adding one field destroys the others \u2014 and there is no single-key delete."
   },
   {
    "n": 27,
@@ -434,7 +434,7 @@
     "gitops"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 34,
@@ -629,7 +629,7 @@
     "performance"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 49,
@@ -823,7 +823,7 @@
     "testing"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 64,
@@ -994,7 +994,7 @@
     "linux"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 77,
@@ -1163,7 +1163,7 @@
     "architecture"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 90,
@@ -1304,7 +1304,7 @@
     "security"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 101,
@@ -1396,7 +1396,7 @@
     "architecture"
    ],
    "source": "existing",
-   "problem": "RETITLED — full rewrite to the four-part structure"
+   "problem": "RETITLED \u2014 full rewrite to the four-part structure"
   },
   {
    "n": 108,
@@ -1439,7 +1439,7 @@
     "reliability"
    ],
    "source": "k8s",
-   "problem": "fsGroup on a volume with a million files chowns every one of them on every pod start — unless the root already matches."
+   "problem": "fsGroup on a volume with a million files chowns every one of them on every pod start \u2014 unless the root already matches."
   },
   {
    "n": 111,
@@ -1453,7 +1453,7 @@
     "ci-cd"
    ],
    "source": "k8s",
-   "problem": "A regex location cannot carry a proxy_pass with a URI part — and splitting cache policy by routing is the wrong shape anyway."
+   "problem": "A regex location cannot carry a proxy_pass with a URI part \u2014 and splitting cache policy by routing is the wrong shape anyway."
   },
   {
    "n": 112,
@@ -1467,7 +1467,7 @@
     "linux"
    ],
    "source": "msu",
-   "problem": "A device with no battery-backed RTC boots with a stale clock, NTP jumps it forward, and a wall-clock-aligned scheduler tries to catch up — one measurement at a time."
+   "problem": "A device with no battery-backed RTC boots with a stale clock, NTP jumps it forward, and a wall-clock-aligned scheduler tries to catch up \u2014 one measurement at a time."
   },
   {
    "n": 113,
@@ -1495,7 +1495,7 @@
     "docker"
    ],
    "source": "homelab",
-   "problem": "Headscale's docs say don't run it behind a reverse proxy, but its control connection speaks a noise protocol that is not HTTP/2-compatible — so the proxy has to offer only HTTP/1.1 on that one host, which is a single Traefik TLS option that is easy to get wrong and nearly impossible to diagnose when you do."
+   "problem": "Headscale's docs say don't run it behind a reverse proxy, but its control connection speaks a noise protocol that is not HTTP/2-compatible \u2014 so the proxy has to offer only HTTP/1.1 on that one host, which is a single Traefik TLS option that is easy to get wrong and nearly impossible to diagnose when you do."
   },
   {
    "n": 115,
@@ -1510,7 +1510,7 @@
     "testing"
    ],
    "source": "horus",
-   "problem": "A multicast discovery library started one server per IPv4 address, including NetBird's kernel WireGuard wt0, which rejects every multicast send with ENOKEY — so the server restarted once a second, 68,805 times, until interfaces were filtered on IFF_MULTICAST and IFF_POINTOPOINT."
+   "problem": "A multicast discovery library started one server per IPv4 address, including NetBird's kernel WireGuard wt0, which rejects every multicast send with ENOKEY \u2014 so the server restarted once a second, 68,805 times, until interfaces were filtered on IFF_MULTICAST and IFF_POINTOPOINT."
   },
   {
    "n": 116,
@@ -1524,7 +1524,7 @@
     "testing"
    ],
    "source": "k8s",
-   "problem": "Since v2.11.2 Traefik's respondingTimeouts.readTimeout defaults to 60s and bounds reading the entire request including the body, so every slow Nextcloud chunk upload was truncated mid-body — the fix is readTimeout: 0 on internal entrypoints, with slowloris defence left to the public edge."
+   "problem": "Since v2.11.2 Traefik's respondingTimeouts.readTimeout defaults to 60s and bounds reading the entire request including the body, so every slow Nextcloud chunk upload was truncated mid-body \u2014 the fix is readTimeout: 0 on internal entrypoints, with slowloris defence left to the public edge."
   },
   {
    "n": 117,
@@ -1581,6 +1581,22 @@
    ],
    "source": "daily",
    "problem": "A food tracker dies when logging means typing; with a language model (mostly a self-hosted Qwen, sometimes Claude) as the input device over MCP it survives, and a shopping list becomes plans minus stock, provided stock is derived from an append-only journal instead of patched in place."
+  },
+  {
+   "n": 121,
+   "date": "2026-10-05",
+   "slug": "reverse-engineering-smart-ring-ble-protocol-clean-room",
+   "title": "I Reverse-Engineered My Smart Ring BLE Protocol Clean-Room",
+   "labels": [
+    "embedded",
+    "bluetooth",
+    "reverse-engineering",
+    "flutter",
+    "linux",
+    "methodology"
+   ],
+   "source": "openhealth",
+   "problem": "A smart ring measures heart rate, steps and SpO2 on its own but locks the data behind a subscription app; reading your own ring's BLE protocol by observation alone means a week of captures, a 16-byte command channel with an unenforced checksum, and a clean-room method with evidence levels to keep the protocol facts honest."
   }
  ],
  "backlog": [
@@ -2299,6 +2315,7 @@
   "redis",
   "networking",
   "dns",
+  "bluetooth",
   "security",
   "vault",
   "secrets-management",
@@ -2312,6 +2329,7 @@
   "go",
   "cpp",
   "frontend",
+  "flutter",
   "llm",
   "agents",
   "embedded",
@@ -2321,6 +2339,8 @@
   "reliability",
   "ci-cd",
   "automation",
-  "documentation"
+  "documentation",
+  "reverse-engineering",
+  "methodology"
  ]
 }
