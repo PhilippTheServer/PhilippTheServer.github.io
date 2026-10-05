@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "I Reverse-Engineered My $40 Smart Ring's BLE Protocol — Clean-Room"
+title: "I Reverse-Engineered My Smart Ring BLE Protocol Clean-Room"
 subtitle: "A week, one ring, 58 numbered captures, and a protocol that turns out to be 16 bytes of discipline and a checksum nobody enforces. Everything below is protocol facts and methodology, because that is all that is public."
 date: 2026-10-05 09:00:00 +0200
 tags: [embedded, bluetooth, reverse-engineering, flutter, linux, methodology]
