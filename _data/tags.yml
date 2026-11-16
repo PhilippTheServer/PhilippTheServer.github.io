@@ -44,6 +44,7 @@ python: "Python services, tooling and the packaging around them."
 fastapi: "Building HTTP APIs with FastAPI and Pydantic."
 go: "Go services: concurrency, HTTP, and shipping a single binary."
 cpp: "C++ services and the build systems that make them reproducible."
+rust: "Rust services and contracts: strict types at the boundary and generated code you can diff."
 frontend: "Angular, TypeScript, and interfaces that show the truth about a system."
 flutter: "Cross-platform mobile apps and the toolchain that builds them on Linux."
 
