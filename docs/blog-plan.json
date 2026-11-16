@@ -1597,6 +1597,51 @@
    ],
    "source": "openhealth",
    "problem": "A COLMi R02 smart ring on a Realtek RTL8762E measures heart rate, steps and SpO2 but locks the data behind a subscription app; reading the BLE protocol from Linux and a Pixel 10a with GrapheneOS means 58 captures, a 16-byte command channel with an unenforced checksum, and a clean-room method with evidence levels."
+  },
+  {
+   "n": 122,
+   "date": "2026-11-16",
+   "slug": "the-information-problem",
+   "title": "The Information Problem",
+   "labels": [
+    "cpp",
+    "architecture",
+    "testing",
+    "documentation",
+    "methodology"
+   ],
+   "source": "nisaba",
+   "problem": "A description of a moving world is a stale claim, not a fact, so Nisaba records every assertion as an attributed bitemporal revision, closes the loop through accountable delivery and observed outcomes, and qualifies the design with sixteen adversarial traces while the AI stays optional."
+  },
+  {
+   "n": 123,
+   "date": "2026-11-16",
+   "slug": "gitgentic-one-operation-catalog-four-interfaces",
+   "title": "GitGentic: One Operation Catalog, Four Interfaces",
+   "labels": [
+    "rust",
+    "agents",
+    "api-design",
+    "architecture",
+    "frontend"
+   ],
+   "source": "gitgentic",
+   "problem": "Git forges are built for humans and their agents improvise against them, so GitGentic defines 142 operations once in a Rust contract crate and generates the REST API, the MCP server, the CLI and the TypeScript client from it, with a parity test that fails the build when any projection drifts."
+  },
+  {
+   "n": 124,
+   "date": "2026-11-16",
+   "slug": "daily-2-0-the-kitchen-picnic-and-the-human-money-loop",
+   "title": "daily 2.0: The Kitchen, Picnic, and the Human Money Loop",
+   "labels": [
+    "python",
+    "agents",
+    "automation",
+    "architecture",
+    "fastapi"
+   ],
+   "source": "daily",
+   "problem": "A diet system without a kitchen treats the pantry as a number, but stock is physical and expires, cooking is a confirmed fact, ml is not g, and shopping touches money, so daily 2.0 plans around lots and confirmed cooking runs while the agent prepares the Picnic cart and the owner still checks out."
   }
  ],
  "backlog": [
@@ -2328,6 +2373,7 @@
   "fastapi",
   "go",
   "cpp",
+  "rust",
   "frontend",
   "flutter",
   "llm",

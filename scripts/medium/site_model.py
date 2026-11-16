@@ -72,6 +72,7 @@ MEDIUM_TOPIC = {
     "redis": "Redis",
     "reliability": "Site Reliability Engineer",
     "reverse-engineering": "Reverse Engineering",
+    "rust": "Rust",
     "secrets-management": "Hashicorp Vault",
     "security": "Cybersecurity",
     "storage": "Storage",
