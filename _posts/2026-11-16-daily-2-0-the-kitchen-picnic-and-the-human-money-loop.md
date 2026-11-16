@@ -12,7 +12,7 @@ description: >-
 
 ## The problem
 
-[Last time](/posts/tracking-meals-and-automating-shopping-with-an-mcp-server/)
+[Last time](/posts/daily-meal-tracking-shopping-automation-mcp/)
 I built the first version of *daily*, my personal health and diet system: a
 language model operates it, I only look at it, and the shopping list is
 planned meals minus a live pantry, with the pantry derived from an event
