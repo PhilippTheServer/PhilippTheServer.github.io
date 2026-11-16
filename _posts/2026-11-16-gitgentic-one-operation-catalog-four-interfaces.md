@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "GitGentic: An Agent-First Git Forge From One Operation Catalog"
+title: "GitGentic: One Operation Catalog, Four Interfaces"
 subtitle: "One typed operation catalog in Rust generates the REST API, the MCP server, the CLI and the browser client. 37 entities, 142 operations, eight catalog rules, and a frontend that is only allowed to draw."
 date: 2026-11-16 10:00:00 +0200
 tags: [rust, agents, api-design, architecture, frontend]
 description: >-
-  GitGentic is a self-hosted git forge where agents are first-class actors.
-  One Rust operation catalog generates REST, MCP, CLI and the browser client,
-  and parity tests fail the build when any projection drifts.
+  GitGentic is a self-hosted git forge for agents: one Rust operation
+  catalog generates REST, MCP, CLI and browser client; parity tests fail
+  the build on drift.
 ---
 
 ## The problem
@@ -47,7 +47,27 @@ The answer is that the forge does not *have* four interfaces. It has one
 
 An operation is written once in the contract crate: a trait with a const
 name, summary, safety class (Read / Write / Destructive), scope, and HTTP
-mapping, plus associated `Input` and `Output` types and examples. An `xtask`
+mapping, plus associated `Input` and `Output` types and examples.
+
+```rust
+pub trait Operation {
+    /// Dotted name, for example `pull_request.merge`.
+    const NAME: &'static str;
+    const SUMMARY: &'static str;
+    const SAFETY: Safety;
+    /// Token scope required to call the operation.
+    const SCOPE: &'static str;
+    /// Method and path template below `/v1`.
+    const HTTP: (Method, &'static str);
+
+    type Input: DeserializeOwned + JsonSchema;
+    type Output: Serialize + JsonSchema;
+
+    fn examples() -> Vec<Example<Self::Input, Self::Output>>;
+}
+```
+
+An `xtask`
 target generates `openapi.json`, the TypeScript client, the CLI reference,
 and an `llms.txt` — a one-page guide for agents that find the API by reading
 it.

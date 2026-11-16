@@ -5,9 +5,9 @@ subtitle: "The v1 prototype grew a kitchen: physical stock with expiry dates, co
 date: 2026-11-16 11:00:00 +0200
 tags: [python, agents, automation, architecture, fastapi]
 description: >-
-  daily 2.0 adds a kitchen with physical, expiring stock, confirmed cooking,
-  stock-aware shopping, and approval-first Picnic cart preparation — with
-  the owner still doing the final checkout.
+  daily 2.0 grows a kitchen: physical expiring stock, confirmed cooking,
+  stock-aware shopping, and approval-first Picnic carts — I still do the
+  checkout.
 ---
 
 ## The problem
@@ -109,7 +109,20 @@ commitment is neither zero nor proven coverage**.
 If I have ordered milk and it has not arrived, the shopping screen does not
 show "buy milk" a second time, and it does not show "milk covered" as if
 the carton were in the fridge. It shows *already ordered — coverage
-unresolved*, with the order reference and the delivery time. Late deliveries
+unresolved*, with the order reference and the delivery time. The line in
+the shopping order carries that state instead of a guess:
+
+```json
+{
+  "name": "Milk",
+  "shortfall_grams": 500.0,
+  "target_count": 0,
+  "commitment_uncertain": true
+}
+```
+
+Zero target because the carton is on its way; `commitment_uncertain` keeps
+it out of the basket without pretending it is in the fridge. Late deliveries
 and overdue receipts remain explicit states. Buying the same thing twice
 because a system could not tell "ordered" from "owned" is the kind of bug
 that costs money instead of failing a test.
@@ -177,7 +190,7 @@ thing you ship "good enough".
 human-viewed** system. The Python backend declares each operation once, and
 it is reachable as a REST command or view for the Angular PWA and as an MCP
 tool for the language model — the same single-source-of-truth move as
-[GitGentic](/posts/gitgentic-an-agent-first-git-forge-from-one-operation-catalog/),
+[GitGentic](/posts/gitgentic-one-operation-catalog-four-interfaces/),
 applied to a food system. The PWA renders every form from server schemas,
 logs in with PKCE, and treats service-worker updates as a non-modal notice
 that never reloads the form I am filling in.

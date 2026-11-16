@@ -5,9 +5,8 @@ subtitle: "Nisaba is a closed-loop lifecycle for information about a moving worl
 date: 2026-11-16 09:00:00 +0200
 tags: [cpp, architecture, testing, documentation, methodology]
 description: >-
-  Nisaba treats every piece of information as a stale claim about a moving
-  world: bitemporal revisions, adversarial acceptance traces, and a closed
-  loop that needs no AI to work.
+  Nisaba treats information as stale claims about a moving world: bitemporal
+  revisions, adversarial traces, and a closed loop that needs no AI.
 ---
 
 ## The problem
